@@ -28,6 +28,11 @@ class Page extends Model
         ]);
     }
 
+    public function tags()
+    {
+        return $this->morphToMany('App\Tag', 'taggable');
+    }
+
     public function getUrlAttribute()
     {
         return url('pages/' . $this->id . '/' . str_slug($this->title));

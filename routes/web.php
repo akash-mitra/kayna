@@ -16,7 +16,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::resource('pages', 'PageController')->except(['show']);
 });
 
-
 // All Categories related general and admin routes
 Route::get('/categories/{category}/{slug?}', 'CategoryController@show');
 Route::get('/api/categories', 'CategoryController@apiIndex')->name('api.categories.index');
@@ -24,6 +23,12 @@ Route::group(['prefix' => 'admin'], function () {
     Route::resource('categories', 'CategoryController')->except(['show']);
 });
 
+// All Tags related general and admin routes
+Route::get('/tags/{tag}/{slug?}', 'TagController@show');
+Route::get('/api/tags', 'TagController@apiIndex')->name('api.tags.index');
+Route::group(['prefix' => 'admin'], function () {
+    Route::resource('tags', 'TagController')->except(['show']);
+});
 
 // Route::get('/page/{id}/{slug}', function () {
 //     $page = [

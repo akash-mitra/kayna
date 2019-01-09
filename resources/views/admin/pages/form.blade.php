@@ -255,7 +255,7 @@
                 media_url: '{{data_get($page, "media_url")}}',
                 page_url: '{{data_get($page, "url")}}',
                 status: '{{data_get($page, "status", "Live")}}',
-                body: '{!! data_get($page, "content.body") !!}',
+                body: `{!! data_get($page, "content.body") !!}`,
                 ago: '{!! data_get($page, "ago") ?? "Just Now" !!}', 
                 categories: @json($categories),
 
