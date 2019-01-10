@@ -17,23 +17,32 @@
 
 @section('main')
 
-<div class="w-full max-w-lg mx-auto p-4 mx-1 bg-white shadow rounded">
+<div class="w-full max-w-lg mx-auto flex justify-between border-b shadow -mt-12 p-4 bg-white">
+        <button class="p-2 rounded text-teal hover:text-white hover:bg-teal" 
+                v-on:click="showSummary">
+                Page Information
+        </button>
 
-        <h1 class="w-full flex flex-col p-2">
-                        
-                <div class="inline-block relative">
-                        <select class="block appearance-none w-full bg-white text-sm text-blue pb-4 pr-8 cursor-pointer leading-tight focus:outline-none focus:shqadow-outline"
-                                v-model="category.value">
-                                <option :value="0" selected='selected'>Uncategorised</option>
-                                <option v-for="c in categories" v-bind:value="c.id">
-                                        @{{ c.name }}
-                                </option>
-                        </select>
-                        <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                        </div>
+        <button class="p-2 rounded text-white bg-teal hover:text-white hover:bg-teal-dark" 
+                v-on:click="confirm">Save</button>
+</div>
+
+<div class="w-full max-w-lg mx-auto p-4 bg-white shadow">
+
+        <div class="m-2 inline-block relative">
+                <select class="p-2 mb-2 rounded-lg block appearance-none w-full hover:bg-grey-lightest text-sm text-blue-light pr-8 cursor-pointer leading-tight focus:outline-none focus:shqadow-outline"
+                        v-model="category.value">
+                        <option :value="0" selected='selected'>Uncategorised</option>
+                        <option v-for="c in categories" v-bind:value="c.id">
+                                @{{ c.name }}
+                        </option>
+                </select>
+                <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
+                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                 </div>
+        </div>
 
+        <h1 class="w-full flex flex-col px-2">
                 <textarea name="title"  
                         v-model="title" 
                         placeholder="Type page title here" 
@@ -60,7 +69,8 @@
                 class="px-2" 
                 name="body" 
                 v-model="body" 
-                :value="body"
+                :value="body" 
+                :autohide=true 
                 placeholder="Have your say here...">
         </editor>
         <!-- <textarea v-model="body" class="w-full"></textarea> -->
@@ -68,13 +78,7 @@
 </div>  
 
 <div class="w-full max-w-lg mx-auto flex justify-between my-2 p-4">
-        <button class="p-2 rounded text-teal hover:text-white hover:bg-teal" 
-                v-on:click="showSummary">
-                Page Information
-        </button>
-
-        <button class="p-2 rounded text-white bg-teal hover:text-white hover:bg-teal-dark" 
-                v-on:click="confirm">Save</button>
+        
 </div>
 
 
@@ -277,17 +281,6 @@
                 has_error: false,
         };
 
-        /**
-         * Toggles the visibility of trix toolbar 
-         */
-        // document.addEventListener("trix-focus", function(event) {
-        //         event.target.toolbarElement.style.display = "block";
-        // });
-        // document.addEventListener("trix-blur", function(event) {
-        //         event.target.toolbarElement.style.display = "none";
-        // });
-
-        
 
         new Vue({
                 el: 'main',

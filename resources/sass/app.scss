@@ -62,6 +62,13 @@
  */
 
  .trix h1 {
-        color: #999;
+        color:indigo;
         size: 1em;
+}
+
+.trix-button--icon--attach {
+        
+
+	background: url('/svg/photo.svg') center no-repeat !important;
+
 }

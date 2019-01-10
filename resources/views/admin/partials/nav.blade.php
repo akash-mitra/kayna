@@ -3,15 +3,15 @@
                     <ul class="flex xl:flex-col list-reset">
                         <li class="sticky pin-t pin-l bg-white h-16 flex flex-col justify-center">
                             <h3 class="pl-8 text-teal">
-                                Bliss
+                                Kayna
                                 
                             </h3>
                             
                         </li>
-                        <li class="hidden xl:block">
+                        <!-- <li class="hidden xl:block">
                             <p>&nbsp;</p>
                             
-                        </li>
+                        </li> -->
                         <li>
                             <span class="hidden p-6 pb-2 xl:flex bg-white text-grey-dark font-bold text-xs uppercase">Content Management</span>
                         </li>
@@ -44,7 +44,7 @@
                             <span class="hidden p-6 pb-2 xl:flex bg-white text-grey-dark font-bold text-xs uppercase">User Management</span>
                         </li>
                         <li>
-                            <a class="pl-8 py-6 xl:py-2 flex bg-white hover:text-teal text-grey-darker no-underline font-hairline" href="#">
+                            <a class="pl-8 py-6 xl:py-2 flex bg-white hover:text-teal text-grey-darker no-underline font-hairline" href="/admin/users">
                                  Users
                             </a>
                         </li>                

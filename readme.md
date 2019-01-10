@@ -1,11 +1,11 @@
-# Browser Support
-## Kayna Blog Front-End
+## Browser Support
+### Kayna Blog Front-End
 
 Blog front-end supports pretty much any relatively modern browsers.
 
-## Kayna Admin Back-End
+### Kayna Admin Back-End
 
-Requires a ECMA6 compliant browser as Javascript ~template literals~ are used heavily.
+Requires a ECMA6 compliant browser as Javascript `template literals` are used heavily.
 
 * Microsoft Edge Browser - Version 13 onwards
 * Google Chrome - Version 41 onwards

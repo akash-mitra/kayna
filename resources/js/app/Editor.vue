@@ -1,10 +1,3 @@
-<style scoped>
-    .trix-button--icon--attach {
-        color: red;
-        background: red;
-    }
-</style>
-
 <template>
     <div>
         
@@ -37,8 +30,9 @@
 
                 value: String,
 
-                placeholder: String
+                placeholder: String,
 
+                autohide: Boolean
         },
 
         mounted() {
@@ -46,9 +40,24 @@
 
             this.$refs.trix.addEventListener('trix-initialize', e => {
                 
+                if (this.autohide) e.target.toolbarElement.style.display = "none";
+                
                 return this.addUploadButton (e)
 
             });
+
+            if (this.autohide) {
+                
+                this.$refs.trix.addEventListener("trix-focus", function(event) {
+
+                        event.target.toolbarElement.style.display = "block";
+                });
+                
+                this.$refs.trix.addEventListener("trix-blur", function(event) {
+
+                        event.target.toolbarElement.style.display = "none";
+                });
+            }
 
             this.$refs.trix.addEventListener('trix-change', e => {
                 
@@ -67,11 +76,6 @@
 
             });
 
-            // this.$refs.trix.addEventListener("trix-action-invoke", function(event) {
-            //     if(event.actionName === "x-log"){
-            //         console.log("Log called");  
-            //     }
-            // })
         },
 
         methods: {
@@ -119,9 +123,9 @@
                 }
 
                 xhr.onload = function () {
+                    let data = JSON.parse(xhr.responseText)
                     if (xhr.status === 201) {
                         window.onbeforeunload = function() {};
-                        let data = JSON.parse(xhr.responseText)
                         attachment.setAttributes({
                             url: data.url,
                             href: data.url
@@ -129,7 +133,9 @@
                     } else {
                         window.onbeforeunload = function() {};
                         attachment.remove();
-                        alert("Upload failed. Try to reload the page.");
+                        if (typeof data.message != 'undefined')
+                            alert (data.message)
+                        else alert("Upload failed. Try to reload the page.")
                     }
                 }
 

@@ -10,7 +10,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $appends = ['url'];
+    protected $appends = ['url', 'ago'];
     
     /**
      * The attributes that are mass assignable.
@@ -31,13 +31,21 @@ class User extends Authenticatable
     ];
 
 
-    public function getUrlAttribute()
-    {
-        return url($this->id);
-    }
+    
 
     public function publications ()
     {
         return $this->hasMany(Page::class);
+    }
+
+
+    public function getUrlAttribute()
+    {
+        return url('/admin/users/' . $this->id);
+    }
+
+    public function getAgoAttribute()
+    {
+        return $this->updated_at->diffForHumans();
     }
 }

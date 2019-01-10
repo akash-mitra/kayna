@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\media;
+use App\User;
 use Illuminate\Http\Request;
 
-class MediaController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,6 +13,8 @@ class MediaController extends Controller
      */
     public function index()
     {
+        $users = User::all();
+        return view('admin.user.index', compact('users'));
     }
 
     /**
@@ -23,6 +24,7 @@ class MediaController extends Controller
      */
     public function create()
     {
+        //
     }
 
     /**
@@ -33,57 +35,51 @@ class MediaController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->input();
-        $uploadedFile = request()->file('media');
-        $name = $input['name'];
-
-        try {
-            $url = Media::store($uploadedFile, $name);
-
-            return response()->json(['url' => asset($url)], 201);
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()]);
-        }
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\media                $media
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(media $media)
+    public function show($id)
     {
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\media                $media
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(media $media)
+    public function edit($id)
     {
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\media                $media
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, media $media)
+    public function update(Request $request, $id)
     {
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\media                $media
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(media $media)
+    public function destroy($id)
     {
+        //
     }
 }
