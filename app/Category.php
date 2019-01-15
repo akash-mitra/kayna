@@ -12,7 +12,7 @@ class Category extends Model
 
     public function pages()
     {
-        return $this->hasMany('App\Pages');
+        return $this->hasMany('App\Page');
     }
 
 

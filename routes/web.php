@@ -30,6 +30,11 @@ Route::group(['prefix' => 'admin'], function () {
     Route::resource('tags', 'TagController')->except(['show']);
 });
 
+// all modules related routes
+Route::group(['prefix' => 'admin'], function () {
+    Route::resource('modules', 'ModuleController');
+});
+
 // All Tags related general and admin routes
 Route::group(['prefix' => 'admin'], function () {
     Route::resource('users', 'UserController');

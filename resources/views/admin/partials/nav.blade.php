@@ -41,6 +41,11 @@
                             </a>
                         </li>
                         <li>
+                            <a class="pl-8 py-6 xl:py-2 flex bg-white hover:text-teal text-grey-darker no-underline font-hairline active" href="/admin/modules">
+                                 Modules
+                            </a>
+                        </li>
+                        <li>
                             <span class="hidden p-6 pb-2 xl:flex bg-white text-grey-dark font-bold text-xs uppercase">User Management</span>
                         </li>
                         <li>

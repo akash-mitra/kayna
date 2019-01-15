@@ -6396,6 +6396,11 @@ table {
   background: url("/svg/photo.svg") center no-repeat !important;
 }
 
+.heroicon {
+  position: relative;
+  top: 5px;
+}
+
 @media (min-width: 576px) {
   .sm\:list-reset {
     list-style: none;

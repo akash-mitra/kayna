@@ -1,23 +1,21 @@
 <?php
-
+use App\Module;
 use App\ContentTypeTemplate;
 
-function getApplicableModulesFor($position)
+/**
+ * Returns an array containing the names of modules
+ * that are available under given position name
+ *
+ * @param String $position
+ * @return array
+ */
+function getModulesforPosition($position)
 {
-    class Module
-    {
-        public $view;
-        public $script;
-
-        public function __construct($module)
-        {
-            $this->view = 'modules.' . $module;
-            $this->script = $module . '.js';
-        }
-    }
-
-    return [new Module('mod2'), new Module('mod1')];
+    //TODO cache
+    return Module::at($position);
 }
+
+
 
 function getTemplate($contentType)
 {

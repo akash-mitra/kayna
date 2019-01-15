@@ -67,8 +67,10 @@
 }
 
 .trix-button--icon--attach {
-        
-
 	background: url('/svg/photo.svg') center no-repeat !important;
+}
 
+.heroicon {
+        position: relative;
+        top: 5px;
 }
