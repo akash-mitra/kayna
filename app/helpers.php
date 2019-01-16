@@ -1,7 +1,22 @@
 <?php
+
 use App\Module;
 use App\ContentTypeTemplate;
+use Illuminate\Support\Facades\Cache;
 
+
+/**
+ * Retrieves the value of the key from parameter table
+ *
+ * @param String $key
+ * @return String
+ */
+function get_param(String $key)
+{
+    return Cache::rememberForever($key, function () use ($key) {
+        return DB::table('parameters')->where('key', $key)->first()->value;
+    });
+}
 /**
  * Returns an array containing the names of modules
  * that are available under given position name

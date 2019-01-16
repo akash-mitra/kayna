@@ -18,21 +18,21 @@
 @section('main')
         
         <div class="w-full bg-white shadow">
-                <table class="w-full text-left text-sm text-grey-darker border-collapse">
-                        <thead class="bg-grey-lighter uppercase border-b">
+                <table class="w-full text-left table-collapse">
+                        <thead class="uppercase text-xs font-semibold text-grey-darker border-b-2">
                                 <tr>
-                                        <th class="py-2 px-6 font-semibold">Content Type</th>
-                                        <th class="py-2 px-6 font-semibold">Template</th>
-                                        <th class="py-2 px-6 font-semibold">Updated</th>
+                                        <th class="p-4">Content Type</th>
+                                        <th class="p-4">Choose Template</th>
+                                        <th class="p-4">Last Updated</th>
                                 </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="align-baseline">
                                 <tr v-for="ct in ctt" 
                                     class="border-b border-blue-lightest">
-                                        <td class="py-2 px-6" v-text="ct.type"></td>
-                                        <td class="py-2 px-6">
+                                        <td class="px-4 py-2 border-t border-grey-light text-purple-dark whitespace-no-wrap" v-text="ct.type.charAt(0).toUpperCase() + ct.type.slice(1)"></td>
+                                        <td class="px-4 py-2 border-t border-grey-light whitespace-no-wrap">
                                                 <div class="inline-block relative w-64">
-                                                        <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                                                        <select class="block appearance-none w-full text-blue bg-grey-lighter rounded-lg px-4 py-2 pr-8 leading-tight focus:outline-none"
                                                             v-model="ct.template_id" 
                                                             v-on:change="save(ct)">
                                                                 <option disabled value="0">Please select one</option>
@@ -45,7 +45,7 @@
                                                         </div>
                                                 </div>
                                         </td>
-                                        <td class="py-2 px-6" v-text="ct.updated_at"></td>
+                                        <td class="px-4 py-2 border-t border-grey-light font-mono text-sm whitespace-no-wrap" v-text="ct.ago"></td>
                                 </tr>
                         </tbody>
                 </table>
@@ -73,9 +73,9 @@
                                 axios.post('/admin/content-types/' + ct.id, ct)
 
                                         .then(function (response) {
-                                                ct.updated_at = 'Saved Successfully!'
+                                                ct.ago = 'Saved Successfully!'
                                                 setTimeout(() => {
-                                                ct.updated_at = response.data.updated_at  
+                                                        ct.ago = response.data.ago
                                                 }, 2000);
                                         })
                                         

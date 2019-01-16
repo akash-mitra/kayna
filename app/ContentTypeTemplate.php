@@ -8,6 +8,8 @@ class ContentTypeTemplate extends Model
 {
     protected $fillable = ['type', 'template_id'];
 
+    protected $appends = ['ago'];
+
     /**
      * Get the template associated with the template type
      *
@@ -27,5 +29,11 @@ class ContentTypeTemplate extends Model
     public static function for(string $type)
     {
         return static::with('template')->where('type', $type)->firstOrFail()->template->body;
+    }
+
+
+    public function getAgoAttribute()
+    {
+        return $this->updated_at->diffForHumans();
     }
 }

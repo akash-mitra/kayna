@@ -17,38 +17,40 @@
 
 @section('main')
         
-        <div class="pt-4 flex justify-between">
-                <div class="flex w-4/5 md:w-1/3">  
+        <div class="pt-4 flex justify-end">
+                <!-- <div class="flex w-4/5 md:w-1/3">  
                         
                         <input type="text" value="{{ $query }}" id="txtSearch" class="p-2 w-full text-sm bg-white border-l border-t border-b" placeholder="Search...">
                         <button class="border p-2 text-sm" id="btnSearch">Go</button>        
 
-                </div>
+                </div> -->
 
-                <button id="btnNew" class="border border-teal px-2 py-1 rounded text-sm bg-teal hover:bg-orange hover:border-orange text-white shadow">
+                <button id="btnNew" class="border border-teal px-2 py-2 rounded text-sm bg-teal hover:bg-orange hover:border-orange text-white shadow">
                         New Template
                 </button>
         </div>
 
         <div class="w-full mt-8 bg-white shadow">
-                <table class="w-full text-left text-sm text-grey-darker border-collapse">
-                        <thead class="bg-grey-lighter uppercase border-b">
+                <table class="w-full text-left table-collapse">
+                        <thead class="uppercase text-xs font-semibold text-grey-darker border-b-2">
                                 <tr>
-                                        <th class="py-2 px-6 font-semibold">#</th>
-                                        <th class="py-2 px-6 font-semibold">Name</th>
-                                        <th class="py-2 px-6 font-semibold">Created</th>
+                                        <th class="p-4">#</th>
+                                        <th class="p-4">Name</th>
+                                        <th class="p-4">Used In</th>
+                                        <th class="p-4">Created</th>
                                 </tr>
                         </thead>
-                        <tbody>
-                                @foreach($templates as $item)
+                        <tbody class="align-baseline">
+                                @foreach($templates as $template)
                                         <tr class="hover:bg-grey-lightest hover:shadow-inner cursor-pointer border-b border-blue-lightest">
-                                                <td class="py-2 px-6">{{ $loop->iteration }}</td>
-                                                <td class="py-2 px-6">
-                                                        <a href="{{ route('templates.show', $item->id)}}" class="no-underline text-blue">
-                                                                {{ $item->name }}
+                                                <td class="px-4 py-2 border-t border-grey-light whitespace-no-wrap text-sm">{{ $loop->iteration }}</td>
+                                                <td class="px-4 py-2 border-t border-grey-light whitespace-no-wrap">
+                                                        <a href="{{ route('templates.show', $template->id)}}" class="no-underline text-blue">
+                                                                {{ $template->name }}
                                                         </a>
                                                 </td>
-                                                <td class="py-2 px-6">{{ $item->created_at->diffForHumans() }}</td>
+                                                <td class="px-4 py-2 border-t border-grey-light font-mono text-purple-dark whitespace-no-wrap text-sm">{!! implode(", ", $template->used_in) !!}</td>
+                                                <td class="px-4 py-2 border-t border-grey-light whitespace-no-wrap text-sm">{{ $template->created_at->diffForHumans() }}</td>
                                         </tr>
                                 @endforeach
                         </tbody>
@@ -70,9 +72,9 @@
 @section('script')
 
         <script>
-                document.getElementById('btnSearch').onclick = function () {
-                        location.href = '{{ route('templates.index') }}' + '?q=' + document.getElementById('txtSearch').value 
-                }
+                // document.getElementById('btnSearch').onclick = function () {
+                //         location.href = '{{ route('templates.index') }}' + '?q=' + document.getElementById('txtSearch').value 
+                // }
 
                 document.getElementById('btnNew').onclick = function () {
                         this.disabled = true;

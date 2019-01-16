@@ -24,11 +24,10 @@ class PageController extends Controller
      */
     public function index()
     {
-        return view('admin.pages.index')
-            ->with('pages',
-                    Page::with('author')
+        $pages = Page::with(['author', 'category'])
                     ->orderBy('updated_at', 'desc')
-                    ->get());
+                    ->get();
+        return view('admin.pages.index', compact('pages'));
     }
 
     /**

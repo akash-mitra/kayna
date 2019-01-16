@@ -44,19 +44,29 @@
                                                 <button @click="deletePage(page.id)" class="mb-4 cursor-pointer text-blue no-underline">Delete</button>
                                         </td>
                                         <td class="py-2 px-4 max-w-xs bg-white text-sm">
+                                                
+                                                <p v-text="page.category.name + ' / '" class="text-grey text-sm mb-2"></p>
+                                                
                                                 <a v-bind:href="page.url" class="no-underline text-blue text-sm font-medium">
                                                         <span v-text="page.title"></span>
                                                 </a>
                                                 <p class="py-2 text-sm" v-text="page.summary"></p>
-                                                <div class="py-2 flex text-grey-dark italic">
+                                                <div class="mb-1 flex text-grey-dark italic justify-between">
                                                         <div>
-                                                                Created by 
+                                                                <svg viewBox="0 0 24 24"  class="heroicon h-5 w-5 fill-current text-grey" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                                        <path d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm9 11a1 1 0 0 1-2 0v-2a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v2a1 1 0 0 1-2 0v-2a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v2z"></path>
+						                </svg>
+                                                                
                                                                 <a v-bind:href="page.author.url" class="no-underline text-blue-light">
                                                                         <span class="" v-text="page.author.name"></span>
                                                                 </a>
                                                         </div>
                                                         <div>
-                                                                , Updated: <span class="" v-text="page.ago"></span>.
+                                                                <svg viewBox="0 0 24 24"  class="heroicon h-5 w-5 fill-current text-grey" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                                        <path d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm1-8.41l2.54 2.53a1 1 0 0 1-1.42 1.42L11.3 12.7A1 1 0 0 1 11 12V8a1 1 0 0 1 2 0v3.59z"></path>
+                                                                </svg>
+                                                                Updated 
+                                                                <span class="" v-text="page.ago"></span>.
                                                         </div>
                                                 </div>
                                         </td>

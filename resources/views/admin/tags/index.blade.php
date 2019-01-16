@@ -40,7 +40,7 @@
                         <tbody class="align-baseline">
                                 <tr v-for="tag in filter_tags">
                                         
-                                        <td class="px-4 py-2 border-t border-grey-light text-puqrple-dark whitespace-no-wrap">
+                                        <td class="px-4 py-2 border-t border-grey-light whitespace-no-wrap">
 
                                                 <p class="py-1 text-sm font-semibold" v-text="tag.name"></p>
                                                 <p class="text-xs text-grey-darker" v-text="tag.description"></p>
