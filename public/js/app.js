@@ -17561,7 +17561,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             body: this.message,
-            color: 'teal',
+            type: 'success',
             show: false
         };
     },
@@ -17582,7 +17582,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         flash: function flash(data) {
             if (data) {
                 this.body = data.message;
-                this.level = data.level;
+                this.type = data.type;
             }
 
             this.show = true;
@@ -17595,6 +17595,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             setTimeout(function () {
                 _this2.show = false;
             }, 3000);
+        }
+    },
+
+    computed: {
+        color: function color() {
+            if (this.type === 'warning') return 'orange';
+            if (this.type === 'error') return 'red';
+            return 'teal';
         }
     }
 });
@@ -17614,13 +17622,13 @@ var render = function() {
         { name: "show", rawName: "v-show", value: _vm.show, expression: "show" }
       ],
       staticClass:
-        "w-1/3 md:w-1/3 lg:w-1/4 text-sm shadow-md border alert-position",
+        "w-1/3 md:w-1/3 lg:w-1/4 text-sm shadow-md border rounded-lg p-2 alert-position",
       class:
         "border-" +
         _vm.color +
         " text-" +
         _vm.color +
-        " bg-" +
+        "-dark bg-" +
         _vm.color +
         "-lightest",
       attrs: { role: "alert" }

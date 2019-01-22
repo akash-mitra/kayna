@@ -69,9 +69,7 @@
                             </a>
                         </li>
                         
-                        <li>
-                            <span class="hidden p-6 pb-2 xl:flex bg-white text-grey-dark font-bold text-xs uppercase">Relationship</span>
-                        </li>
+                        
                         <li>
                             <a class="pl-8 py-6 xl:py-2 flex bg-white hover:text-teal text-grey-darker no-underline font-hairline" href="#">
                                  Mailing List
@@ -79,39 +77,24 @@
                         </li>
                         <li>
                             <a class="pl-8 py-6 xl:py-2 flex bg-white hover:text-teal text-grey-darker no-underline font-hairline" href="#">
-                                 Facebook
-                            </a>
-                        </li>
-                        <li>
-                            <a class="pl-8 py-6 xl:py-2 flex bg-white hover:text-teal text-grey-darker no-underline font-hairline" href="#">
-                                Twitter
+                                 Social Engagement
                             </a>
                         </li>
 
-
-                        <li>
-                            <span class="hidden p-6 pb-2 xl:flex bg-white text-grey-dark font-bold text-xs uppercase">Analytics</span>
-                        </li>
-
+                        
 
                         <li>
                             <span class="hidden p-6 pb-2 xl:flex bg-white text-grey-dark font-bold text-xs uppercase">Server Management</span>
                         </li>
+
+
                         <li>
-                            <a class="pl-8 py-6 xl:py-2 flex bg-white hover:text-teal text-grey-darker no-underline font-hairline" href="#">
-                                CDN
+                            <a href="/admin/settings" 
+                            class="pl-8 py-6 xl:py-2 flex bg-white hover:text-teal text-grey-darker no-underline font-hairline">
+                                Settings
                             </a>
                         </li>
-                        <li>
-                            <a class="pl-8 py-6 xl:py-2 flex bg-white hover:text-teal text-grey-darker no-underline font-hairline" href="#">
-                                Storage
-                            </a>
-                        </li>
-                        <li>
-                            <a class="pl-8 py-6 xl:py-2 flex bg-white hover:text-teal text-grey-darker no-underline font-hairline" href="#">
-                                Ads
-                            </a>
-                        </li>
+                        
                         <li>
                             <p>&nbsp;</p>
                         </li>

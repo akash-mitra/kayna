@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'type', 'avatar'
     ];
 
     /**
@@ -36,6 +36,38 @@ class User extends Authenticatable
     public function publications ()
     {
         return $this->hasMany(Page::class);
+    }
+
+    public function providers ($provider = null)
+    {
+        if (empty($provider)) {
+            return $this->hasMany(AuthProvider::class);
+        }
+        else {
+            return $this->hasOne(AuthProvider::class)->where('provider', $provider);
+        }
+    }
+
+
+    public function createOrUpdateProvider(String $provider, $providerUser)
+    {
+        $authProvider = $this->providers($provider)->first();
+
+        if (empty($authProvider)) {
+            $this->providers()->create([
+                'provider' => $provider,
+                'provider_user_id' => $providerUser->getId(),
+                'avatar' => $providerUser->getAvatar()
+            ]);
+        }
+        else {
+            $authProvider->avatar = $providerUser->getAvatar();
+            $authProvider->save();
+        }
+
+        $this->avatar = $providerUser->getAvatar();
+
+        return $this->save();
     }
 
 

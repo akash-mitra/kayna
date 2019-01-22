@@ -17,6 +17,13 @@ function get_param(String $key)
         return DB::table('parameters')->where('key', $key)->first()->value;
     });
 }
+
+function param(String $key)
+{
+    return get_param($key);
+}
+
+
 /**
  * Returns an array containing the names of modules
  * that are available under given position name
