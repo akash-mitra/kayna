@@ -63,10 +63,10 @@
                         @if (Route::has('login'))
                             <div class="top-right links">
                                 @auth
-                                    <form method="post" action="/logout">
-                                        @csrf
-                                        <button class="no-underline text-blue-dark p-2 hover:shadow rounded">Logout</button>
-                                    </form>
+                                    <a href="{{ route('profile', Auth::user()->slug) }}" class="no-underline">
+                                        <img class="w-10 h-10 rounded-full mr-4" src="{{ Auth::user()->avatar }}" alt="User Avatar">
+                                    </a>
+                                    
                                 @else
                                     <a class="no-underline text-blue-dark p-2 hover:shadow rounded" href="{{ route('login') }}">Login</a>
                                     <a class="no-underline text-blue-dark p-2 hover:shadow rounded" href="{{ route('register') }}">Register</a>

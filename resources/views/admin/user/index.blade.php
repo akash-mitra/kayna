@@ -40,18 +40,21 @@
                         <tbody class="align-baseline">
                                 <tr v-for="user in users">
                                         
-                                        <td class="px-4 py-2 border-t border-grey-light text-puqrple-dark whitespace-no-wrap">
-
+                                        <td class="px-4 py-2 flex items-center flex-no-wrap border-t border-grey-light text-puqrple-dark whitespace-no-wrap">
+                                                <a :href="user.url" class="no-underline">
+                                                        <img v-if="user.avatar" v-bind:src="user.avatar" class="w-8 h-8 rounded-full mr-4">
+                                                        <svg v-if="!user.avatar" class="w-8 h-8 rounded-full border mr-4 fill-current text-grey-lighter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path class="heroicon-ui" d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm9 11a1 1 0 0 1-2 0v-2a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v2a1 1 0 0 1-2 0v-2a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v2z"/></svg>
+                                                </a>
                                                 <p class="py-1 text-sm font-semibold" v-text="user.name"></p>
                                                 
                                                 
                                         </td>
-                                        <td class="px-4 py-2 border-t border-grey-light font-mono text-xs text-purple-dark whitespace-no-wrap">
+                                        <td class="px-4 py-2 align-middle border-t border-grey-light font-mono text-xs text-purple-dark whitespace-no-wrap">
                                                 <p class="text-xs text-grey-darker" v-text="user.email"></p>
                                         </td>
-                                        <td class="px-4 py-2 border-t border-grey-light font-mono text-xs text-purple-dark whitespace-no-wrap" v-text="user.ago">
+                                        <td class="px-4 py-2 align-middle border-t border-grey-light font-mono text-xs text-purple-dark whitespace-no-wrap" v-text="user.ago">
                                         </td>
-                                        <td class="px-4 py-2 border-t border-grey-light font-mono text-sm whitespace-no-wrap">
+                                        <td class="px-4 py-2 align-middle border-t border-grey-light font-mono text-sm whitespace-no-wrap">
                                                 <a v-bind:href="editUser(user.id)" class="mb-1 cursor-pointer text-blue no-underline">
                                                         <svg viewBox="0 0 20 20" class="fill-current h-3 w-3 text-blue-light" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                                                 <path d="M12.2928932,3.70710678 L0,16 L0,20 L4,20 L16.2928932,7.70710678 L12.2928932,3.70710678 Z M13.7071068,2.29289322 L16,0 L20,4 L17.7071068,6.29289322 L13.7071068,2.29289322 Z" id="Combined-Shape"></path>
@@ -85,7 +88,6 @@
                 },
 
                 computed: {
-
 
                 },
 

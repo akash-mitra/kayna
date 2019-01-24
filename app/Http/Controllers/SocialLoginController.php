@@ -31,6 +31,7 @@ class SocialLoginController extends Controller
         }
 
         $authenticatedUser = $this->getAuthenticatedUser($provider);
+        $this->abortIfInfoMissing($authenticatedUser);
         $existingUser = $this->authenticatedUserExisting($authenticatedUser);
 
         if ($existingUser) {
@@ -83,6 +84,23 @@ class SocialLoginController extends Controller
     private function authenticatedUserExisting($authenticatedUser)
     {
         return User::where('email', $authenticatedUser->getEmail())->first();
+    }
+
+
+    /**
+     * Checks the authenticated user returned from the 
+     * social provider to make sure all the mandatory
+     * information are present
+     *
+     * @param  object $authenticatedUser
+     * @return void
+     */
+    private function abortIfInfoMissing($authenticatedUser)
+    {
+        if (empty($authenticatedUser->getEmail()) 
+            || empty($authenticatedUser->getName()) 
+            || empty($authenticatedUser->getAvatar()))
+            abort (406, "Must provide name, email and profile picture");
     }
 
     private function makeDriver($provider)

@@ -27,17 +27,17 @@ Route::group(['prefix' => 'admin'], function () {
 Route::get('/tags/{tag}/{slug?}', 'TagController@show');
 Route::get('/api/tags', 'TagController@apiIndex')->name('api.tags.index');
 Route::group(['prefix' => 'admin'], function () {
-    Route::resource('tags', 'TagController')->except(['show']);
+    Route::resource('tags', 'TagController')->except(['show'])->middleware('admin');
 });
 
 // all modules related routes
 Route::group(['prefix' => 'admin'], function () {
-    Route::resource('modules', 'ModuleController');
+    Route::resource('modules', 'ModuleController')->middleware('admin');
 });
 
 // All Tags related general and admin routes
 Route::group(['prefix' => 'admin'], function () {
-    Route::resource('users', 'UserController');
+    Route::resource('users', 'UserController')->middleware('admin');
 });
 
 // Route::get('/page/{id}/{slug}', function () {
@@ -50,9 +50,7 @@ Route::group(['prefix' => 'admin'], function () {
 //     return compiledView('page', $page);
 // });
 
-Route::get('/profile/{id}/{slug}', function () {
-    return null;
-});
+Route::get('/profile/{slug}', 'ProfileController@show')->name('profile');
 
 Route::get('/admin', function () {return view('admin.home');});
 
@@ -69,13 +67,11 @@ Route::post('/admin/content-types/{contentTypeTemplate}', 'ContentTypeController
 Route::get('/admin/settings', 'SettingController@index')->middleware('admin');
 Route::patch('/admin/settings', 'SettingController@update')->middleware('admin');
 
-
 /**
  * Authentication related routes
  */
 Auth::routes();
 Route::get('/social/login/{provider}', 'SocialLoginController@provider')->name('social.login');
 Route::get('/social/login/{provider}/callback', 'SocialLoginController@callback');
-
 
 Route::get('/home', 'HomeController@index')->name('home');

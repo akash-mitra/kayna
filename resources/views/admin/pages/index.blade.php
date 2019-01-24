@@ -52,10 +52,11 @@
                                                 </a>
                                                 <p class="py-2 text-sm" v-text="page.summary"></p>
                                                 <div class="mb-1 flex text-grey-dark italic justify-between">
-                                                        <div>
-                                                                <svg viewBox="0 0 24 24"  class="heroicon h-5 w-5 fill-current text-grey" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                                        <path d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm9 11a1 1 0 0 1-2 0v-2a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v2a1 1 0 0 1-2 0v-2a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v2z"></path>
-						                </svg>
+                                                        <div class="flex items-center">
+                                                                <a :href="page.author.url" class="no-underline">
+                                                                        <img v-if="page.author.avatar" v-bind:src="page.author.avatar" class="w-8 h-8 rounded-full mr-4">
+                                                                        <svg v-if="!page.author.avatar" class="w-8 h-8 rounded-full border mr-4 fill-current text-grey-lighter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path class="heroicon-ui" d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm9 11a1 1 0 0 1-2 0v-2a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v2a1 1 0 0 1-2 0v-2a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v2z"/></svg>
+                                                                </a>
                                                                 
                                                                 <a v-bind:href="page.author.url" class="no-underline text-blue-light">
                                                                         <span class="" v-text="page.author.name"></span>
@@ -65,7 +66,7 @@
                                                                 <svg viewBox="0 0 24 24"  class="heroicon h-5 w-5 fill-current text-grey" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                                                         <path d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm1-8.41l2.54 2.53a1 1 0 0 1-1.42 1.42L11.3 12.7A1 1 0 0 1 11 12V8a1 1 0 0 1 2 0v3.59z"></path>
                                                                 </svg>
-                                                                Updated 
+                                                                 
                                                                 <span class="" v-text="page.ago"></span>.
                                                         </div>
                                                 </div>

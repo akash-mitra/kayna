@@ -70,16 +70,25 @@
                                         </div>
                                 </div>
                                 <div class="mt-6 text-grey-dark"> 
-                                        App Secret
-                                        <input v-model="login_facebook_app_secret" 
+                                        <div>
+                                        Client ID
+                                        <input v-model="login_facebook_client_id" 
                                                 @change="change('loginFBStateClass')"
                                                 type="text" 
                                                 class="w-full my-2 p-2 border rounded font-mono bg-grey-lightest hover:bg-white" />
+                                        </div>
+                                        <div>
+                                        App Secret
+                                        <input v-model="login_facebook_client_secret" 
+                                                @change="change('loginFBStateClass')"
+                                                type="text" 
+                                                class="w-full my-2 p-2 border rounded font-mono bg-grey-lightest hover:bg-white" />
+                                        </div>
 
                                 </div>
 
                                 <div class="mt-2"> 
-                                        <button @click="save('loginFBStateClass', ['login_facebook_active', 'login_facebook_app_secret'])" :class="loginFBStateClass"  class="px-4 py-2 rounded text-white">Save</button>
+                                        <button @click="save('loginFBStateClass', ['login_facebook_active', 'login_facebook_client_secret', 'login_facebook_client_id'])" :class="loginFBStateClass"  class="px-4 py-2 rounded text-white">Save</button>
 
                                 </div>
                         </div>
@@ -106,16 +115,25 @@
                                         </div>
                                 </div>
                                 <div class="mt-6 text-grey-dark"> 
-                                        App Secret
-                                        <input v-model="login_google_app_secret" 
+                                        <div>
+                                        Client ID
+                                        <input v-model="login_google_client_id" 
                                                 @change="change('loginGoogleStateClass')"
                                                 type="text" 
                                                 class="w-full my-2 p-2 border rounded font-mono bg-grey-lightest hover:bg-white" />
+                                        </div>
+                                        <div>
+                                        App Secret
+                                        <input v-model="login_google_client_secret" 
+                                                @change="change('loginGoogleStateClass')"
+                                                type="text" 
+                                                class="w-full my-2 p-2 border rounded font-mono bg-grey-lightest hover:bg-white" />
+                                        </div>
 
                                 </div>
 
                                 <div class="mt-2"> 
-                                        <button @click="save('loginGoogleStateClass', ['login_google_active', 'login_google_app_secret'])" :class="loginGoogleStateClass"  class="px-4 py-2 rounded text-white">Save</button>
+                                        <button @click="save('loginGoogleStateClass', ['login_google_active', 'login_google_client_secret', 'login_google_client_id'])" :class="loginGoogleStateClass"  class="px-4 py-2 rounded text-white">Save</button>
 
                                 </div>
                         </div>

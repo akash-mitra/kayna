@@ -1,9 +1,8 @@
 <?php
 
 namespace App;
-use App\Page;
+
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -11,14 +10,14 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $appends = ['url', 'ago'];
-    
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'type', 'avatar'
+        'name', 'email', 'password', 'type', 'avatar', 'slug'
     ];
 
     /**
@@ -30,24 +29,24 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-
-    
-
-    public function publications ()
+    public function publications()
     {
         return $this->hasMany(Page::class);
     }
 
-    public function providers ($provider = null)
+    public function providers($provider = null)
     {
         if (empty($provider)) {
             return $this->hasMany(AuthProvider::class);
-        }
-        else {
+        } else {
             return $this->hasOne(AuthProvider::class)->where('provider', $provider);
         }
     }
 
+    public static function findOrFailBySlug($slug)
+    {
+        return static::where('slug', $slug)->first();
+    }
 
     public function createOrUpdateProvider(String $provider, $providerUser)
     {
@@ -59,8 +58,7 @@ class User extends Authenticatable
                 'provider_user_id' => $providerUser->getId(),
                 'avatar' => $providerUser->getAvatar()
             ]);
-        }
-        else {
+        } else {
             $authProvider->avatar = $providerUser->getAvatar();
             $authProvider->save();
         }
@@ -70,10 +68,9 @@ class User extends Authenticatable
         return $this->save();
     }
 
-
     public function getUrlAttribute()
     {
-        return url('/admin/users/' . $this->id);
+        return url('/profile/' . $this->slug);
     }
 
     public function getAgoAttribute()

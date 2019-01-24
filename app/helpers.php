@@ -3,6 +3,7 @@
 use App\Module;
 use App\ContentTypeTemplate;
 use Illuminate\Support\Facades\Cache;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
 
 
 /**
