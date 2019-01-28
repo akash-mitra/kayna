@@ -18,12 +18,9 @@
 @section('main')
         
         <div class="pt-4 flex justify-end">
-                <!-- <div class="flex w-4/5 md:w-1/3">  
-                        
-                        <input type="text" value="{{ $query }}" id="txtSearch" class="p-2 w-full text-sm bg-white border-l border-t border-b" placeholder="Search...">
-                        <button class="border p-2 text-sm" id="btnSearch">Go</button>        
-
-                </div> -->
+                <a href="/admin/content-types" class="no-underline border border-teal px-4 py-2 rounded text-sm  hover:bg-teal hover:text-white text-teal mr-2">
+                        Template Assignments
+                </a>
 
                 <button id="btnNew" class="border border-teal px-2 py-2 rounded text-sm bg-teal hover:bg-orange hover:border-orange text-white shadow">
                         New Template

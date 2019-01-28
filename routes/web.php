@@ -12,6 +12,8 @@
 
 // All Page related general and admin routes
 Route::get('/pages/{page}/{slug?}', 'PageController@show');
+Route::get('/api/pages', 'PageController@apiIndex')->name('api.pages.index');
+Route::get('/api/pages/{page}', 'PageController@apiGet')->name('api.pages.get');
 Route::group(['prefix' => 'admin'], function () {
     Route::resource('pages', 'PageController')->except(['show']);
 });
@@ -19,6 +21,7 @@ Route::group(['prefix' => 'admin'], function () {
 // All Categories related general and admin routes
 Route::get('/categories/{category}/{slug?}', 'CategoryController@show');
 Route::get('/api/categories', 'CategoryController@apiIndex')->name('api.categories.index');
+Route::get('/api/categories/{category}', 'CategoryController@apiGet')->name('api.categories.get');
 Route::group(['prefix' => 'admin'], function () {
     Route::resource('categories', 'CategoryController')->except(['show']);
 });
@@ -62,6 +65,11 @@ Route::get('/admin/templates/{template}', 'TemplateController@show')->name('temp
 Route::post('/admin/templates', 'TemplateController@store')->name('templates.store')->middleware('admin');
 Route::patch('/admin/templates/{template}', 'TemplateController@update')->name('templates.update')->middleware('admin');
 
+Route::get('/admin/accesses', 'RestrictionController@index')->name('accesses.index')->middleware('admin');
+Route::post('/admin/accesses/store', 'RestrictionController@createOrUpdate')->name('accesses.createOrUpdate')->middleware('admin');
+// Route::resource('/admin/accesses', 'RestrictionController')->only(['index', 'store'])->middleware('admin');
+
+
 Route::get('/admin/content-types', 'ContentTypeController@index')->name('content-types.index')->middleware('admin');
 Route::post('/admin/content-types/{contentTypeTemplate}', 'ContentTypeController@update')->name('content-types.update')->middleware('admin');
 Route::get('/admin/settings', 'SettingController@index')->middleware('admin');
@@ -74,4 +82,7 @@ Auth::routes();
 Route::get('/social/login/{provider}', 'SocialLoginController@provider')->name('social.login');
 Route::get('/social/login/{provider}/callback', 'SocialLoginController@callback');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('home');
+
+Route::post('/api/search', 'SearchController@search')->name('search');
+

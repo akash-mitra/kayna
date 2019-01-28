@@ -31,8 +31,8 @@
                             </a>
                         </li>
                         <li>
-                            <a class="pl-8 py-6 xl:py-2 flex bg-white hover:text-teal text-grey-darker no-underline font-hairline active" href="/admin/content-types">
-                                 Content Type
+                            <a class="pl-8 py-6 xl:py-2 flex bg-white hover:text-teal text-grey-darker no-underline font-hairline active" href="/admin/accesses">
+                                 Access
                             </a>
                         </li>
                         <li>

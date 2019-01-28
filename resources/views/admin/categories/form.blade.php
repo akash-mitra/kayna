@@ -24,10 +24,11 @@
 
 @section('main')
         
+<form action="{{ route('categories.store') }}" method="POST" id="frm">
+        @csrf
 
-        <div class="w-full md:w-4/5 lg:w-3/5  p-6 bg-white shadow bordesr rounded-lg">
-                <form action="{{ route('categories.store') }}" method="POST" id="frm">
-                        @csrf
+        <div class="w-full md:w-4/5 lg:w-3/5  p-6 bg-white shadow rounded-lg">
+                        
                         <div class="flex flex-wrap -mx-3 mb-6">
                                 <div class="w-full px-3">
                                         <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="name">
@@ -67,16 +68,17 @@
                                         <textarea v-model="description" name="description" class="appearance-none block w-full h-32 bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey" id="txtCategory"  placeholder="e.g. Movies I have watched this summer..."></textarea>
                                 </div>
                         </div>
-                </form>
+                
 
                 <div class="flex items-center">
-                        <button class="border border-teal px-8 py-2 rounded text-sm bg-teal text-white shadow" 
+                        <button type="button" 
+                                class="border border-teal px-8 py-2 rounded text-sm bg-teal text-white shadow" 
                                 @click="confirm">
                                 Save                                
                         </button>
                 </div>
         </div>
-
+</form>
         
 
         

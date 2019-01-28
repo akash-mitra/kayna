@@ -33,8 +33,8 @@
                                 <tr>
                                         <th class="p-4">Name</th>
                                         <th class="p-4">Email</th>
-                                        <th class="p-4">Created</th>
-                                        <th class="p-4">Actions</th>
+                                        <th class="p-4">Joined</th>
+                                        <th class="p-4"></th>
                                 </tr>
                         </thead>
                         <tbody class="align-baseline">

@@ -28,8 +28,15 @@ class CategoryController extends Controller
 
     public function apiIndex()
     {
-        return Category::all()->paginate(10);
+        return Category::paginate(10);
     }
+
+
+    public function apiGet(Category $category)
+    {
+        return $category;
+    }
+
 
     /**
      * Show the form for creating a new resource.

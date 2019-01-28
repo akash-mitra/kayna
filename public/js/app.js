@@ -1502,6 +1502,10 @@ requireComponent.keys().forEach(function (fileName) {
     componentConfig.default || componentConfig);
 });
 
+/**
+ * Some additional handy functions
+ */
+
 /***/ }),
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {

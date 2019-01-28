@@ -46,3 +46,8 @@ requireComponent.keys().forEach(fileName => {
         componentConfig.default || componentConfig
     )
 })
+
+
+/**
+ * Some additional handy functions
+ */

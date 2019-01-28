@@ -137,4 +137,20 @@ class PageController extends Controller
                 //"page" => $page
         ];
     }
+
+
+
+    public function apiIndex()
+    {
+        return Page::paginate(10);
+        // return Page::with(['author', 'category'])
+        //     ->orderBy('updated_at', 'desc')
+        //     ->get();
+    }
+
+
+    public function apiGet(Page $page)
+    {
+        return $page;
+    }
 }

@@ -70,7 +70,20 @@
 	background: url('/svg/photo.svg') center no-repeat !important;
 }
 
+/* Heroicon styles */
+/* Below is an old class that needs to be replaced in favor of "hi-*" classes below this */
 .heroicon {
         position: relative;
         top: 5px;
 }
+
+.hi { vertical-align: text-top; fill: currentColor }
+.hi-xs { width: 0.75rem; height: 1.125rem }
+.hi-sm { width: 0.875rem; height: 1.312rem }
+.hi-base { width: 1rem; height: 1.5rem }
+.hi-lg { width: 1.125rem; height: 1.6875rem }
+.hi-xl { width: 1.25rem; height: 1.875rem }
+.hi-2xl { width: 1.5rem; height: 2.25rem }
+.hi-3xl { width: 1.875rem; height: 2.812rem }
+.hi-4xl { width: 2.25rem; height: 3.375rem }
+.hi-5xl { width: 3rem; height: 4.5rem }
