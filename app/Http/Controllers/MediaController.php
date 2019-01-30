@@ -80,10 +80,19 @@ class MediaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\media                $media
-     * @return \Illuminate\Http\Response
      */
-    public function destroy(media $media)
+    public function destroy(Request $request)
     {
+        $url = $request->input('url');
+
+        $urlArray = explode('/', $url);
+
+        // Get the filename from the url.
+        // This filename is not the original client supplied file name
+        // this is a unique filename that was generated when client
+        // first uploaded the file to the server
+        $filename = end($urlArray);
+
+        return Media::destroy($filename);
     }
 }

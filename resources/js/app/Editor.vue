@@ -76,6 +76,13 @@
 
             });
 
+
+            this.$refs.trix.addEventListener('trix-attachment-remove', e => {
+                
+                if (confirm("Delete this from the server as well?"))
+                    return this.deleteAttachment(e.attachment.attachment.attributes.values.url)
+            });
+
         },
 
         methods: {
@@ -140,6 +147,14 @@
                 }
 
                 return xhr.send(form)
+            },
+
+
+            deleteAttachment: function (url) {
+                axios.post('/media/destroy', { 'url': url })
+                .then (function (e) {
+                    console.log('Attachement media deleted from the server');
+                });
             },
 
             addUploadButton: function (e) {

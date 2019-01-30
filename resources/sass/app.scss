@@ -87,3 +87,12 @@
 .hi-3xl { width: 1.875rem; height: 2.812rem }
 .hi-4xl { width: 2.25rem; height: 3.375rem }
 .hi-5xl { width: 3rem; height: 4.5rem }
+
+
+/* Vue Transition Classes */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}

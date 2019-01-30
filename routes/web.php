@@ -57,7 +57,8 @@ Route::get('/profile/{slug}', 'ProfileController@show')->name('profile');
 
 Route::get('/admin', function () {return view('admin.home');});
 
-Route::resource('media', 'MediaController');
+Route::resource('media', 'MediaController')->except(['destroy']);
+Route::post('/media/destroy', 'MediaController@destroy')->middleware('auth');
 
 Route::get('/admin/templates', 'TemplateController@index')->name('templates.index')->middleware('admin');
 Route::get('/admin/templates/create', 'TemplateController@create')->name('templates.create')->middleware('admin');

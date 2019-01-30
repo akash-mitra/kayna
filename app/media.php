@@ -14,44 +14,49 @@ class media extends Model
     protected static $allowedExtensions = ['jpeg', 'jpg', 'png', 'bmp', 'gif'];
     protected static $maxSize = 10; //megabytes
     protected static $visibility = 'public';
-    protected static $subDirectoryPath = 'media'; // 'Media'
 
-    // Storage Type
-    protected static $storageType = 'public';
+    /**
+     * directoryPath is only applicable for cloud storage. 
+     * For example, in case of s3 this is actually the bucket name.
+     */
+    protected static $directoryPath = null; 
 
-    public static function url($storage, $fileName)
+
+    protected static $subDirectoryPath = 'media';
+    
+
+    public static function buildUrl($storage, $fileName)
     {
         if ($storage === 'public') return asset($fileName);
+        if ($storage === 's3') return 'https://'. self::$directoryPath . '.s3.amazonaws.com/'  . $fileName;
     }
 
     public static function store ($file, $name) {
         try {
-  
             $sizeInBytes = $file->getClientSize(); // bytes
             self::_checkFileError ($file, $sizeInBytes);
-  
-            self::setStorageType();
-
-            $path = Storage::disk(self::$storageType)->putFile(self::$subDirectoryPath, $file, self::$visibility);
+            $storageType = self::getStorageType();
+            
+            $path = Storage::disk($storageType)->putFile(self::$subDirectoryPath, $file, self::$visibility);
 
             $id = DB::table('media')->insertGetId([
                 
                 'name' => isset($name) ? $name : $file->getClientOriginalName(),
                 'type' => $file->guessExtension(), // $uri_detail['extension'],
                 'size' => round($sizeInBytes / 1024, 2), // killobytes
-                'path' => $path,
-                'storage' => self::$storageType,
+                'path' => empty(self::$directoryPath) ? $path : self::$directoryPath . '/' . $path,
+                'storage' => $storageType,
                 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
             ]);
 
-            return self::url(self::$storageType, $path);
+            return self::buildUrl($storageType, $path);
 
         } 
         catch (Exception $e) {
 
-            if (Storage::disk(self::$storageType)->exists($path)) {
-                Storage::disk(self::$storageType)->delete($path);
+            if (Storage::disk($storageType)->exists($path)) {
+                Storage::disk($storageType)->delete($path);
             }
             Media::where('id', $id)->delete();
             abort(500, $e->getMessage());
@@ -59,19 +64,58 @@ class media extends Model
     }
 
 
-    private static function setStorageType ()
+    public static function destroy($filename)
     {
-        // $storage = Configuration::getConfig('storage');
-        // $value = $storage['storage'];
+        $media = Media::where('path', 'like', '%' . $filename)->first();
 
-        // if ($value['type'] == 's3') {
-        //     self::$storageType = 's3';
-        //     \Config::set('filesystems.disks.s3.key', $value['key']);
-        //     \Config::set('filesystems.disks.s3.secret', $value['secret']);
-        //     \Config::set('filesystems.disks.s3.region', $value['region']);
-        //     \Config::set('filesystems.disks.s3.bucket', $value['bucket']);
-        // }
-        // return true;
+        if ($media->storage === 'public')
+            Storage::disk('public')->delete($media->path);
+
+        if ($media->storage === 's3') {
+            $path_array = explode('/', $media->path);
+            $bucket = array_shift($path_array); // gets the bucket name
+            $path = implode('/', $path_array);
+            
+            self::setS3StorageParameters(
+                param('storage_s3_key'),
+                param('storage_s3_secret'),
+                param('storage_s3_region'),
+                $bucket
+            );
+            
+            Storage::disk('s3')->delete($path);
+        }
+
+        $media->delete();
+
+        return $media;
+
+    }
+
+
+    private static function getStorageType ()
+    {
+        if (param('storage_s3_active') === 'yes') {  
+            self::setS3StorageParameters(
+                param('storage_s3_key'),
+                param('storage_s3_secret'),
+                param('storage_s3_region'),
+                param('storage_s3_bucket')
+            );
+            return 's3';
+        }
+
+        return 'public';
+    }
+
+
+    private static function setS3StorageParameters($key, $secret, $region, $bucket)
+    {
+        \Config::set('filesystems.disks.s3.key', $key);
+        \Config::set('filesystems.disks.s3.secret', $secret);
+        \Config::set('filesystems.disks.s3.region', $region);
+        \Config::set('filesystems.disks.s3.bucket', $bucket);
+        self::$directoryPath = $bucket;
     }
 
 

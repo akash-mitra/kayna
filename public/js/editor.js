@@ -811,6 +811,11 @@ __WEBPACK_IMPORTED_MODULE_0_trix___default.a.config.attachments.preview.caption 
                 return _this.uploadAttachment(attachment);
             }
         });
+
+        this.$refs.trix.addEventListener('trix-attachment-remove', function (e) {
+
+            if (confirm("Delete this from the server as well?")) return _this.deleteAttachment(e.attachment.attachment.attributes.values.url);
+        });
     },
 
 
@@ -871,6 +876,12 @@ __WEBPACK_IMPORTED_MODULE_0_trix___default.a.config.attachments.preview.caption 
             };
 
             return xhr.send(form);
+        },
+
+        deleteAttachment: function deleteAttachment(url) {
+            axios.post('/media/destroy', { 'url': url }).then(function (e) {
+                console.log('Attachement media deleted from the server');
+            });
         },
 
         addUploadButton: function addUploadButton(e) {
