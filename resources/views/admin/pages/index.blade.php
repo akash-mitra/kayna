@@ -73,7 +73,7 @@
                                         </td>
                                         <td class="flex p-4 text-sm">
                                                 <div class="italic text-grey-dark">
-                                                        <span class="font-medium text-blue font-mono" v-text="page.title.length"></span> Comments
+                                                        <span class="font-medium text-blue font-mono" v-text="page.comments.length"></span> Comments
                                                 </div>
                                         </td>
                                         

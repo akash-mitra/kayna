@@ -1,4 +1,4 @@
-@extends('admin.layout')
+@extends('layouts.pageform')
 
 @section('css')
 
@@ -17,7 +17,7 @@
 
 @section('main')
 
-<div class="w-full max-w-lg mx-auto flex justify-between border-b shadow -mt-12 p-4 bg-white">
+<!-- <div class="w-full max-w-lg mx-auto flex justify-between -mt-12 p-4">
         <button class="p-2 rounded text-teal hover:text-white hover:bg-teal" 
                 v-on:click="showSummary">
                 Page Information
@@ -25,35 +25,40 @@
 
         <button class="p-2 rounded text-white bg-teal hover:text-white hover:bg-teal-dark" 
                 v-on:click="confirm">Save</button>
-</div>
+</div> -->
 
-<div class="w-full max-w-lg mx-auto p-4 bg-white shadow">
+<div class="w-full max-w-lg mx-auto p-4">
 
-        <div class="m-2 inline-block relative">
-                <select class="p-2 mb-2 rounded-lg block appearance-none w-full hover:bg-grey-lightest text-sm text-blue-light pr-8 cursor-pointer leading-tight focus:outline-none focus:shqadow-outline"
-                        v-model="category.value">
-                        <option :value="0" selected='selected'>Uncategorised</option>
-                        <option v-for="c in categories" v-bind:value="c.id">
-                                @{{ c.name }}
-                        </option>
-                </select>
-                <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
-                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+        <div class="w-full flex justify-between items-center mb-4">
+                <div class="inline-block relative border rounded">
+                        <select class="p-2 rounded-lg block appearance-none w-full hover:bg-grey-lightest text-sm text-grey pr-8 cursor-pointer leading-tight focus:outline-none focus:shqadow-outline"
+                                v-model="category.value">
+                                <option :value="0" selected='selected'>Uncategorised</option>
+                                <option v-for="c in categories" v-bind:value="c.id">
+                                        @{{ c.name }}
+                                </option>
+                        </select>
+                        <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        </div>
                 </div>
+
+                <button class="m-2 py-2 px-4 rounded text-teal border border-teal hover:text-white hover:bg-teal" 
+                        v-on:click="confirm">Save</button>
         </div>
 
-        <h1 class="w-full flex flex-col px-2">
+        <h1 class="w-full flex flex-col">
                 <textarea name="title"  
                         v-model="title" 
                         placeholder="Type page title here" 
                         rows="1" 
                         @input="clearValidations"
-                        class="w-full border-b py-2 text-4xl font-light font-serif"></textarea>
+                        class="w-full border-b py-2 kayna-page-header"></textarea>
                 <!-- </span> -->
                 <ul class="-ml-5 mt-2"><li v-for="e in validations.title" v-text="e" class="text-xs font-normal text-red"></li></ul>
         </h1>
 
-        <h3 class="flex flex-col px-2 py-4 text-sm font-light text-grey-dark">
+        <h3 class="flex flex-col py-4 text-sm font-light text-grey-dark">
                 <textarea 
                         name="summary"
                         v-model="summary" 
@@ -65,12 +70,11 @@
         </h3>
         
         
-        <editor 
-                class="px-2" 
+        <editor  
                 name="body" 
                 v-model="body" 
                 :value="body" 
-                :autohide=true 
+                :autohide=false 
                 placeholder="Have your say here...">
         </editor>
         <!-- <textarea v-model="body" class="w-full"></textarea> -->

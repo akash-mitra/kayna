@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Comment;
 use Illuminate\Database\Eloquent\Model;
 
 class Page extends Model
@@ -26,6 +27,12 @@ class Page extends Model
             'name' => 'Uncategorized',
             'description' => null
         ]);
+    }
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+
     }
 
     public function tags()

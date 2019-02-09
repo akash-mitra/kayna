@@ -24,7 +24,7 @@ class PageController extends Controller
      */
     public function index()
     {
-        $pages = Page::with(['author', 'category'])
+        $pages = Page::with(['author', 'category', 'comments'])
                     ->orderBy('updated_at', 'desc')
                     ->get();
         return view('admin.pages.index', compact('pages'));

@@ -1,4 +1,5 @@
-@extends('admin.layout')
+@extends('layouts.template')
+
 
 @section('header')
 <div class="px-6 py-4">
@@ -8,51 +9,254 @@
                 </span>
         </h1>
 
-        <h3 class="p-2 text-sm font-light text-grey-dark">
+        <!-- <h3 class="p-2 text-sm font-light text-grey-dark">
                 Use blade syntax to create a new template
-        </h3>
+        </h3> -->
 </div>
         
 @endsection
 
 
 @section('main')
+<div class="w-full flex justify-between px-6 mb-2 items-center">
+        <span>Use Tailwind classes to design your template</span>
+        <div>
+                <button type="button" class="py-1 px-4 border border-teal text-teal rounded">Back</button>
+                <button type="button" class="py-1 px-4 bg-teal text-white rounded">Save</button>
+        </div>
+</div>        
+<div class="w-full flex flex-wrap">
         
-<div class="w-full p-6 bg-white shadow">
-        <form action="/admin/templates" method="POST" id="frm">
-                {{ csrf_field() }}
-                <div class="flex flex-wrap -mx-3 mb-6">
-                        <div class="w-full px-3">
-                                <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="grid-password">
-                                        Name
-                                </label>
-                                <input name="name" class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey" id="inName" type="text" placeholder="e.g. Default Forum Page">
-                                <p class="text-grey-dark text-xs italic">Provide a unique name</p>
+        <div class="w-full px-2">
+                <div v-show="selected.length > 0" 
+                        class="absolute bg-black text-white text-sm font-mono shadow-lg"
+                        id="config"
+                        >
+                        <div id="configheader" class="flex justify-between w-full p-4 border-b border-grey-darkest items-center cursor-move">
+                                <div class="font-bold">Settings</div>
+                                <svg class="w-6 h-6 fill-current text-grey-lighter cursor-pointer" @mousedown="selected=[]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path class="heroicon-ui" d="M4.93 19.07A10 10 0 1 1 19.07 4.93 10 10 0 0 1 4.93 19.07zm1.41-1.41A8 8 0 1 0 17.66 6.34 8 8 0 0 0 6.34 17.66zM13.41 12l1.42 1.41a1 1 0 1 1-1.42 1.42L12 13.4l-1.41 1.42a1 1 0 1 1-1.42-1.42L10.6 12l-1.42-1.41a1 1 0 1 1 1.42-1.42L12 10.6l1.41-1.42a1 1 0 1 1 1.42 1.42L13.4 12z"/></svg>
+                        </div>
+
+                        <div class="w-full px-4 py-2 border-b border-grey-darkest" v-if="selected.length === 1">
+                                <div>
+                                        <p>Section Class</p>
+                                        <p class="text-xs py-2 text-grey">Classes to be applied on the selected section</p>
+                                        <textarea 
+                                                class="w-full p-2 bg-grey-darkest text-white rounded"
+                                                v-model="rows[selected[0].r].cols[selected[0].c].class"
+                                        ></textarea>
+                                </div>
+                                <div class="mt-4">
+                                        <p>Load Positions</p>
+                                        <p class="text-xs py-2 text-grey">Add one or more position names separated by comma</p>
+                                        <textarea class="w-full p-2 bg-grey-darkest text-white rounded"
+                                                v-model="rows[selected[0].r].cols[selected[0].c].positions"
+                                        ></textarea>
+                                </div>
+                                
+                        </div>
+
+                        <div v-if="sameRowSelection() === true" class="w-full flex flex-no-wrap px-2 py-2 border-b border-grey-darkest max-w-sm">
+                                
+                                <div v-if="selected.length >= 1 && selected.length === rows[selected[0].r].cols.length" class="w-full m-2">
+                                        <p class="w-full pt-2">Divisions</p>
+                                        <p class="text-xs py-2 text-grey">Divisions are horizontal rows. You can add a new division below the selected cell(s) or delete the current division</p>
+                                        <div class="w-full flex">
+                                                <button @click="addRow" class="w-1/2 p-2 mr-1 bg-grey-darkest hover:bg-grey-darker text-grey text-xs" type="button">+ Add</button>
+                                                <button @click="removeRow" class="w-1/2 p-2 bg-grey-darkest hover:bg-grey-darker text-grey text-xs" type="button">- Delete</button>
+                                        </div>
+                                </div>
+
+                                <div  class="w-full m-2">
+                                        <p class="w-full pt-2">Sections</p>
+                                        <p class="text-xs py-2 text-grey">Sections are cells within division. You can add new section on right of the selected cell or delete current section</p>
+                                        <div class="w-full flex">
+                                                <button @click="addCol" class="w-1/2 p-2 mr-1 bg-grey-darkest hover:bg-grey-darker text-grey text-xs" type="button">+ Add</button>
+                                                <button @click="removeCol" class="w-1/2 p-2 bg-grey-darkest hover:bg-grey-darker text-grey text-xs" type="button">- Delete</button>
+                                        </div>
+                                </div>
+                        </div>
+
+                        <div v-if="selected.length >= 1">
+                                <div class="w-full px-4 py-2" v-if="selected.length === rows[selected[0].r].cols.length">
+                                        <p class="py-2">Division Class</p>
+                                        <textarea 
+                                                class="w-full p-2 bg-grey-darkest text-white rounded mb-2"
+                                                v-model="rows[selected[0].r].class"
+                                        ></textarea>
+                                </div>
+                        </div>
+
+                </div>
+
+
+
+                <div class="w-full checkers">
+                        <div v-for="(row, row_index) in rows" class="cursor-pointer" :class="row.class">
+                                <div    v-for="(col, col_index) in row.cols"
+                                        @click="select(row_index, col_index, $event)"
+                                        :class="col.class" 
+                                        :style="styleSelected(row_index, col_index)">
+                                        <div v-if="col.positions.length > 0" 
+                                                v-for="position in col.positions.replace(/\s/g,'').split(',')" 
+                                                class="hover:bg-grey-lighter text-green"
+                                                :class="position.split('.').slice(1).join(' ')"
+                                                >
+                                                <!-- <div>
+                                                        <label 
+                                                        class="px-2 cursor-pointer bg-purple-lighter rounded-lg text-purple hover:bg-purple hover:text-white"
+                                                        v-text="position.split('.').shift()"
+                                                        @click.stop="addData"></label>
+                                                </div>  -->
+
+                                                <module-position v-bind:name="position.split('.').shift()" v-on:click.stop.native="addData"></module-position>
+                                        </div>
+                                </div>
                         </div>
                 </div>
 
-                <div class="flex flex-wrap -mx-3 mb-6">
-                        <div class="w-full px-3">
-                                <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="grid-password">
-                                        Template 
-                                </label>
-                                <!-- <textarea name="body" class="appearance-none block w-full h-64 bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey" id="txtTemplate"  placeholder="e.g. HTML syntax"></textarea> -->
-                                <input type="hidden" name="body" id="inpBody">
-                                <div id="editor" class="appearance-none block w-full h-64  border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none"></div>
-                                <p class="text-grey-dark text-xs italic">Supports <a href="https://laravel.com/docs/master/blade">Blade</a> template</p>
-                        </div>
-                </div>
-        </form>
 
-        <button class="border border-teal px-4 py-2 rounded text-sm bg-teal text-white shadow" id="btnSave">
-                Save                                
-        </button>
+        </div>
+
+        
 </div>
-
 @endsection
 
 @section('script')
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.1/ace.js"></script>
+
+        <script>
+                let methods = {
+                        /**
+                         * Selects a specific cell based on given row and column numbers
+                         */
+                        select: function (r, c, e) 
+                        {   
+                                // if the clicked cell is already selected, then deselect it
+                                // by removing the cell from the list of selected cells
+                                let cellRemoved = this.removeFromSelection (r, c)
+
+                                // otherwise when the clicked cell is not already selected,  
+                                // select it by replacing the current selections with it or by 
+                                // adding it to the list of current selections (if shift key is pressed)
+                                if (cellRemoved === false) {
+                                        if (e.shiftKey) this.selected.push({r: r, c: c})
+                                        else this.selected = [{r: r, c: c}]
+                                }
+                        },
+
+                        // apply a light blue boder style to depict selection
+                        styleSelected: function (r, c)
+                        {
+                                if (this.isSelected(r, c)) 
+                                        return 'border: 2px #6af solid'
+                                return 'border: 1px #ddd dotted'
+                        },
+
+                        // checks if the given cell at row "r" and column "c" is already selected
+                        isSelected: function (r, c)
+                        {
+                                for (let i = 0; i < this.selected.length; i++) {
+                                        let s = this.selected[i]
+                                        if (s.r === r && s.c === c) 
+                                                return true
+                                }
+                                return false
+                        },
+
+                        // removes the cell at row "r" and column "c" from
+                        // the list of selected cells
+                        removeFromSelection: function (r, c) 
+                        {
+                                let isRemoved = false
+                                this.selected = this.selected.filter(function(s) { 
+                                        if (s.r === r && s.c === c) {
+                                                isRemoved = true
+                                                return false
+                                        }
+                                        return true
+                                })
+                                return isRemoved
+                        },
+
+                        sameRowSelection: function ()
+                        {
+                                return this.selected.every (s => s.r === this.selected[0].r)
+                        },
+
+                        sameColSelection: function ()
+                        {
+                                return this.selected.every (s => s.c === this.selected[0].c)
+                        },
+
+                        addRow: function () {
+                                let addAfterRow = this.selected[0].r
+                                let newRow = {class: 'flex', cols: [{ class: 'w-full bg-white py-4', positions: '' }]}
+                                this.rows.splice (addAfterRow+1, 0, newRow)
+                        },
+                        removeRow: function () {
+                                let rowToDelete = this.selected[0].r
+                                this.removeFromSelection(this.selected[0].r, this.selected[0].c)
+                                this.rows.splice (rowToDelete, 1)
+                        },
+                        addCol: function () {
+                                let toRow = this.selected[0].r
+                                let afterCol = this.selected[0].c
+                                this.rows[toRow].cols.splice(afterCol+1, 0, { class: 'w-1/6 bg-white py-4', positions: '' })
+                        },
+                        removeCol: function () {
+                                let fromRow = this.selected[0].r
+                                let colToDelete = this.selected[0].c
+                                this.removeFromSelection(this.selected[0].r, this.selected[0].c)
+                                this.rows[fromRow].cols.splice (colToDelete, 1)
+                        },
+                        addData: function () {
+                                console.log('checked')
+                        }
+                };
+                let data = {
+                        num_rows: 3,
+                        num_cols: 3,
+                        selected: [],
+                        rows: [
+                                {
+                                        class: 'flex',
+                                        cols: [
+                                                { class: 'w-full bg-white', positions: 'header' },
+                                        ]
+                                },
+                                {
+                                        class: 'flex',
+                                        cols: [
+                                                { class: 'hidden md:block w-1/4 bg-white', positions: 'aside' },
+                                                { class: 'w-full md:w-3/4 bg-white', positions: 'main' }
+                                        ]
+                                },
+                                {
+                                        class: 'flex',
+                                        cols: [
+                                                { class: 'w-1/3 bg-white', positions: 'left' },
+                                                { class: 'w-1/3 bg-white', positions: 'center' },
+                                                { class: 'w-1/3 bg-white', positions: 'right' },
+                                        ]
+                                }
+                        ]
+                }
+
+                Vue.component('module-position', {
+                        props: ['name'],
+                        template: '<span v-text="name" class="px-2 cursor-pointer bg-purple-lighter rounded-lg text-purple hover:bg-purple hover:text-white"></span>'
+                })
+
+                new Vue({
+                        el: 'main',
+                        data: data,
+                        methods: methods,
+                        
+                })
+
+                
+        </script>
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.1/ace.js"></script>
         <script>
                 var editor = ace.edit("editor");
                 editor.setTheme("ace/theme/monokai");
@@ -63,6 +267,52 @@
                         document.getElementById('inpBody').value = editor.getSession().getValue();
                         frm.submit();
                 }
-        </script>
+        </script> -->
 
+        <script>
+
+                dragElement(document.getElementById('config'));
+
+                function dragElement(elmnt) {
+                        var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+                        if (document.getElementById(elmnt.id + "header")) {
+                                // if present, the header is where you move the DIV from:
+                                document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+                        } 
+                        else {
+                                // otherwise, move the DIV from anywhere inside the DIV:
+                                elmnt.onmousedown = dragMouseDown;
+                        }
+
+                        function dragMouseDown(e) {
+                                e = e || window.event;
+                                e.preventDefault();
+                                // get the mouse cursor position at startup:
+                                pos3 = e.clientX;
+                                pos4 = e.clientY;
+                                document.onmouseup = closeDragElement;
+                                // call a function whenever the cursor moves:
+                                document.onmousemove = elementDrag;
+                        }
+
+                        function elementDrag(e) {
+                                e = e || window.event;
+                                e.preventDefault();
+                                // calculate the new cursor position:
+                                pos1 = pos3 - e.clientX;
+                                pos2 = pos4 - e.clientY;
+                                pos3 = e.clientX;
+                                pos4 = e.clientY;
+                                // set the element's new position:
+                                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+                        }
+
+                        function closeDragElement() {
+                                // stop moving when mouse button is released:
+                                document.onmouseup = null;
+                                document.onmousemove = null;
+                        }
+                }
+        </script>
 @endsection

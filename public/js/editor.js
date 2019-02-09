@@ -990,7 +990,7 @@ var render = function() {
       _vm._v(" "),
       _c("trix-editor", {
         ref: "trix",
-        staticClass: "trix border-none pt-1",
+        staticClass: "trix border-none mt-2 -ml-1",
         attrs: { input: "trix", placeholder: _vm.placeholder }
       })
     ],

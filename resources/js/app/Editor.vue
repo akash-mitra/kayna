@@ -7,7 +7,7 @@
             ref="trix" 
             input="trix" 
             :placeholder="placeholder" 
-            class="trix border-none pt-1">
+            class="trix border-none mt-2 -ml-1">
         </trix-editor>
 
     </div>

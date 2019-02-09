@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Comment;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -34,6 +35,11 @@ class User extends Authenticatable
         return $this->hasMany(Page::class);
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+    
     public function providers($provider = null)
     {
         if (empty($provider)) {
@@ -67,6 +73,9 @@ class User extends Authenticatable
 
         return $this->save();
     }
+
+
+    
 
     public function getUrlAttribute()
     {
