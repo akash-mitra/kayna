@@ -47,10 +47,10 @@
                                         ></textarea>
                                 </div>
                                 <div class="mt-4">
-                                        <p>Load Positions</p>
+                                        <p>Assign Position(s)</p>
                                         <p class="text-xs py-2 text-grey">Add one or more position names separated by comma</p>
                                         <textarea class="w-full p-2 bg-grey-darkest text-white rounded"
-                                                v-model="rows[selected[0].r].cols[selected[0].c].positions"
+                                                v-model="rows[selected[0].r].cols[selected[0].c].positionNames"
                                         ></textarea>
                                 </div>
                                 
@@ -90,6 +90,44 @@
                 </div>
 
 
+                <div v-show="selectedPosition != null" 
+                        class="absolute bg-black text-white text-sm font-mono shadow-lg"
+                        id="position">
+                        <div id="positionheader" class="flex justify-between w-full p-4 border-b border-grey-darkest items-center cursor-move">
+                                <div class="font-bold">Items for @{{ selectedPosition }}</div>
+                                <svg class="w-6 h-6 fill-current text-grey-lighter cursor-pointer" @mousedown="selectedPosition=null" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path class="heroicon-ui" d="M4.93 19.07A10 10 0 1 1 19.07 4.93 10 10 0 0 1 4.93 19.07zm1.41-1.41A8 8 0 1 0 17.66 6.34 8 8 0 0 0 6.34 17.66zM13.41 12l1.42 1.41a1 1 0 1 1-1.42 1.42L12 13.4l-1.41 1.42a1 1 0 1 1-1.42-1.42L10.6 12l-1.42-1.41a1 1 0 1 1 1.42-1.42L12 10.6l1.41-1.42a1 1 0 1 1 1.42 1.42L13.4 12z"/></svg>
+                        </div>
+                        <div class="w-full p-2">
+
+                                <table class="w-full text-xs text-grey text-left table-collapse">
+                                        <thead class="uppercase text-xs font-semibold text-grey border-b-1">
+                                                <tr>
+                                                        <th class="p-2">Items</th>
+                                                        <th class="p-2">Description</th>
+                                                        <th class="p-2">Action</th>
+                                                        
+                                                </tr>
+                                        </thead>
+                                        <tbody class="align-baseline">
+                                                <tr v-for="item in items">
+                                                        <td class="p-2 border-t border-grey-darker whitespace-no-wrap" v-text="item.name"></td>
+                                                        <td class="p-2 border-t border-grey-darker whitespace-no-wrap" v-text="item.description"></td>
+                                                        <td class="p-2 border-t border-grey-darker whitespace-no-wrap">
+                                                                <span v-show="item.positions.indexOf(selectedPosition) >= 0"
+                                                                        class="py-1 px-2 text-white bg-red cursor-pointer rounded"
+                                                                        @click="item.positions.splice(item.positions.indexOf(selectedPosition), 1)">Unload</span>
+                                                                <span v-show="item.positions.indexOf(selectedPosition) < 0"
+                                                                        class="py-1 px-2 text-white bg-green cursor-pointer rounded"
+                                                                        @click="item.positions.push(selectedPosition)">Load</span>
+                                                        </td>
+                                                        
+                                                </tr>
+                                        </tbody>
+                                </table>
+                                
+                        </div>
+                </div>
+
 
                 <div class="w-full checkers">
                         <div v-for="(row, row_index) in rows" class="cursor-pointer" :class="row.class">
@@ -97,19 +135,20 @@
                                         @click="select(row_index, col_index, $event)"
                                         :class="col.class" 
                                         :style="styleSelected(row_index, col_index)">
-                                        <div v-if="col.positions.length > 0" 
-                                                v-for="position in col.positions.replace(/\s/g,'').split(',')" 
+                                        <div v-if="col.positionNames.length > 0" 
+                                                v-for="position in col.positionNames.replace(/\s/g,'').split(',')" 
                                                 class="hover:bg-grey-lighter text-green"
                                                 :class="position.split('.').slice(1).join(' ')"
                                                 >
-                                                <!-- <div>
+                                                <div>
                                                         <label 
                                                         class="px-2 cursor-pointer bg-purple-lighter rounded-lg text-purple hover:bg-purple hover:text-white"
                                                         v-text="position.split('.').shift()"
-                                                        @click.stop="addData"></label>
-                                                </div>  -->
+                                                        @click.stop="addData(position)"></label>
 
-                                                <module-position v-bind:name="position.split('.').shift()" v-on:click.stop.native="addData"></module-position>
+                                                        <div v-for="item in items" v-if="item.positions.indexOf(position.split('.').shift()) >= 0" v-html="item.markup">
+                                                        </div>
+                                                </div> 
                                         </div>
                                 </div>
                         </div>
@@ -190,7 +229,7 @@
 
                         addRow: function () {
                                 let addAfterRow = this.selected[0].r
-                                let newRow = {class: 'flex', cols: [{ class: 'w-full bg-white py-4', positions: '' }]}
+                                let newRow = {class: 'flex', cols: [{ class: 'w-full bg-white py-4', positionNames: '' }]}
                                 this.rows.splice (addAfterRow+1, 0, newRow)
                         },
                         removeRow: function () {
@@ -201,7 +240,7 @@
                         addCol: function () {
                                 let toRow = this.selected[0].r
                                 let afterCol = this.selected[0].c
-                                this.rows[toRow].cols.splice(afterCol+1, 0, { class: 'w-1/6 bg-white py-4', positions: '' })
+                                this.rows[toRow].cols.splice(afterCol+1, 0, { class: 'w-1/6 bg-white py-4', positionNames: '' })
                         },
                         removeCol: function () {
                                 let fromRow = this.selected[0].r
@@ -209,49 +248,98 @@
                                 this.removeFromSelection(this.selected[0].r, this.selected[0].c)
                                 this.rows[fromRow].cols.splice (colToDelete, 1)
                         },
-                        addData: function () {
-                                console.log('checked')
+
+                        addData: function (position) {
+
+                                this.selected = []
+                                this.selectedPosition = position.split('.').shift()
+
+
+                        },
+
+                        load: function (item) {
+                                this.selectedItem = item.name
+                                if (! this.posItemsMap.hasOwnProperty(this.selectedPosition)) {
+                                        this.posItemsMap[this.selectedPosition] = []
+                                }
+                                this.posItemsMap[this.selectedPosition].push(this.selectedItem)
+                        },
+
+                        unload: function (item) {
+
                         }
-                };
+                }
+
+                let computed = {
+                        itemInPosition: function () {
+                                return this.posItemsMap.hasOwnProperty(this.selectedPosition) && this.posItemsMap[this.selectedPosition].indexOf(this.selectedItem) >= 0 
+                        }
+                }
+
                 let data = {
                         num_rows: 3,
                         num_cols: 3,
                         selected: [],
+                        selectedPosition: null,
+                        selectedItem: null,
                         rows: [
                                 {
                                         class: 'flex',
                                         cols: [
-                                                { class: 'w-full bg-white', positions: 'header' },
+                                                { class: 'w-full bg-white', positionNames: 'header' },
                                         ]
                                 },
                                 {
                                         class: 'flex',
                                         cols: [
-                                                { class: 'hidden md:block w-1/4 bg-white', positions: 'aside' },
-                                                { class: 'w-full md:w-3/4 bg-white', positions: 'main' }
+                                                { class: 'hidden md:block w-1/4 bg-white', positionNames: 'aside' },
+                                                { class: 'w-full md:w-3/4 bg-white', positionNames: 'adblock,main, comments' }
                                         ]
                                 },
                                 {
                                         class: 'flex',
                                         cols: [
-                                                { class: 'w-1/3 bg-white', positions: 'left' },
-                                                { class: 'w-1/3 bg-white', positions: 'center' },
-                                                { class: 'w-1/3 bg-white', positions: 'right' },
+                                                { class: 'w-1/3 bg-white', positionNames: 'left' },
+                                                { class: 'w-1/3 bg-white', positionNames: 'center' },
+                                                { class: 'w-1/3 bg-white', positionNames: 'right' },
                                         ]
+                                }
+                        ],
+
+                        posItemsMap: {
+                            /*
+                            'position1': ['title'],
+                            'position2': ['author', 'summary'],
+                            */
+                           'main': ['title', 'summary']
+                        },
+                        
+                        items: [
+                                {
+                                        'name': 'title',
+                                        'description': 'Title of the Page',
+                                        'positions': ['right'],
+                                        'markup': '<h3 class="text-blue text-3xl my-2">Title of the page</h3>'
+                                },
+                                {
+                                        'name': 'summary',
+                                        'description': 'Summary of the Page',
+                                        'positions': ['main'],
+                                        'markup': '<p class="">Nibh maiorum salutatus ne vix, quod veri interesset sed ne? Mea et putent aperiam voluptaria, duo ex diceret suavitate definiebas, splendide interpretaris vis an. Eu semper phaedrum assueverit cum, facete putant inciderint ea pri. Labore alienum pericula est ut. Tractatos erroribus qui no.</p>'
                                 }
                         ]
                 }
 
-                Vue.component('module-position', {
-                        props: ['name'],
-                        template: '<span v-text="name" class="px-2 cursor-pointer bg-purple-lighter rounded-lg text-purple hover:bg-purple hover:text-white"></span>'
-                })
+                // Vue.component('module-position', {
+                //         props: ['name'],
+                //         template: '<span v-text="name" class="px-2 cursor-pointer bg-purple-lighter rounded-lg text-purple hover:bg-purple hover:text-white"></span>'
+                // })
 
                 new Vue({
                         el: 'main',
                         data: data,
                         methods: methods,
-                        
+                        computed: computed
                 })
 
                 
@@ -272,6 +360,7 @@
         <script>
 
                 dragElement(document.getElementById('config'));
+                dragElement(document.getElementById('position'));
 
                 function dragElement(elmnt) {
                         var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
