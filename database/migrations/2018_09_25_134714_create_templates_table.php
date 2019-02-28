@@ -17,6 +17,9 @@ class CreateTemplatesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->text('body');
+            $table->text('frame');
+            $table->text('head');
+            $table->string('type', 30);
             $table->timestamps();
         });
     }

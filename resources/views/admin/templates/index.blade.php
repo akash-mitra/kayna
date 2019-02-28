@@ -22,7 +22,7 @@
                         Template Assignments
                 </a>
 
-                <button id="btnNew" class="border border-teal px-2 py-2 rounded text-sm bg-teal hover:bg-orange hover:border-orange text-white shadow">
+                <button id="btnNew" @click="newTemplate" class="border border-teal px-2 py-2 rounded text-sm bg-teal hover:bg-orange hover:border-orange text-white shadow">
                         New Template
                 </button>
         </div>
@@ -62,7 +62,30 @@
                 {{ count($templates) }} records found
         </p>
 
-        <!-- <img src="/svg/undraw_content_vbqo.svg" class="absolute pin-b pin-r z-0"> -->
+        <base-modal :show="showModal" cover="1/3" @close="showModal=false">
+                <h4 slot="header" class="w-full text-blue-dark font-semibold bg-grey-lightest border-blue-lighter border-b qshadow py-4 px-8">
+                        What template do you want to create?
+                </h4>
+
+                <div  class="w-full max-w-lg mx-auto px-8 pt-2 pb-4 border-b hover:bg-blue-lightest cursor-pointer" @click="createTemplate('home')">
+                        <h3 class="text-blue font-light py-1">Homepage Template</h3>
+                        <p class="text-grey-dark">Template for the first page or the landing page of your blog</p>
+                </div>
+                <div  class="w-full max-w-lg mx-auto px-8 pt-2 pb-4 border-b hover:bg-blue-lightest cursor-pointer" @click="createTemplate('page')">
+                        <h3 class="text-blue font-light py-1">Page Template</h3>
+                        <p class="text-grey-dark">Page templates are used to display individual pages of your blog</p>
+                </div>
+                <div  class="w-full max-w-lg mx-auto px-8 pt-2 pb-4 border-b hover:bg-blue-lightest cursor-pointer" @click="createTemplate('category')">
+                        <h3 class="text-blue font-light py-1">Category Template</h3>
+                        <p class="text-grey-dark">This template is used to display pages of a specific category chronologically</p>
+                </div>
+                <div  class="w-full max-w-lg mx-auto px-8 pt-2 pb-4 border-b hover:bg-blue-lightest cursor-pointer" @click="createTemplate('profile')">
+                        <h3 class="text-blue font-light py-1">Profile Template</h3>
+                        <p class="text-grey-dark">Profile template is used to show the profile page of a registered user</p>
+                </div>
+
+                <div slot="footer" class="bg-blue-lightest border-blue-lighter border-t h-4">
+        </base-modal>
         
 @endsection
 
@@ -73,11 +96,22 @@
                 //         location.href = '{{ route('templates.index') }}' + '?q=' + document.getElementById('txtSearch').value 
                 // }
 
-                document.getElementById('btnNew').onclick = function () {
-                        this.disabled = true;
-                        this.classList.add('opacity-50');
-                        location.href = '{{ route("templates.create")}}'
-                }
+                new Vue({
+                        el: 'main',
+                        data: {
+                                showModal: false
+                        },
+                        methods: {
+                                newTemplate: function () {
+                                        this.showModal = true
+                                },
+
+                                createTemplate: function (type) {
+                                        location.href = "/admin/templates/create/" + type
+                                }
+                        }
+                })
+
         </script>
 
 @endsection

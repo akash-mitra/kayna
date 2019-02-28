@@ -61,7 +61,7 @@ Route::resource('media', 'MediaController')->except(['destroy']);
 Route::post('/media/destroy', 'MediaController@destroy')->middleware('auth');
 
 Route::get('/admin/templates', 'TemplateController@index')->name('templates.index')->middleware('admin');
-Route::get('/admin/templates/create', 'TemplateController@create')->name('templates.create')->middleware('admin');
+Route::get('/admin/templates/create/{type}', 'TemplateController@create')->name('templates.create')->middleware('admin');
 Route::get('/admin/templates/{template}', 'TemplateController@show')->name('templates.show')->middleware('admin');
 Route::post('/admin/templates', 'TemplateController@store')->name('templates.store')->middleware('admin');
 Route::patch('/admin/templates/{template}', 'TemplateController@update')->name('templates.update')->middleware('admin');
@@ -69,7 +69,6 @@ Route::patch('/admin/templates/{template}', 'TemplateController@update')->name('
 Route::get('/admin/accesses', 'RestrictionController@index')->name('accesses.index')->middleware('admin');
 Route::post('/admin/accesses/store', 'RestrictionController@createOrUpdate')->name('accesses.createOrUpdate')->middleware('admin');
 // Route::resource('/admin/accesses', 'RestrictionController')->only(['index', 'store'])->middleware('admin');
-
 
 Route::get('/admin/content-types', 'ContentTypeController@index')->name('content-types.index')->middleware('admin');
 Route::post('/admin/content-types/{contentTypeTemplate}', 'ContentTypeController@update')->name('content-types.update')->middleware('admin');
@@ -86,4 +85,3 @@ Route::get('/social/login/{provider}/callback', 'SocialLoginController@callback'
 Route::get('/', 'HomeController@index')->name('home');
 
 Route::post('/api/search', 'SearchController@search')->name('search');
-

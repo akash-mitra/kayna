@@ -33,10 +33,9 @@
                                 <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="name">
                                         Name
                                 </label>
-                                <input v-model="name" name="name" class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey" id="inName" type="text" placeholder="e.g. My Custom Logo">
+                                <input v-model="name" name="name" class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey" id="inName" type="text" placeholder="e.g. my_custom_logo">
                                 <p class="text-grey-dark text-xs italic">Provide a unique name</p>
 
-                                <!-- <p vfor="e in errors.name" vtext="e" class="text-sm text-red py-1"><p> -->
                         </div>
                 </div>
 
@@ -77,7 +76,7 @@
         <div class="flex flex-wrap -mx-3 mb-6">
                 <div class="w-full px-3">
                         <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="grid-password">
-                                Template 
+                                Template Code
                         </label>
                         
                         <div id="editor" 

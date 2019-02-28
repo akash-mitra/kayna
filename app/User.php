@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Comment;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -39,7 +38,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Comment::class);
     }
-    
+
     public function providers($provider = null)
     {
         if (empty($provider)) {
@@ -74,9 +73,6 @@ class User extends Authenticatable
         return $this->save();
     }
 
-
-    
-
     public function getUrlAttribute()
     {
         return url('/profile/' . $this->slug);
@@ -85,5 +81,15 @@ class User extends Authenticatable
     public function getAgoAttribute()
     {
         return $this->updated_at->diffForHumans();
+    }
+
+    public static function props()
+    {
+        return [
+            ['name' => 'name', 'description' => 'Name of the user', 'visibility' => true],
+            ['name' => 'email', 'description' => 'Email ID of the user', 'visibility' => false],
+            ['name' => 'url', 'description' => 'Link to the public profile of the user', 'visibility' => true],
+            ['name' => 'avatar', 'description' => 'Profile Image of the user', 'visibility' => true]
+        ];
     }
 }

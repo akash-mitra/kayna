@@ -32,9 +32,23 @@ class TemplateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($type)
     {
-        return view('admin.templates.create');
+        if (!in_array($type, ['home', 'page', 'category', 'profile'])) {
+            return abort(400, 'Invalid template type');
+        }
+
+        $template = new Template();
+        $template->frame = json_encode($this->getDefaultFrame());
+        $template->type = $type;
+        $props = json_encode($this->getAPIForContentType($type));
+        $template->head = json_encode($this->getDefaultHead());
+
+
+        return view('admin.templates.form')
+            ->with('template', $template)
+            ->with('props', $props);
+
     }
 
     /**
@@ -45,11 +59,20 @@ class TemplateController extends Controller
      */
     public function store(Request $request)
     {
-        $template = new Template($request->input());
+        $frame = $request->input('frame');
+        $head = $request->input('head');
+        
+        $body = $this->build($frame, $head, $request->input('type'));
+        $template = tap(new Template([
+            'name' => $request->input('name'),
+            'body' => $body,
+            'type' => $request->input('type'),
+            'frame' => $frame,
+            'head' => $head
+        ]))->save();
 
-        $template->save();
-
-        return redirect()->route('templates.index');
+        return redirect()->to(route('templates.show', $template->id));
+    
     }
 
     /**
@@ -60,10 +83,14 @@ class TemplateController extends Controller
      */
     public function show(Template $template)
     {
-        return view('admin.templates.show', compact('template'));
+
+        $props = $this->getAPIForContentType($template->type);
+
+        return view('admin.templates.form')
+            ->with('template', $template)
+            ->with('props', json_encode($props));
+
     }
-
-
 
     /**
      * Update the specified resource in storage.
@@ -74,9 +101,24 @@ class TemplateController extends Controller
      */
     public function update(Request $request, Template $template)
     {
-        $template->fill($request->input())->save();
+        $frame = $request->input('frame');
+        $head = $request->input('head');
 
-        return redirect()->route('templates.index');
+        $body = $this->build($frame, $head, $request->input('type'));
+
+        $template = tap($template->fill([
+            'name' => $request->input('name'),
+            'body' => $body,
+            'type' => $request->input('type'),
+            'frame' => $frame,
+            'head' => $head
+        ]))->save();
+
+        return [
+            'status' => 'success',
+            'flash' => ['message' => 'template [' . $template->name . '] saved'],
+            'template_id' => $template->id
+        ];
     }
 
     /**
@@ -87,5 +129,92 @@ class TemplateController extends Controller
      */
     public function destroy(Template $template)
     {
+    }
+
+    private function getAPIForContentType($type)
+    {
+        $props = [];
+        if ($type === 'page') {
+            $props = \App\Page::props();
+        }
+        if ($type === 'category') {
+            $props = \App\Category::props();
+        }
+        if ($type === 'profile') {
+            $props = \App\User::props();
+        }
+
+        $filteredProps = [];
+        foreach ($props as $prop) {
+            if ($prop['visibility'] === true) {
+                $prop['class'] = '';
+                array_push($filteredProps, $prop);
+            }
+        }
+
+        return $filteredProps;
+    }
+
+    private function getDefaultFrame()
+    {
+        return [
+            [
+                'class' => 'flex',
+                'cols' => [
+                    [
+                        'class' => 'w-full bg-white flex justify-between',
+                        'positionNames' => 'header',
+                        'positions' => [
+                            [
+                                'name' => 'header',
+                                'class' => '',
+                                'items' => [
+                                    ['name' => 'title', 'class' => 'text-3xl', 'placeholder' => ['tag' => 'span', 'text' => 'The Intersteller Journey to the futures']]
+                                ]
+                            ],
+                            [
+                                'name' => 'login',
+                                'class' => 'p-4',
+                                'items' => []
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                'class' => 'flex',
+                'cols' => [
+                    ['class' => 'w-full bg-white', 'positionNames' => 'body', 'positions' => [['name' => 'body', 'class' => '', 'items' => []]]]
+                ]
+            ],
+            [
+                'class' => 'flex',
+                'cols' => [
+                    ['class' => 'w-full bg-white', 'positionNames' => 'footer', 'positions' => [['name' => 'footer', 'class' => '', 'items' => []]]]
+                ]
+            ],
+        ];
+    }
+
+
+    private function getDefaultHead()
+    {
+        return [
+            ['prop' => 'lang', 'default' => 'us', 'value' => 'us' ], 
+            ['prop' =>'charset' , 'default'  =>'UTF-8' , 'value'  => 'UTF-8'], 
+            ['prop' =>'csrf-token' , 'default'  =>'{{ csrf_token() }}' , 'value'  => '{{ csrf_token() }}'],
+            ['prop' => 'title', 'default' => '{{ $title }}', 'value' => '{{ $title }}'],
+            ['prop' => 'css', 'default' => 'https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css', 'value' => 'https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css'],
+            ['prop' => 'template-css', 'default' => '/storage/css/main.css', 'value' => '/storage/css/main.css'],
+            ['prop' => 'js', 'default' => 'https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js', 'value' => 'https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js'], 
+        ];
+    }
+
+    private function build($frame, $head, $type)
+    {
+        $frameJson = json_decode($frame);
+        $headJson = json_decode($head);
+
+        return Template::buildFromFrame($frameJson, $headJson, $type);
     }
 }

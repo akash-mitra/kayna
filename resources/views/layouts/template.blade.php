@@ -74,7 +74,7 @@
                 </header>
 
 
-                <main class="w-full bg-grey-lightest min-h-screen px-2">
+                <main class="w-full bg-grey-lightest min-h-screen">
                 
                     @yield('main')
 
@@ -88,32 +88,6 @@
 
     </div>
     
-    <script>
-
-        /**
-         * This code is for creating the left side menu toggle 
-         * behavior. 
-         */
-        // let toggleSideBar = function () {
-        //         var leftCol = document.getElementById('leftCol');
-        //         var logoBlock = document.getElementById('logoBlock');
-        //         if (leftCol.style.display === 'none') {
-        //             leftCol.style.display = 'flex'
-        //             logoBlock.style.display = 'none'
-        //         }
-        //         else {
-        //             logoBlock.style.display = 'block';
-        //             leftCol.style.display = 'none';
-        //         }
-        // }, btnSidebar = document.getElementsByClassName('btnSidebar');
-
-        // for (var i = 0; i < btnSidebar.length; i++) {
-        //     btnSidebar[i].addEventListener('click', toggleSideBar);
-        // }
-
-    
-    </script>
-
     <script src="{{ mix('/js/app.js') }}"></script>
 
     @yield('script')

@@ -76,7 +76,7 @@ class PageController extends Controller
     public function show(Page $page)
     {
         $pageData = $page->load('author', 'category', 'content');
-        
+
         return compiledView('page', $pageData->toArray());
     }
 
