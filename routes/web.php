@@ -12,11 +12,13 @@
 
 // All Page related general and admin routes
 Route::get('/pages/{page}/{slug?}', 'PageController@show');
-Route::get('/api/pages', 'PageController@apiIndex')->name('api.pages.index');
-Route::get('/api/pages/{page}', 'PageController@apiGet')->name('api.pages.get');
 Route::group(['prefix' => 'admin'], function () {
     Route::resource('pages', 'PageController')->except(['show']);
 });
+Route::get('/api/pages', 'PageController@apiGetAll')->name('api.pages.index');
+Route::get('/api/pages/{page}', 'PageController@apiGet')->name('api.pages.get');
+Route::post('/api/pages/status', 'PageController@apiSetStatus')->name('api.pages.setStatus');
+
 
 // All Categories related general and admin routes
 Route::get('/categories/{category}/{slug?}', 'CategoryController@show');

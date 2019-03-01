@@ -17,17 +17,8 @@
 
 @section('main')
 
-<!-- <div class="w-full max-w-lg mx-auto flex justify-between -mt-12 p-4">
-        <button class="p-2 rounded text-teal hover:text-white hover:bg-teal" 
-                v-on:click="showSummary">
-                Page Information
-        </button>
 
-        <button class="p-2 rounded text-white bg-teal hover:text-white hover:bg-teal-dark" 
-                v-on:click="confirm">Save</button>
-</div> -->
-
-<div class="w-full max-w-lg mx-auto p-4">
+<div class="w-full max-w-lg mx-auto p-8">
 
         <div class="w-full flex justify-between items-center mb-4">
                 <div class="inline-block relative border rounded">
@@ -43,31 +34,36 @@
                         </div>
                 </div>
 
-                <button class="m-2 py-2 px-4 rounded text-teal border border-teal hover:text-white hover:bg-teal" 
-                        v-on:click="confirm">Save</button>
+                <div>
+                        <button class="m-2 py-2 px-4 text-blue-light hover:text-blue" 
+                                v-on:click="show_info_modal=true">Review</button>
+
+                        <button class="m-2 py-2 px-4 rounded text-teal border border-teal hover:text-white hover:bg-teal" 
+                                v-on:click="confirm">Save</button>
+                </div>
         </div>
 
-        <h1 class="w-full flex flex-col">
+        <div class="w-full flex flex-col px-2">
                 <textarea name="title"  
                         v-model="title" 
                         placeholder="Type page title here" 
                         rows="1" 
                         @input="clearValidations"
-                        class="w-full border-b py-2 kayna-page-header"></textarea>
+                        class="w-full py-2 default-page-title"></textarea>
                 <!-- </span> -->
                 <ul class="-ml-5 mt-2"><li v-for="e in validations.title" v-text="e" class="text-xs font-normal text-red"></li></ul>
-        </h1>
+        </div>
 
-        <h3 class="flex flex-col py-4 text-sm font-light text-grey-dark">
+        <div class="flex flex-col py-2 px-2 text-sm font-light text-grey-dark">
                 <textarea 
                         name="summary"
                         v-model="summary" 
                         placeholder="Provide a short Summary in 2-3 lines" 
                         rows="3" 
                         @input="clearValidations"
-                        class="w-full border-b py-2 text-lg font-hairline font-sans"></textarea>
+                        class="w-full py-2 default-page-summary"></textarea>
                 <ul class="-ml-5 mt-2"><li v-for="e in validations.summary" v-text="e" class="text-xs font-normal text-red"></li></ul>
-        </h3>
+        </div>
         
         
         <editor  

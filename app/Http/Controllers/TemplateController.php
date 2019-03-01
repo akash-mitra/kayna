@@ -147,7 +147,7 @@ class TemplateController extends Controller
         $filteredProps = [];
         foreach ($props as $prop) {
             if ($prop['visibility'] === true) {
-                $prop['class'] = '';
+                // $prop['class'] = '';
                 array_push($filteredProps, $prop);
             }
         }

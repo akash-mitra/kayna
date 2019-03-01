@@ -3,7 +3,7 @@
 @section('header')
 <div class="py-4 px-6">
         <h1 class="w-full p-2">
-                <span class="text-lg font-semibold text-grey-darker uppercase borqder-b">
+                <span class="text-lg font-semibold text-indigo uppercase">
                         Pages
                 </span>
         </h1>
@@ -33,21 +33,24 @@
                                 <tr>
                                         <th class="p-4">Actions</th>
                                         <th class="p-4">Page</th>
-                                        <th class="p-4">Stats</th>
+                                        <th class="p-4 hidden sm:block">Stats</th>
                                 </tr>
                         </thead>
                         <tbody class="align-baseline">
                                 <tr v-for="page in filter_pages" 
-                                    class="border-b border-blue-lightest">
+                                    :class="page.status != 'Live' ? 'bg-grey-lightest': 'shadow-inner'">
                                         <td class="px-4 py-2 font-mono text-xs whitespace-no-wrap flex flex-col items-end">
-                                                <a v-bind:href="editPage(page.id)"   class="mb-4 cursor-pointer text-blue no-underline">Edit</a>
-                                                <button @click="deletePage(page.id)" class="mb-4 cursor-pointer text-blue no-underline">Delete</button>
+                                                <a v-bind:href="page.url" target="_blank" class="mb-4 cursor-pointer text-blue-dark no-underline">View</a>
+                                                <button @click="deletePage(page.id)" class="mb-4 cursor-pointer text-blue-dark no-underline">Delete</button>
+                                                <button @click="changeStatus(page.id, (page.status != 'Live'? 'Live' : 'Draft'))"
+                                                        v-text="page.status != 'Live'? 'Publish' : 'Take Down'"
+                                                        class="mb-4 cursor-pointer text-blue-dark no-underline"></button>
                                         </td>
-                                        <td class="py-2 px-4 max-w-xs bg-white text-sm">
+                                        <td class="py-2 px-4 max-w-xs text-sm">
                                                 
                                                 <p v-text="page.category.name + ' / '" class="text-grey text-sm mb-2"></p>
                                                 
-                                                <a v-bind:href="page.url" class="no-underline text-blue text-sm font-medium">
+                                                <a v-bind:href="editPage(page.id)" class="no-underline text-blue text-sm font-medium">
                                                         <span v-text="page.title"></span>
                                                 </a>
                                                 <p class="py-2 text-sm" v-text="page.summary"></p>
@@ -71,7 +74,7 @@
                                                         </div>
                                                 </div>
                                         </td>
-                                        <td class="flex p-4 text-sm">
+                                        <td class="p-4 text-sm hidden sm:block">
                                                 <div class="italic text-grey-dark">
                                                         <span class="font-medium text-blue font-mono" v-text="page.comments.length"></span> Comments
                                                 </div>
@@ -113,17 +116,47 @@
                         editPage: function (id) { return "/admin/pages/" + id + "/edit" },
 
                         deletePage: function (id) {
-                                let p = this
-                                axios.delete('/admin/pages/' + id)
-                                        .then(function (response){
-                                                p.removePageById(response.data.page_id) 
-                                        })
+
+                                if (confirm("Are you sure that you want to delete this page? \nThis will permanently delete this page. This action is unrecoverable.")) {
+                                        let p = this
+                                        axios.delete('/admin/pages/' + id)
+                                                .then(function (response){
+                                                        p.removePageById(response.data.page_id) 
+                                                })
+                                }
                         },
 
+                        changeStatus: function (id, status) {
+                                let p = this
+                                axios.post("{{ route('api.pages.setStatus') }}", {
+                                        page_id: id,
+                                        status: status
+                                })
+                                .then(function (response){
+                                        flash({message: response.data.flash.message})
+                                        let page = p.getPageById (response.data.page_id)
+                                        page.status = status
+                                })
+                        },
+
+                        /**
+                         * Removes a page from the pages list
+                         */
                         removePageById: function (page_id) {
                                 for(let i = 0; i < this.pages.length; i++) { 
                                         if ( this.pages[i].id === page_id ) 
                                                 this.pages.splice(i, 1)
+                                }
+                        },
+
+                        /**
+                         * Returns  the page that has the provided id
+                         */
+                        getPageById: function (page_id) {
+                                const l = this.pages.length
+                                for(let i = 0; i < l; i++) { 
+                                        if ( this.pages[i].id === page_id ) 
+                                                return this.pages[i]
                                 }
                         }
                 }

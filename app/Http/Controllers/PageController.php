@@ -77,6 +77,8 @@ class PageController extends Controller
     {
         $pageData = $page->load('author', 'category', 'content');
 
+        if ($pageData->status != 'Live') return abort(404, "This page is currently off-line.");
+
         return compiledView('page', $pageData->toArray());
     }
 
@@ -140,7 +142,7 @@ class PageController extends Controller
 
 
 
-    public function apiIndex()
+    public function apiGetAll()
     {
         return Page::paginate(10);
         // return Page::with(['author', 'category'])
@@ -152,5 +154,21 @@ class PageController extends Controller
     public function apiGet(Page $page)
     {
         return $page;
+    }
+
+    public function apiSetStatus(Request $request)
+    {
+        $page_id = $request->input('page_id');
+        $status  = $request->input('status');
+        $page = Page::findOrFail($page_id);
+        $page->status = $status;
+        $page->save();
+
+        return [
+            "status" => "success",
+            "flash" => ["message" => "Page status updated to [" . $page->status . "]"],
+            "page_id" => $page->id
+        ];
+
     }
 }

@@ -1,3 +1,12 @@
+<style>
+    trix-toolbar .trix-button-group, trix-toolbar .trix-button, trix-toolbar .trix-button:not(:first-child) {
+        border: none
+    }
+
+    trix-toolbar .trix-button:hover {
+        color: #000
+    }
+</style>
 <template>
     <div>
         
@@ -7,7 +16,7 @@
             ref="trix" 
             input="trix" 
             :placeholder="placeholder" 
-            class="trix border-none mt-2 -ml-1">
+            class="trix border-none mt-2 -ml-1 font-sans default-page-content">
         </trix-editor>
 
     </div>

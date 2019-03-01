@@ -1,8 +1,8 @@
 @extends('layouts.template')
 
 
-@section('header')
-
+@section('css')
+        <link rel="stylesheet" href="/storage/css/main.css">
         
 @endsection
 
