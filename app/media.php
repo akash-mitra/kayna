@@ -16,10 +16,10 @@ class media extends Model
     protected static $visibility = 'public';
 
     /**
-     * directoryPath is only applicable for cloud storage. 
+     * directoryPath is only applicable for cloud storage.
      * For example, in case of s3 this is actually the bucket name.
      */
-    protected static $directoryPath = null; 
+    protected static $directoryPath = null;
 
 
     protected static $subDirectoryPath = 'media';
@@ -27,14 +27,19 @@ class media extends Model
 
     public static function buildUrl($storage, $fileName)
     {
-        if ($storage === 'public') return asset($fileName);
-        if ($storage === 's3') return 'https://'. self::$directoryPath . '.s3.amazonaws.com/'  . $fileName;
+        if ($storage === 'public') {
+            return asset($fileName);
+        }
+        if ($storage === 's3') {
+            return 'https://'. self::$directoryPath . '.s3.amazonaws.com/'  . $fileName;
+        }
     }
 
-    public static function store ($file, $name) {
+    public static function store($file, $name)
+    {
         try {
             $sizeInBytes = $file->getClientSize(); // bytes
-            self::_checkFileError ($file, $sizeInBytes);
+            self::_checkFileError($file, $sizeInBytes);
             $storageType = self::getStorageType();
             
             $path = Storage::disk($storageType)->putFile(self::$subDirectoryPath, $file, self::$visibility);
@@ -51,10 +56,7 @@ class media extends Model
             ]);
 
             return self::buildUrl($storageType, $path);
-
-        } 
-        catch (Exception $e) {
-
+        } catch (Exception $e) {
             if (Storage::disk($storageType)->exists($path)) {
                 Storage::disk($storageType)->delete($path);
             }
@@ -68,8 +70,9 @@ class media extends Model
     {
         $media = Media::where('path', 'like', '%' . $filename)->first();
 
-        if ($media->storage === 'public')
+        if ($media->storage === 'public') {
             Storage::disk('public')->delete($media->path);
+        }
 
         if ($media->storage === 's3') {
             $path_array = explode('/', $media->path);
@@ -89,13 +92,12 @@ class media extends Model
         $media->delete();
 
         return $media;
-
     }
 
 
-    private static function getStorageType ()
+    private static function getStorageType()
     {
-        if (param('storage_s3_active') === 'yes') {  
+        if (param('storage_s3_active') === 'yes') {
             self::setS3StorageParameters(
                 param('storage_s3_key'),
                 param('storage_s3_secret'),
@@ -119,16 +121,20 @@ class media extends Model
     }
 
 
-    public static function _checkFileError ($file, $sizeInBytes) {
+    public static function _checkFileError($file, $sizeInBytes)
+    {
 
-        if (!isset($file))
+        if (!isset($file)) {
             abort(400, 'File not uploaded');
+        }
 
-        if (!in_array($file->guessExtension(), self::$allowedExtensions))
+        if (!in_array($file->guessExtension(), self::$allowedExtensions)) {
             abort(400, 'Unallowed file type error');
+        }
 
         
-        if ($sizeInBytes > (self::$maxSize * 1024 * 1024) || $sizeInBytes <= 0)
+        if ($sizeInBytes > (self::$maxSize * 1024 * 1024) || $sizeInBytes <= 0) {
             abort(400, 'File size error');
+        }
     }
 }

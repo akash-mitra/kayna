@@ -30,24 +30,22 @@ class Module extends Model
         }, $modules->toArray());
     }
 
-    public static function storeTemplate ($filename, $content)
+    public static function storeTemplate($filename, $content)
     {
         return Storage::disk('resources')->put(self::fullFileName($filename), $content);
     }
 
-    public static function getTemplate ($filename)
+    public static function getTemplate($filename)
     {
         return Storage::disk('resources')->get(self::fullFileName($filename));
-
     }
 
 
-     public static function updateTemplate ($oldName, $newName, $content)
+    public static function updateTemplate($oldName, $newName, $content)
     {
 
         self::removeTemplate($oldName);
         return self::storeTemplate($newName, $content);
-
     }
 
 
@@ -57,7 +55,7 @@ class Module extends Model
     }
 
 
-    public static function fullFileName ($filename)
+    public static function fullFileName($filename)
     {
         return 'views/modules/' . $filename . '.blade.php';
     }
@@ -67,5 +65,4 @@ class Module extends Model
     {
         return self::fullFileName($this->name);
     }
-
 }

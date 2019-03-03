@@ -26,7 +26,7 @@ class SettingController extends Controller
 
     public function update(Request $request)
     {
-        foreach($request->input() as $key => $value) {
+        foreach ($request->input() as $key => $value) {
             Cache::forget($key);
             DB::table('parameters')->where('key', $key)->update(['value' => $value]);
         }
@@ -35,6 +35,5 @@ class SettingController extends Controller
             "status" => "success",
             "message" => "Parameters updated"
         ];
-         
     }
 }

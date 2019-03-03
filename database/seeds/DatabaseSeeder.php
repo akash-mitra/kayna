@@ -43,9 +43,6 @@ class DatabaseSeeder extends Seeder
                     ->each(function ($page) {
                         $page->content()->save(factory(App\PageContent::class)->make());
                     });
-                
             });
-
-        
     }
 }

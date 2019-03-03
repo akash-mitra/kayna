@@ -12,7 +12,5 @@ class PageTableSeeder extends Seeder
     public function run()
     {
         factory(App\Page::class, 25)->create(['user_id' => 0]);
-
-        
     }
 }

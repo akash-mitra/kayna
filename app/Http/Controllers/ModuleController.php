@@ -50,7 +50,6 @@ class ModuleController extends Controller
             'flash' => ['message' => 'module [' . $module->name . '] saved'],
             'module_id' => $module->id
         ];
-
     }
 
     /**
@@ -77,7 +76,6 @@ class ModuleController extends Controller
         $moduleWithCode = $module->toArray();
         $moduleWithCode['code'] = $content;
         return view('admin.modules.form')->with('types', Module::getTypes())->with('module', $moduleWithCode);
-
     }
 
     /**
@@ -105,7 +103,6 @@ class ModuleController extends Controller
             'flash' => ['message' => 'module [' . $module->name . '] saved']
                 
         ];
-
     }
 
     /**
@@ -126,6 +123,5 @@ class ModuleController extends Controller
             'module_id' => $module->id
                 
         ];
-
     }
 }

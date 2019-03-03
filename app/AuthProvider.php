@@ -12,4 +12,4 @@ class AuthProvider extends Model
     {
         $this->belongsTo(User::class);
     }
-}   
+}

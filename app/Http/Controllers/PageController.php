@@ -38,7 +38,8 @@ class PageController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('admin.pages.form')->with('categories', $categories)->with('page', null);;
+        return view('admin.pages.form')->with('categories', $categories)->with('page', null);
+        ;
     }
 
     /**
@@ -77,7 +78,9 @@ class PageController extends Controller
     {
         $pageData = $page->load('author', 'category', 'content');
 
-        if ($pageData->status != 'Live') return abort(404, "This page is currently off-line.");
+        if ($pageData->status != 'Live') {
+            return abort(404, "This page is currently off-line.");
+        }
 
         return compiledView('page', $pageData->toArray());
     }
@@ -94,8 +97,7 @@ class PageController extends Controller
         
         $categories = Category::all();
 
-        return view('admin.pages.form')->with('categories', $categories)->with('page',  $pageData);
-
+        return view('admin.pages.form')->with('categories', $categories)->with('page', $pageData);
     }
 
     /**
@@ -116,7 +118,7 @@ class PageController extends Controller
         });
 
         return [
-                "status" => "success", 
+                "status" => "success",
                 "flash" => ["message" => "Page [" . $page->title . "] saved"]
                 //"page" => $page
             ];
@@ -169,6 +171,5 @@ class PageController extends Controller
             "flash" => ["message" => "Page status updated to [" . $page->status . "]"],
             "page_id" => $page->id
         ];
-
     }
 }

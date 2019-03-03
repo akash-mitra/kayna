@@ -57,7 +57,9 @@ Route::group(['prefix' => 'admin'], function () {
 
 Route::get('/profile/{slug}', 'ProfileController@show')->name('profile');
 
-Route::get('/admin', function () {return view('admin.home');});
+Route::get('/admin', function () {
+    return view('admin.home');
+});
 
 Route::resource('media', 'MediaController')->except(['destroy']);
 Route::post('/media/destroy', 'MediaController@destroy')->middleware('auth');

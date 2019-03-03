@@ -10,6 +10,6 @@ $factory->define(App\PageContent::class, function (Faker $faker) {
             . '<h3>' . $faker->sentence(10, true) . '</h3>'
             . '<p>' . $faker->paragraph(15, true) . '</p>'
             . '<h3>' . $faker->sentence(10, true) . '</h3>'
-            . '<p>' . $faker->paragraph(10, true) . '</p>' 
+            . '<p>' . $faker->paragraph(10, true) . '</p>'
     ];
 });

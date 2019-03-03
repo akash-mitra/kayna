@@ -15,7 +15,7 @@ class IsAdmin
      * @return mixed
      */
     public function handle($request, Closure $next)
-    {        
+    {
         if (Auth::user() && Auth::user()->type == 'admin') {
             return $next($request);
         }

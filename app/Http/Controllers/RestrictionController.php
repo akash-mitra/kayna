@@ -37,26 +37,19 @@ class RestrictionController extends Controller
         $message = '';
 
         if (empty($existing)) {
-
             $restriction->save();
             $message = 'Content restricted for user type ' . $restriction->user_type . ' only.';
-
         } else {
-
-            if ($request->input('user_type') === 'None') 
-            {
+            if ($request->input('user_type') === 'None') {
                 $this->destroy($existing);
 
                 $message = 'Content restriction removed.';
-            }
-            else 
-            {
+            } else {
                 $existing->user_type = $request->input('user_type');
                 $existing->save();
 
                 $message = 'Content restriction updated for user type ' . $restriction->user_type . ' only.';
             }
-
         }
         
         return [
@@ -64,7 +57,6 @@ class RestrictionController extends Controller
             'flash' => ['message' => $message],
             'content_id' => $restriction->content_id
         ];
-
     }
 
     /**

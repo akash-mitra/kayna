@@ -23,7 +23,6 @@ class CreateCommentsTable extends Migration
             $table->integer('vote')->unsigned();
             $table->timestamps();
         });
-
     }
 
     /**

@@ -13,7 +13,7 @@ class SocialLoginController extends Controller
 
     protected $providers = ['facebook', 'google'];
 
-    public function provider ($provider)
+    public function provider($provider)
     {
         if (!in_array($provider, $this->providers)) {
             return abort(404, 'Provider not supported');
@@ -24,7 +24,7 @@ class SocialLoginController extends Controller
     }
 
 
-    public function callback (String $provider)
+    public function callback(String $provider)
     {
         if (!in_array($provider, $this->providers)) {
             return abort(404, 'Provider not supported');
@@ -37,8 +37,7 @@ class SocialLoginController extends Controller
         if ($existingUser) {
                 $existingUser->createOrUpdateProvider($provider, $authenticatedUser);
                 Auth::login($existingUser, true);
-        }
-        else {
+        } else {
             $user = $this->createUserWithProvider($provider, $authenticatedUser);
             Auth::login($user, true);
         }
@@ -67,7 +66,6 @@ class SocialLoginController extends Controller
         ]);
         
         return $user;
-        
     }
 
     private function getAuthenticatedUser($provider)
@@ -88,7 +86,7 @@ class SocialLoginController extends Controller
 
 
     /**
-     * Checks the authenticated user returned from the 
+     * Checks the authenticated user returned from the
      * social provider to make sure all the mandatory
      * information are present
      *
@@ -97,10 +95,11 @@ class SocialLoginController extends Controller
      */
     private function abortIfInfoMissing($authenticatedUser)
     {
-        if (empty($authenticatedUser->getEmail()) 
-            || empty($authenticatedUser->getName()) 
-            || empty($authenticatedUser->getAvatar()))
-            abort (406, "Must provide name, email and profile picture");
+        if (empty($authenticatedUser->getEmail())
+            || empty($authenticatedUser->getName())
+            || empty($authenticatedUser->getAvatar())) {
+            abort(406, "Must provide name, email and profile picture");
+        }
     }
 
     private function makeDriver($provider)
@@ -110,7 +109,7 @@ class SocialLoginController extends Controller
         return $this->$func();
     }
     
-    private function makeFacebookDriver ()
+    private function makeFacebookDriver()
     {
         $config['client_id'] = param('login_facebook_client_id');
         $config['client_secret'] = param('login_facebook_client_secret');
@@ -119,7 +118,7 @@ class SocialLoginController extends Controller
         return  Socialite::buildProvider(\Laravel\Socialite\Two\FacebookProvider::class, $config);
     }
 
-    private function makeGoogleDriver ()
+    private function makeGoogleDriver()
     {
         $config['client_id'] = param('login_google_client_id');
         $config['client_secret'] = param('login_google_client_secret');
@@ -127,7 +126,4 @@ class SocialLoginController extends Controller
 
         return  Socialite::buildProvider(\Laravel\Socialite\Two\GoogleProvider::class, $config);
     }
-
-
-
 }

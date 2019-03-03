@@ -17,13 +17,13 @@ class Parameter extends Model
      * Return all the key-value pairs as simple object
      *
      * @return String
-     */ 
+     */
     public static function getObject()
     {
         $paramObject = (object) [];
         $paramArray = Parameter::select(['key', 'value'])->get()->toArray();
         
-        foreach($paramArray as $param) {
+        foreach ($paramArray as $param) {
             $key = $param['key'];
             $paramObject->{$key} = $param['value'];
         }

@@ -5,7 +5,6 @@ use App\ContentTypeTemplate;
 use Illuminate\Support\Facades\Cache;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 
-
 /**
  * Retrieves the value of the key from parameter table
  *

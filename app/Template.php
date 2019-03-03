@@ -76,7 +76,9 @@ class Template extends Model
     public static function getHeader(array $props, String $prop)
     {
         $val = array_filter($props, function ($item) use ($prop) {
-            if ($item->prop === $prop) return true;
+            if ($item->prop === $prop) {
+                return true;
+            }
             return false;
         });
 
@@ -106,7 +108,4 @@ class Template extends Model
 
         // return "{{ $" . $type . "['" . str_replace(".", "']['", $var) . "'] }}";
     }
-
-
-    
 }

@@ -48,7 +48,6 @@ class TemplateController extends Controller
         return view('admin.templates.form')
             ->with('template', $template)
             ->with('props', $props);
-
     }
 
     /**
@@ -72,7 +71,6 @@ class TemplateController extends Controller
         ]))->save();
 
         return redirect()->to(route('templates.show', $template->id));
-    
     }
 
     /**
@@ -89,7 +87,6 @@ class TemplateController extends Controller
         return view('admin.templates.form')
             ->with('template', $template)
             ->with('props', json_encode($props));
-
     }
 
     /**
@@ -200,13 +197,13 @@ class TemplateController extends Controller
     private function getDefaultHead()
     {
         return [
-            ['prop' => 'lang', 'default' => 'us', 'value' => 'us' ], 
-            ['prop' =>'charset' , 'default'  =>'UTF-8' , 'value'  => 'UTF-8'], 
+            ['prop' => 'lang', 'default' => 'us', 'value' => 'us' ],
+            ['prop' =>'charset' , 'default'  =>'UTF-8' , 'value'  => 'UTF-8'],
             ['prop' =>'csrf-token' , 'default'  =>'{{ csrf_token() }}' , 'value'  => '{{ csrf_token() }}'],
             ['prop' => 'title', 'default' => '{{ $title }}', 'value' => '{{ $title }}'],
             ['prop' => 'css', 'default' => 'https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css', 'value' => 'https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css'],
             ['prop' => 'template-css', 'default' => '/storage/css/main.css', 'value' => '/storage/css/main.css'],
-            ['prop' => 'js', 'default' => 'https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js', 'value' => 'https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js'], 
+            ['prop' => 'js', 'default' => 'https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js', 'value' => 'https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js'],
         ];
     }
 

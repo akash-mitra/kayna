@@ -10,7 +10,7 @@ class Comment extends Model
 {
     protected $fillable = ['body', 'parent_id', 'user_id', 'vote', 'commentable_id', 'commentable_type'];
     protected $appends = ['ago'];
-    protected $with = ['replies', 'user']; 
+    protected $with = ['replies', 'user'];
 
     public function replies()
     {
@@ -43,7 +43,9 @@ class Comment extends Model
             ->where('user_id', Auth::id())
             ->first();
             
-        if(! empty($authUserVoted))    return $authUserVoted->votes;
+        if (! empty($authUserVoted)) {
+            return $authUserVoted->votes;
+        }
 
         return null;
     }

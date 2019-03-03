@@ -48,7 +48,6 @@ class CategoryController extends Controller
         return view('admin.categories.form')
             ->with('categories', Category::all())
             ->with('category', null);
-            
     }
 
     /**
