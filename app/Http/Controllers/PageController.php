@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use DB;
 use App\Page;
 use App\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PageController extends Controller
 {

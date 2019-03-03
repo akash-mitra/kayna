@@ -2,9 +2,9 @@
 
 namespace App;
 
-use DB;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Module extends Model
 {

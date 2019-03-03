@@ -24,7 +24,7 @@
 
 <div class="w-full p-6 bg-white shadow">
         <form action="{{ route('templates.update', $template->id) }}" method="POST" id="frm">
-                {{ csrf_field() }}
+                @csrf
                 {{ method_field('PATCH') }}
                 <div class="flex flex-wrap -mx-3 mb-6">
                         <div class="w-full px-3">

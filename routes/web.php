@@ -13,7 +13,7 @@
 // All Page related general and admin routes
 Route::get('/pages/{page}/{slug?}', 'PageController@show');
 Route::group(['prefix' => 'admin'], function () {
-    Route::resource('pages', 'PageController')->except(['show']);
+    Route::resource('pages', 'PageController')->except(['show'])->middleware('admin');
 });
 Route::get('/api/pages', 'PageController@apiGetAll')->name('api.pages.index');
 Route::get('/api/pages/{page}', 'PageController@apiGet')->name('api.pages.get');
@@ -25,7 +25,7 @@ Route::get('/categories/{category}/{slug?}', 'CategoryController@show');
 Route::get('/api/categories', 'CategoryController@apiIndex')->name('api.categories.index');
 Route::get('/api/categories/{category}', 'CategoryController@apiGet')->name('api.categories.get');
 Route::group(['prefix' => 'admin'], function () {
-    Route::resource('categories', 'CategoryController')->except(['show']);
+    Route::resource('categories', 'CategoryController')->except(['show'])->middleware('admin');
 });
 
 // All Tags related general and admin routes
@@ -59,7 +59,7 @@ Route::get('/profile/{slug}', 'ProfileController@show')->name('profile');
 
 Route::get('/admin', function () {
     return view('admin.home');
-});
+})->middleware('admin');
 
 Route::resource('media', 'MediaController')->except(['destroy']);
 Route::post('/media/destroy', 'MediaController@destroy')->middleware('auth');

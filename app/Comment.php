@@ -3,6 +3,7 @@
 namespace App;
 
 use App\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 
@@ -37,7 +38,7 @@ class Comment extends Model
     {
         //return $this->votes->where('user_id', '=', \Auth::id())->votes;
 
-        $authUserVoted = \DB::table('votes')
+        $authUserVoted = DB::table('votes')
             ->where('votable_type', \App\Comment::class)
             ->where('votable_id', $this->id)
             ->where('user_id', Auth::id())

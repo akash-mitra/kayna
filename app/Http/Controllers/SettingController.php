@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use DB;
 use Cache;
 use App\Parameter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SettingController extends Controller
 {

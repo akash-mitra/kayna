@@ -2,7 +2,8 @@
 
 namespace App;
 
-use DB;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Model;
 
@@ -113,10 +114,10 @@ class media extends Model
 
     private static function setS3StorageParameters($key, $secret, $region, $bucket)
     {
-        \Config::set('filesystems.disks.s3.key', $key);
-        \Config::set('filesystems.disks.s3.secret', $secret);
-        \Config::set('filesystems.disks.s3.region', $region);
-        \Config::set('filesystems.disks.s3.bucket', $bucket);
+        Config::set('filesystems.disks.s3.key', $key);
+        Config::set('filesystems.disks.s3.secret', $secret);
+        Config::set('filesystems.disks.s3.region', $region);
+        Config::set('filesystems.disks.s3.bucket', $bucket);
         self::$directoryPath = $bucket;
     }
 
