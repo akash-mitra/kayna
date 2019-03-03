@@ -12,7 +12,7 @@ class Category extends Model
 
     public function pages()
     {
-        return $this->hasMany('App\Page');
+        return $this->hasMany(\App\Page::class);
     }
 
     public function getUrlAttribute()
@@ -27,7 +27,7 @@ class Category extends Model
 
     public function parent()
     {
-        return $this->belongsTo('App\Category', 'parent_id')->withDefault();
+        return $this->belongsTo(\App\Category::class, 'parent_id')->withDefault();
     }
 
     public static function props()

@@ -11,7 +11,7 @@ class Tag extends Model
 
     public function pages()
     {
-        return $this->morphedByMany('App\Page', 'taggable');
+        return $this->morphedByMany(\App\Page::class, 'taggable');
     }
 
     public function getUrlAttribute()

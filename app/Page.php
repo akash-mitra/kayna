@@ -12,17 +12,17 @@ class Page extends Model
 
     public function content()
     {
-        return $this->hasOne('App\PageContent');
+        return $this->hasOne(\App\PageContent::class);
     }
 
     public function author()
     {
-        return $this->belongsTo('App\User', 'user_id');
+        return $this->belongsTo(\App\User::class, 'user_id');
     }
 
     public function category()
     {
-        return $this->belongsTo('App\Category', 'category_id')->withDefault([
+        return $this->belongsTo(\App\Category::class, 'category_id')->withDefault([
             'name' => 'Uncategorized',
             'description' => null
         ]);
@@ -35,7 +35,7 @@ class Page extends Model
 
     public function tags()
     {
-        return $this->morphToMany('App\Tag', 'taggable');
+        return $this->morphToMany(\App\Tag::class, 'taggable');
     }
 
     public function getUrlAttribute()
