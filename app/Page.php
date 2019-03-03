@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 
 class Page extends Model
@@ -40,7 +41,7 @@ class Page extends Model
 
     public function getUrlAttribute()
     {
-        return url('pages/' . $this->id . '/' . str_slug($this->title));
+        return url('pages/' . $this->id . '/' . Str::slug($this->title));
     }
 
     public function getAgoAttribute()

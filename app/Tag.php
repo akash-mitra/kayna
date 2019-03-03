@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 
 class Tag extends Model
@@ -16,7 +17,7 @@ class Tag extends Model
 
     public function getUrlAttribute()
     {
-        return url('tags/' . $this->id . '/' . str_slug($this->name));
+        return url('tags/' . $this->id . '/' . Str::slug($this->name));
     }
 
     public function getAgoAttribute()

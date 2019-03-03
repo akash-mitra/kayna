@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
@@ -17,7 +18,7 @@ class Category extends Model
 
     public function getUrlAttribute()
     {
-        return url('categories/' . $this->id . '/' . str_slug($this->name));
+        return url('categories/' . $this->id . '/' . Str::slug($this->name));
     }
 
     public function getAgoAttribute()
