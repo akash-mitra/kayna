@@ -4,7 +4,7 @@
 <div class="py-4 px-6">
         <h1 class="w-full p-2">
                 <span class="text-lg font-semibold text-indigo uppercase">
-                        Pages
+                        Pages 
                 </span>
         </h1>
 
@@ -41,10 +41,12 @@
                                     :class="page.status != 'Live' ? 'bg-grey-lightest': 'shadow-inner'">
                                         <td class="px-4 py-2 font-mono text-xs whitespace-no-wrap flex flex-col items-end">
                                                 <a v-bind:href="page.url" target="_blank" class="mb-4 cursor-pointer text-blue-dark no-underline">View</a>
-                                                <button @click="deletePage(page.id)" class="mb-4 cursor-pointer text-blue-dark no-underline">Delete</button>
+                                                
                                                 <button @click="changeStatus(page.id, (page.status != 'Live'? 'Live' : 'Draft'))"
                                                         v-text="page.status != 'Live'? 'Publish' : 'Take Down'"
                                                         class="mb-4 cursor-pointer text-blue-dark no-underline"></button>
+
+                                                <button @click="deletePage(page.id)" class="mb-4 cursor-pointer text-blue-dark no-underline">Delete</button>
                                         </td>
                                         <td class="py-2 px-4 max-w-xs text-sm">
                                                 
@@ -87,7 +89,7 @@
         </div>
 
         <p class="text-xs text-right py-4 text-grey-darker">
-                {{ count($pages) }} records found
+                <span v-text="pages.length"></span> records found
         </p>
         
 @endsection
@@ -121,6 +123,7 @@
                                         let p = this
                                         axios.delete('/admin/pages/' + id)
                                                 .then(function (response){
+                                                        flash({message: response.data.flash.message})
                                                         p.removePageById(response.data.page_id) 
                                                 })
                                 }
