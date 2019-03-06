@@ -86,22 +86,25 @@
                                 <tr>
                                         <th class="p-4">Module</th>
                                         <th class="p-4">Position</th>
-                                        <th class="p-4">Action</th>
+                                        <th class="p-4">Enable</th>
                                 </tr>
                         </thead>
                         <tbody class="align-baseline">
                                 <tr>
                                         <td class="p-4 border-t border-grey-light">
                                                 <h3 class="text-xl text-grey-dark font-medium pb-2">Page Comment</h3>
-                                                <p class="text-grey-darkest pb-2">When you enable this module, authenticated visitors of your blog will be able to make comments on your posts</p>
+                                                <p class="text-grey-darkest pb-2">When you enable this module, authenticated visitors will be able to make comments on your posts</p>
                                         </td>
                                         <td class="px-4 py-2 border-t border-grey-light font-mono text-xs text-purple-dark whitespace-no-wrap">
-                                                <button class="text-xs text-blue" type="button">Set Position</button>
+                                                <input v-model="comment_module.position" class="px-2 py-2 bg-grey-lightest rounded border" placeholder="Template Position"/>
                                         </td>
                                         <td class="px-4 py-2 border-t border-grey-light font-mono text-xs">
-                                                <div class="block flex flex-no-wrap bg-grey-lighter rounded-lg cursor-pointer border">
-                                                        <span class="p-2 bg-green-light rounded-full"></span>
-                                                        <span class="p-2 bg-transparent"></span>    
+                                                <div 
+                                                        class="block flex justify-between flex-no-wrap rounded-lg cursor-pointer border" 
+                                                        :class="comment_module.active==='Y'? 'bg-green-lightest border-green': 'bg-grey-lightest border-grey'"
+                                                        @click="enableComment">
+                                                                <span class="p-2 rounded-full" :class="comment_module.active==='Y'? 'bg-transparent': 'bg-grey'"></span>    
+                                                                <span class="p-2 rounded-full" :class="comment_module.active==='Y'? 'bg-green': 'bg-transparent'"></span>
                                                 </div>
                                         </td>
                                 </tr>
@@ -130,11 +133,13 @@
 
                         filter_modules: function () {
                                 return this.modules.filter ( module => 
-                                        module.name.indexOf(this.needle) != -1 
-                                        
+                                        module.name.indexOf(this.needle) != -1        
                                 )
-                        }
+                        },
 
+                        comment_module: function () {
+                                return this.modules.filter ( module => module.type === 'comment')[0]
+                        },
                 },
 
                 methods: {
@@ -162,6 +167,29 @@
                                         if ( this.modules[i].id === module_id ) 
                                                 this.modules.splice(i, 1)
                                 }
+                        },
+
+                        enableComment: function () {
+
+                                if (this.comment_module.position === null) {
+                                        return alert("Set comment position first")
+                                }
+
+                                let p = this
+                                this.comment_module.active = (this.comment_module.active === 'Y'? 'N': 'Y')
+
+                                if (this.comment_module.id === null) {
+                                        axios.post ('{{route("modules.store")}}', this.comment_module).then(function (response) {
+                                                flash({message: response.data.flash.message})
+                                                p.comment_module.id  = response.data.module_id
+                                        })
+                                } else {
+                                        axios.patch ('/admin/modules/' + this.comment_module.id, this.comment_module).then(function (response) {
+                                                flash({message: response.data.flash.message})
+                                                p.comment_module.id  = response.data.module_id
+                                        })
+                                }
+                                
                         }
                 }
         })

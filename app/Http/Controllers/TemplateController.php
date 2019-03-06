@@ -197,7 +197,7 @@ class TemplateController extends Controller
     private function getDefaultHead()
     {
         return [
-            ['prop' => 'lang', 'default' => 'us', 'value' => 'us' ],
+            ['prop' => 'lang', 'default' => 'en', 'value' => 'en' ],
             ['prop' =>'charset' , 'default'  =>'UTF-8' , 'value'  => 'UTF-8'],
             ['prop' =>'csrf-token' , 'default'  =>'{{ csrf_token() }}' , 'value'  => '{{ csrf_token() }}'],
             ['prop' => 'title', 'default' => '{{ $title }}', 'value' => '{{ $title }}'],

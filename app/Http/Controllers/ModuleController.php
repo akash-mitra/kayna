@@ -14,7 +14,7 @@ class ModuleController extends Controller
      */
     public function index()
     {
-        $modules = Module::all();
+        $modules = Module::allModules();
         return view('admin.modules.index', compact('modules'));
     }
 

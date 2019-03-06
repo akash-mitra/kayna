@@ -13,6 +13,32 @@ class Module extends Model
 
     protected $appends = ['file'];
 
+    /**
+     * This will return a collection of both custom and pre-built modules 
+     *
+     * @return @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public static function allModules() 
+    {
+        $modules = parent::all();
+
+        // check if comment module present, if not add it
+        $commentModule = $modules->filter(function ($module) {
+            return $module->type === 'comment';
+        });
+        if ($commentModule->count() === 0) {
+            $modules->push([
+                "id" => null,
+                "name" => 'comment',
+                "type" => 'comment',
+                "position" => null,
+                "active" => 'N'
+            ]);
+        }
+
+        return $modules;
+    }
+
     public static function getTypes()
     {
         return ['Custom', 'Related', 'Popular'];
