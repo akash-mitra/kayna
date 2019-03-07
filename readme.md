@@ -1,3 +1,6 @@
+# Kayna
+Kayna is a web application that provides a superior blogging framework for the 
+
 ## Browser Support
 ### Kayna Blog Front-End
 
