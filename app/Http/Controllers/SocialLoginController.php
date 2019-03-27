@@ -5,12 +5,10 @@ namespace App\Http\Controllers;
 use Exception;
 use Socialite;
 use App\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class SocialLoginController extends Controller
 {
-
     protected $providers = ['facebook', 'google'];
 
     public function provider($provider)
@@ -20,9 +18,9 @@ class SocialLoginController extends Controller
         }
 
         $driver = $this->makeDriver($provider);
+
         return $driver->redirect();
     }
-
 
     public function callback(String $provider)
     {
@@ -35,16 +33,15 @@ class SocialLoginController extends Controller
         $existingUser = $this->authenticatedUserExisting($authenticatedUser);
 
         if ($existingUser) {
-                $existingUser->createOrUpdateProvider($provider, $authenticatedUser);
-                Auth::login($existingUser, true);
+            $existingUser->createOrUpdateProvider($provider, $authenticatedUser);
+            Auth::login($existingUser, true);
         } else {
             $user = $this->createUserWithProvider($provider, $authenticatedUser);
             Auth::login($user, true);
         }
-        
+
         return redirect('/admin');
     }
-
 
     private function createUserWithProvider($provider, $authenticatedUser)
     {
@@ -53,7 +50,7 @@ class SocialLoginController extends Controller
             'email' => $authenticatedUser->getEmail(),
             'type' => 'general',
             'avatar' => $authenticatedUser->getAvatar(),
-            'slug' => uniqid(mt_rand(), true),
+            'slug' => uniqid(mt_rand(0, 9999), true),
             'email_verified_at' => \Carbon\Carbon::now()
         ]);
 
@@ -61,10 +58,10 @@ class SocialLoginController extends Controller
 
         $user->providers()->create([
             'provider_user_id' => $authenticatedUser->getId(),
-            'provider'         => $provider,
-            'avatar'           => $authenticatedUser->getAvatar()
+            'provider' => $provider,
+            'avatar' => $authenticatedUser->getAvatar()
         ]);
-        
+
         return $user;
     }
 
@@ -72,18 +69,17 @@ class SocialLoginController extends Controller
     {
         try {
             $driver = $this->makeDriver($provider);
+
             return $driver->user();
         } catch (Exception $e) {
             return abort(400, 'Unable to authenticate user');
         }
     }
 
-
     private function authenticatedUserExisting($authenticatedUser)
     {
         return User::where('email', $authenticatedUser->getEmail())->first();
     }
-
 
     /**
      * Checks the authenticated user returned from the
@@ -98,7 +94,7 @@ class SocialLoginController extends Controller
         if (empty($authenticatedUser->getEmail())
             || empty($authenticatedUser->getName())
             || empty($authenticatedUser->getAvatar())) {
-            abort(406, "Must provide name, email and profile picture");
+            abort(406, 'Must provide name, email and profile picture');
         }
     }
 
@@ -108,7 +104,7 @@ class SocialLoginController extends Controller
 
         return $this->$func();
     }
-    
+
     private function makeFacebookDriver()
     {
         $config['client_id'] = param('login_facebook_client_id');
