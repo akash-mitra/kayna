@@ -11,8 +11,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-
-        // load default template
+        // create an admin user
+        DB::table('users')->insert([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => bcrypt('secret'),
+            'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
+        ]);
 
         // create default template associations
         DB::table('content_type_templates')->insert([
@@ -23,26 +29,29 @@ class DatabaseSeeder extends Seeder
             'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
         ]);
 
+        // create config file entries
+        DB::table('paramters')->insert(['key' => 'login_native_active', 'value' => 'yes']);
+        DB::table('paramters')->insert(['key' => 'login_google_active', 'value' => 'no']);
+        DB::table('paramters')->insert(['key' => 'login_facebook_active', 'value' => 'no']);
+        DB::table('paramters')->insert(['key' => 'login_google_client_id', 'value' => '']);
+        DB::table('paramters')->insert(['key' => 'login_google_client_secret', 'value' => '']);
+        DB::table('paramters')->insert(['key' => 'login_facebook_client_id', 'value' => '']);
+        DB::table('paramters')->insert(['key' => 'login_facebook_client_secret', 'value' => '']);
+        DB::table('paramters')->insert(['key' => 'storage_s3_active', 'value' => 'no']);
+        DB::table('paramters')->insert(['key' => 'storage_s3_bucket', 'value' => '']);
+        DB::table('paramters')->insert(['key' => 'storage_s3_secret', 'value' => '']);
+        DB::table('paramters')->insert(['key' => 'storage_s3_key', 'value' => '']);
+        DB::table('paramters')->insert(['key' => 'storage_s3_region', 'value' => '']);
 
-        // create an admin user
-        DB::table('users')->insert([
-            'name' => 'Akash Mitra',
-            'email' => 'akash.mitra@gmail.com',
-            'password' => bcrypt('pakamala'),
-            'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
-        ]);
+        // $users = factory(App\User::class, 5)
+        //     ->create()
+        //     ->each(function ($user) {
 
-        
-        $users = factory(App\User::class, 5)
-            ->create()
-            ->each(function ($user) {
-
-                factory(App\Page::class, 5)
-                    ->create(['user_id' => $user->id])
-                    ->each(function ($page) {
-                        $page->content()->save(factory(App\PageContent::class)->make());
-                    });
-            });
+        //         factory(App\Page::class, 5)
+        //             ->create(['user_id' => $user->id])
+        //             ->each(function ($page) {
+        //                 $page->content()->save(factory(App\PageContent::class)->make());
+        //             });
+        //     });
     }
 }
