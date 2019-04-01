@@ -1,16 +1,20 @@
 @extends('admin.layout')
 
 @section('header')
-<div class="py-4 px-6">
-    <h1 class="w-full p-2">
-        <span class="text-lg font-semibold text-indigo uppercase">
-            Pages
-        </span>
-    </h1>
+<div class="py-4 px-6 flex items-center">
+    <img src="/png/undraw_pages.svg" class="h-24 w-24 mr-4" />
+    <div>
+        <h1 class="w-full p-2">
+            <span class="text-lg font-semibold text-indigo uppercase">
+                Pages
+            </span>
+        </h1>
 
-    <h3 class="px-2 text-sm font-light text-indigo-darker">
-        Create or Edit Pages
-    </h3>
+        <h3 class="px-2 text-sm font-light text-indigo-darker">
+            Create or Edit Pages
+        </h3>
+    </div>
+
 </div>
 @endsection
 

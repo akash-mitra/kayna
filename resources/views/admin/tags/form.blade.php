@@ -24,7 +24,7 @@
 
 @section('main')
         
-
+<div class="px-6">
         <div class="w-full md:w-4/5 lg:w-3/5 p-6 bg-white shadow rounded-lg">
                 <form action="{{ route('tags.store') }}" method="POST" id="frm">
                         @csrf
@@ -33,7 +33,7 @@
                                         <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="name">
                                                 Name
                                         </label>
-                                        <input v-model="name" name="name" class="w-32 appearance-none block bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey" id="inName" type="text" placeholder="e.g. Tennis">
+                                        <input v-model="name" name="name" class="max-w-xs appearance-none block bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey" id="inName" type="text" placeholder="e.g. Tennis">
                                         <p class="text-grey-dark text-xs italic">Provide a unique name</p>
                                 </div>
                         </div>
@@ -58,7 +58,7 @@
                 </div>
         </div>
 
-        
+</div>        
 
         
         

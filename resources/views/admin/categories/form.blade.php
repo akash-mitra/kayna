@@ -23,7 +23,8 @@
 
 
 @section('main')
-        
+     
+<div class="px-6">
 <form action="{{ route('categories.store') }}" method="POST" id="frm">
         @csrf
 
@@ -80,7 +81,7 @@
         </div>
 </form>
         
-
+</div>
         
         
 @endsection
