@@ -59,11 +59,11 @@
                            
                         
                     </div>
-                    <div class="py-4 px-6 text-grey-darker text-right">
+                    <div class="p-4 text-grey-darker text-right">
                         @if (Route::has('login'))
                             <div class="top-right links">
                                 @auth
-                                    <a href="{{ route('profile', Auth::user()->slug) }}" class="no-underline">
+                                    <a href="{{ route('profiles.show', Auth::user()->slug) }}" class="no-underline">
                                         <img class="w-10 h-10 rounded-full mr-4" src="{{ Auth::user()->avatar }}" alt="User Avatar">
                                     </a>
                                     
@@ -78,7 +78,7 @@
                 </header>
 
 
-                <main class="w-full bg-grey-lighter min-h-screen px-8">
+                <main class="w-full bg-grey-lighter min-h-screen px-81">
                 
                     @yield('main')
 

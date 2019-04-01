@@ -9,7 +9,7 @@ class Category extends Model
 {
     protected $fillable = ['name', 'description', 'parent_id'];
 
-    protected $appends = ['url', 'ago'];
+    protected $appends = ['url',  'created_ago', 'updated_ago'];
 
     public function pages()
     {
@@ -21,9 +21,14 @@ class Category extends Model
         return url('categories/' . $this->id . '/' . Str::slug($this->name));
     }
 
-    public function getAgoAttribute()
+    public function getCreatedAgoAttribute()
     {
-        return empty($this->updated_at) ? null : $this->updated_at->diffForHumans();
+        return empty($this->created_at)? null : $this->created_at->diffForHumans();
+    }
+
+    public function getUpdatedAgoAttribute()
+    {
+        return empty($this->updated_at)? null : $this->updated_at->diffForHumans();
     }
 
     public function parent()

@@ -8,8 +8,6 @@
 |
 */
 
-// Authentication Routes
-
 // All Page related general and admin routes
 Route::get('/pages/{page}/{slug?}', 'PageController@show');
 Route::group(['prefix' => 'admin'], function () {
@@ -18,7 +16,6 @@ Route::group(['prefix' => 'admin'], function () {
 Route::get('/api/pages', 'PageController@apiGetAll')->name('api.pages.index');
 Route::get('/api/pages/{page}', 'PageController@apiGet')->name('api.pages.get');
 Route::post('/api/pages/status', 'PageController@apiSetStatus')->name('api.pages.setStatus');
-
 
 // All Categories related general and admin routes
 Route::get('/categories/{category}/{slug?}', 'CategoryController@show');
@@ -40,27 +37,16 @@ Route::group(['prefix' => 'admin'], function () {
     Route::resource('modules', 'ModuleController')->middleware('admin');
 });
 
-// All Tags related general and admin routes
+// All routes (general and admin) related to Users
 Route::group(['prefix' => 'admin'], function () {
     Route::resource('users', 'UserController')->middleware('admin');
 });
 
-// Route::get('/page/{id}/{slug}', function () {
-//     $page = [
-//         'id' => 1,
-//         'title' => 'Life is a series of baby steps',
-//         'summary' => "Don't give it five minutes if you're not going to give it five years.",
-//         'body' => "To succeed in life, you need three things: a wishbone, a backbone, and a funny bone. I've failed over and over and over again in my life and that is why I succeed."
-//     ];
-//     return compiledView('page', $page);
-// });
+// some special routes related to user
+Route::get('/profile/{slug}', 'ProfileController@show')->name('profiles.show');
+Route::post('/admin/users/{user}/password', 'ProfileController@changePassword')->name('profiles.password');
 
-Route::get('/profile/{slug}', 'ProfileController@show')->name('profile');
-
-Route::get('/admin', function () {
-    return view('admin.home');
-})->middleware('admin');
-
+// all media related routes
 Route::resource('media', 'MediaController')->except(['destroy']);
 Route::post('/media/destroy', 'MediaController@destroy')->middleware('auth');
 
@@ -87,5 +73,7 @@ Route::get('/social/login/{provider}', 'SocialLoginController@provider')->name('
 Route::get('/social/login/{provider}/callback', 'SocialLoginController@callback');
 
 Route::get('/', 'HomeController@index')->name('home');
+
+Route::get('/admin', 'HomeController@adminHome')->name('dashboard');
 
 Route::post('/api/search', 'SearchController@search')->name('search');

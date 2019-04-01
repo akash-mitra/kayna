@@ -9,7 +9,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $appends = ['url', 'ago'];
+    protected $appends = ['url', 'created_ago', 'updated_ago'];
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'type', 'avatar', 'slug'
+        'name', 'email', 'password', 'type', 'avatar', 'slug', 'bio'
     ];
 
     /**
@@ -78,9 +78,19 @@ class User extends Authenticatable
         return url('/profile/' . $this->slug);
     }
 
-    public function getAgoAttribute()
+    public function getUpdatedAgoAttribute()
     {
         return $this->updated_at->diffForHumans();
+    }
+
+    public function getCreatedAgoAttribute()
+    {
+        return $this->created_at->diffForHumans();
+    }
+
+    public function isRequestingHerSelf()
+    {
+        return auth()->user()->id === $this->id;
     }
 
     public static function props()

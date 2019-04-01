@@ -51,33 +51,6 @@
 
             <div class="max-h-screen  overflow-scroll">
 
-                <!-- <header class="flex justify-between">
-                    
-                    
-                    <div class="w-full">
-                        @yield('header')
-                           
-                        
-                    </div>
-                    <div class="py-4 px-6 text-grey-darker text-right">
-                        @if (Route::has('login'))
-                            <div class="top-right links">
-                                @auth
-                                    <a href="{{ route('profile', Auth::user()->slug) }}" class="no-underline">
-                                        <img class="w-10 h-10 rounded-full mr-4" src="{{ Auth::user()->avatar }}" alt="User Avatar">
-                                    </a>
-                                    
-                                @else
-                                    <a class="no-underline text-blue-dark p-2 hover:shadow rounded" href="{{ route('login') }}">Login</a>
-                                    <a class="no-underline text-blue-dark p-2 hover:shadow rounded" href="{{ route('register') }}">Register</a>
-                                @endauth
-                            </div>
-                        @endif
-                    </div>
-                    
-                </header> -->
-
-
                 <main class="w-full min-h-screen px-8">
                 
                     @yield('main')
