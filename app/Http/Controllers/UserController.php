@@ -62,6 +62,8 @@ class UserController extends Controller
         return view('admin.user.form', compact('profile'));
     }
 
+
+    
     public function update(Request $request, User $user)
     {
         // only bio and type fields are updatable

@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @section('header')
-<div class="py-4 px-6 flex items-center">
+<div class="py-2 px-6 flex items-center">
     <img src="/png/undraw_pages.svg" class="h-24 w-24 mr-4" />
     <div>
         <h1 class="w-full p-2">

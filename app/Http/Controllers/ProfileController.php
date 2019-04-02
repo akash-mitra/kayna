@@ -22,12 +22,12 @@ class ProfileController extends Controller
         return compiledView('profile', $user->toArray());
     }
 
-    public function edit(User $user)
-    {
-        $profile = $user->load('publications', 'comments', 'providers');
+    // public function edit(User $user)
+    // {
+    //     $profile = $user->load('publications', 'comments', 'providers');
 
-        return view('admin.user.form', compact('profile'));
-    }
+    //     return view('admin.user.form', compact('profile'));
+    // }
 
     /**
      * Change the password of the user. An authenticated

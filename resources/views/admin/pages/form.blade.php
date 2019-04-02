@@ -1,4 +1,4 @@
-@extends('layouts.pageform')
+@extends('admin.pageform')
 
 @section('css')
 

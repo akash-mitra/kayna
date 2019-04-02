@@ -1,6 +1,7 @@
 
 // window._ = require('lodash');
 window.Popper = require('popper.js').default;
+// window.Tooltip = require('tooltip.js').default;
 
 
 /**
