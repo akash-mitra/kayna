@@ -1,5 +1,5 @@
 <template>
-        <div v-if="show" @click="closeModal" class="absolute pin-t pin-l h-screen w-screen" style="background-color: rgba(0,0,0,0.5)">
+        <div v-if="show" @click="closeModal" class="absolute pin-t pin-l h-screen w-screen z-50" style="background-color: rgba(0,0,0,0.5)">
                 <div class="container mx-auto h-full flex justify-center items-center">
                         <div :class="widthClass" @click.stop class="bg-white shadow-lg border border-grey-darker">
 

@@ -121,6 +121,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 trix__WEBPACK_IMPORTED_MODULE_0___default.a.config.attachments.preview.caption = {
   name: false,
@@ -131,6 +133,7 @@ trix__WEBPACK_IMPORTED_MODULE_0___default.a.config.attachments.preview.caption =
     name: String,
     value: String,
     placeholder: String,
+    css_class: String,
     autohide: Boolean
   },
   mounted: function mounted() {
@@ -1450,9 +1453,13 @@ var render = function() {
       _vm._v(" "),
       _c("trix-editor", {
         ref: "trix",
-        staticClass:
-          "trix border-none mt-2 -ml-1 font-sans default-page-content",
-        attrs: { input: "trix", placeholder: _vm.placeholder }
+        staticClass: "trix border-none default-page-content",
+        class: _vm.css_class,
+        attrs: {
+          input: "trix",
+          toolbar: "my_toolbar",
+          placeholder: _vm.placeholder
+        }
       })
     ],
     1
@@ -1703,9 +1710,9 @@ __webpack_require__.r(__webpack_exports__);
  * about an Unknown custom element, assuming that you 
  * forgot to register a global component.
  */
-Vue.config.ignoredElements = ['trix-editor']; // add the Vue file for the Editor application
+Vue.config.ignoredElements = ['trix-editor', 'trix-toolbar']; // add the Vue file for the Editor application
 
-Vue.component('editor', __webpack_require__(/*! ./app/Editor.vue */ "./resources/js/app/Editor.vue"));
+Vue.component('editor', __webpack_require__(/*! ./app/Editor.vue */ "./resources/js/app/Editor.vue").default);
 
 /***/ }),
 

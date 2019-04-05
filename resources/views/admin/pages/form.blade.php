@@ -3,20 +3,14 @@
 @section('css')
 
         <link rel="stylesheet"  href="/css/admin/trix.css">
-        <style>
+        <!-- <style>
                 /* trix-toolbar { display: none; } */
                 h2 { color: red }
-        </style>
-@endsection
-
-@section('header')
-        
-        
+        </style> -->
 @endsection
 
 
 @section('main')
-
 
 <div class="w-full max-w-lg mx-auto p-8">
 
@@ -46,10 +40,11 @@
         <div class="w-full flex flex-col px-2">
                 <textarea name="title"  
                         v-model="title" 
-                        placeholder="Type page title here" 
+                        placeholder="Title" 
                         rows="1" 
                         @input="clearValidations"
-                        class="w-full py-2 default-page-title"></textarea>
+                        class="w-full py-2 default-page-title"
+                        :class='title.length>0? "border-none": "border-b"'></textarea>
                 <!-- </span> -->
                 <ul class="-ml-5 mt-2"><li v-for="e in validations.title" v-text="e" class="text-xs font-normal text-red"></li></ul>
         </div>
@@ -57,22 +52,33 @@
         <div class="flex flex-col py-2 px-2 text-sm font-light text-grey-dark">
                 <textarea 
                         name="summary"
+                        id="ta_summary" 
                         v-model="summary" 
-                        placeholder="Provide a short Summary in 2-3 lines" 
+                        placeholder="Short Summary" 
                         rows="3" 
-                        @input="clearValidations"
-                        class="w-full py-2 default-page-summary"></textarea>
+                        @input="handleSummaryInput"
+                        class="mt-4 h-12 1bg-grey w-full py-2 default-page-summary"
+                        :class='summary.length>0? "border-none": "border-b"'></textarea>
                 <ul class="-ml-5 mt-2"><li v-for="e in validations.summary" v-text="e" class="text-xs font-normal text-red"></li></ul>
         </div>
+
         
+        <div class="w-full px-2 mt-6 text-right">
+                
+                <p class="border-b border-dotted pb-2 text-xs text-grey-dark font-mono">2 min read</p>
+
+        </div>
         
-        <editor  
-                name="body" 
-                v-model="body" 
-                :value="body" 
-                :autohide=false 
-                placeholder="Have your say here...">
-        </editor>
+        <div class="w-full px-2">
+                <editor  
+                        name="body" 
+                        v-model="body" 
+                        :value="body" 
+                        :autohide=false 
+                        :css_class='body.length==0? "bg-grey-lightest": "bg-transparent"'
+                        placeholder="Tell your story...">
+                </editor>
+        </div>
         <!-- <textarea v-model="body" class="w-full"></textarea> -->
         
 </div>  
@@ -80,6 +86,8 @@
 <div class="w-full max-w-lg mx-auto flex justify-between my-2 p-4">
         
 </div>
+
+
 
 
 <base-modal :show="show_info_modal" cover="2/3" @close="show_info_modal=null">
@@ -402,6 +410,14 @@
                                 for(let i = 0; i < this.categories.length; i++)
                                 if (this.categories[i].id === value) return this.categories[i].name
                                 return 'Uncategorised'
+                        },
+
+
+                        handleSummaryInput: function (event) {
+                                let element = document.getElementById('ta_summary');
+                                element.style.height = "5px";
+                                element.style.height = (element.scrollHeight)+"px";
+                                this.clearValidations(event);
                         },
 
                         /**

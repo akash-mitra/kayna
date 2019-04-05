@@ -15,31 +15,25 @@
 
 <body class="font-sans">
 
-    <div class="flex flex-wrap bg-white">
+    <div class="w-full md:flex">
 
-        <div class="w-full md:w-1/5  max-h-screen overflow-scroll" id="leftCol">
-
-            <div class="nav-scrollbar-wrapperq">
-
+        <div class="w-full md:w-1/6 max-h-screen overflow-y-auto">
+            <div class="w-full">
+                @include('admin.partials.logo')
+            </div>
+            <div class="w-full">
                 @include('admin.partials.nav')
             </div>
+        </div>
 
-        </div><!-- end of left col -->
-
-        <div class="flex-1 w-full md:w-4/5">
-
-            <div class="max-h-screen overflow-scroll">
-                <header class="relative bg-grey-lighter w-full">
-                    @yield('header')
-
-                    <div class="absolute pin-t pin-r m-6">
-                        @include('admin.partials.user-tile')
-                    </div>
-                </header>
-
-                <main class="w-full bg-grey-lighter min-h-screen">
+        <div class="w-full md:w-5/6 bg-grey-lighter min-h-screen max-h-screen overflow-x-hidden overflow-y-auto">
+            <div class="w-full flex justify-between items-center bg-grey-lighter">
+                @yield('header')
+                @include('admin.partials.user-tile')
+            </div>
+            <div class="w-full">
+                <main class="w-full">
                     @yield('main')
-
                     <flash message="{{ empty($flash) ? session('flash') : $flash }}"></flash>
                 </main>
             </div>
@@ -59,4 +53,4 @@
 
 </body>
 
-</html> 
+</html>

@@ -15,8 +15,10 @@
         <trix-editor 
             ref="trix" 
             input="trix" 
+            toolbar="my_toolbar" 
             :placeholder="placeholder" 
-            class="trix border-none mt-2 -ml-1 font-sans default-page-content">
+            class="trix border-none default-page-content" 
+            :class="css_class">
         </trix-editor>
 
     </div>
@@ -40,6 +42,8 @@
                 value: String,
 
                 placeholder: String,
+
+                css_class: String,
 
                 autohide: Boolean
         },

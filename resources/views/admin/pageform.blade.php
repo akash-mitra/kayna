@@ -1,99 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Bliss Admin</title>
+    <title>BlogTheory Admin</title>
     <link href="{{ mix('/css/app.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="/storage/css/main.css">
 
-    <style>
-        .active {
-            background-color: transparent;
-        }
-        .btnSidebar {
-            cursor: pointer;
-
-        }
-        @media (max-width: 1200px) {
-            .nav-scrollbar-wrapper nav {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                overflow-y: auto;
-                white-space: nowrap;
-            }    
-        }
-         
-    </style>
-    
     @yield('css')
-
-    
 </head>
-<body class="font-sans">
-    
-    <div class="flex flex-wrap bg-white">
 
-        <div class="hidden bg-grey-lightest flex-none md:flex md:flex-col md:w-full xl:w-1/5  max-h-screen overflow-scroll" id="leftCol">
+<body class="font-sans bg-grey-lightest">
 
-            <div class="nav-scrollbar-wrapper">
+    <div class="w-full md:flex">
 
+        <div class="hidden md:block md:w-1/5 max-h-screen overflow-y-auto">
+            <div class="w-full">
+                @include('admin.partials.logo')
+            </div>
+            <div class="w-full">
                 @include('admin.partials.nav')
             </div>
-            
-        </div><!-- end of left col -->
-
-
-        <div class="flex-1 w-full xl:w-4/5">
-
-            <div class="max-h-screen  overflow-scroll">
-
-                <main class="w-full min-h-screen px-8">
-                
-                    @yield('main')
-
-                    <flash  message="{{ empty($flash) ? session('flash') : $flash }}"></flash>
-
-                </main>
-                
-            </div>
-            
         </div>
 
+        <div class="w-full md:w-4/5 bg-white min-h-screen max-h-screen overflow-x-hidden overflow-y-auto">
+            
+            <div class="h-16 fixed w-full md:w-4/5 flex justify-center items-center border-b bg-white z-20">
+                <trix-toolbar id="my_toolbar" style="padding-top:10px" class="bg-transparent"></trix-toolbar>
+                
+            </div>
+
+            <main class="mt-16 w-full z-10">
+                @yield('main')
+                <flash message="{{ empty($flash) ? session('flash') : $flash }}"></flash>
+            </main>
+            
+        </div>
     </div>
-    
-    <script>
 
-        /**
-         * This code is for creating the left side menu toggle 
-         * behavior. 
-         */
-        // let toggleSideBar = function () {
-        //         var leftCol = document.getElementById('leftCol');
-        //         var logoBlock = document.getElementById('logoBlock');
-        //         if (leftCol.style.display === 'none') {
-        //             leftCol.style.display = 'flex'
-        //             logoBlock.style.display = 'none'
-        //         }
-        //         else {
-        //             logoBlock.style.display = 'block';
-        //             leftCol.style.display = 'none';
-        //         }
-        // }, btnSidebar = document.getElementsByClassName('btnSidebar');
 
-        // for (var i = 0; i < btnSidebar.length; i++) {
-        //     btnSidebar[i].addEventListener('click', toggleSideBar);
-        // }
-
-    
-    </script>
+    @include('admin.partials.popover')
 
     <script src="{{ mix('/js/app.js') }}"></script>
 
+    @include('admin.partials.enable-menu-toggle')
+
+    @include('admin.partials.popover-js')
+
     @yield('script')
-    
+
 </body>
+
 </html>

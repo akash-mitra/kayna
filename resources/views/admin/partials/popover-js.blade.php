@@ -19,8 +19,10 @@
                 }
             });
         } else {
-            popup.style.display = 'none'
-            popper.destroy()
+            if (popper !== null) {
+                popup.style.display = 'none'
+                popper.destroy()
+            }
         }
     }
 </script> 

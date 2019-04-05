@@ -6832,7 +6832,7 @@ var render = function() {
     ? _c(
         "div",
         {
-          staticClass: "absolute pin-t pin-l h-screen w-screen",
+          staticClass: "absolute pin-t pin-l h-screen w-screen z-50",
           staticStyle: { "background-color": "rgba(0,0,0,0.5)" },
           on: { click: _vm.closeModal }
         },
