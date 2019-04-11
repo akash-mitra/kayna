@@ -1,1 +1,0 @@
-Vue.component('editor-tiny', require('./app/EditorTiny.vue'))

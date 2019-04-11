@@ -51,9 +51,13 @@ Route::resource('media', 'MediaController')->except(['destroy']);
 Route::post('/media/destroy', 'MediaController@destroy')->middleware('auth');
 
 Route::get('/admin/templates', 'TemplateController@index')->name('templates.index')->middleware('admin');
-Route::get('/admin/templates/create/{type}', 'TemplateController@create')->name('templates.create')->middleware('admin');
-Route::get('/admin/templates/{template}', 'TemplateController@show')->name('templates.show')->middleware('admin');
-Route::post('/admin/templates', 'TemplateController@store')->name('templates.store')->middleware('admin');
+Route::get('/admin/templates/public', 'TemplateController@templates')->name('templates.templates')->middleware('admin');
+Route::post('/admin/templates/install', 'TemplateController@install')->name('templates.install')->middleware('admin');
+Route::post('/admin/templates/apply', 'TemplateController@apply')->name('templates.apply')->middleware('admin');
+Route::get('/admin/templates/{template}', 'TemplateController@form')->name('templates.form')->middleware('admin');
+// Route::get('/admin/templates/create/{type}', 'TemplateController@create')->name('templates.create')->middleware('admin');
+// Route::get('/admin/templates/{template}', 'TemplateController@show')->name('templates.show')->middleware('admin');
+// Route::post('/admin/templates', 'TemplateController@store')->name('templates.store')->middleware('admin');
 Route::patch('/admin/templates/{template}', 'TemplateController@update')->name('templates.update')->middleware('admin');
 
 Route::get('/admin/accesses', 'RestrictionController@index')->name('accesses.index')->middleware('admin');

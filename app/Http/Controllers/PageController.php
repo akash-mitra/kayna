@@ -81,7 +81,7 @@ class PageController extends Controller
         if ($pageData->status != 'Live') {
             return abort(404, "This page is currently off-line.");
         }
-
+        // return $pageData;
         return compiledView('page', $pageData->toArray());
     }
 

@@ -1,7 +1,7 @@
 <?php
 
 use App\Module;
-use App\ContentTypeTemplate;
+use App\Template;
 use Illuminate\Support\Facades\Cache;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 
@@ -41,7 +41,7 @@ function getModulesforPosition($position)
 
 function getTemplate($contentType)
 {
-    return ContentTypeTemplate::for($contentType);
+    return Template::where('type', $contentType)->where('active', 'Y')->first()->body;
 }
 
 function compiledView(string $contentType, array $data)
@@ -56,13 +56,14 @@ function compiledView(string $contentType, array $data)
     return render($compiledTemplate, $data);
 }
 
-function render(string $__php, array $__data)
+function render(string $__php, array $page)
 {
-    $__data['__env'] = app(\Illuminate\View\Factory::class);
+    // dd($page->title);
+    $page['__env'] = app(\Illuminate\View\Factory::class);
 
     $obLevel = ob_get_level();
     ob_start();
-    extract($__data, EXTR_SKIP);
+    extract($page, EXTR_SKIP);
     try {
         eval('?' . '>' . $__php);
     } catch (Exception $e) {

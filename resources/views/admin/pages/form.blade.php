@@ -74,20 +74,14 @@
                         name="body" 
                         v-model="body" 
                         :value="body" 
-                        :autohide=false 
+                        :autohide=true 
                         :css_class='body.length==0? "bg-grey-lightest": "bg-transparent"'
                         placeholder="Tell your story...">
                 </editor>
         </div>
-        <!-- <textarea v-model="body" class="w-full"></textarea> -->
-        
 </div>  
 
-<div class="w-full max-w-lg mx-auto flex justify-between my-2 p-4">
-        
-</div>
-
-
+<div class="w-full max-w-lg mx-auto flex justify-between my-2 p-4"></div>
 
 
 <base-modal :show="show_info_modal" cover="2/3" @close="show_info_modal=null">

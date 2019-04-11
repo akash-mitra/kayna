@@ -123,11 +123,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 trix__WEBPACK_IMPORTED_MODULE_0___default.a.config.attachments.preview.caption = {
   name: false,
   size: false
 };
+trix__WEBPACK_IMPORTED_MODULE_0___default.a.config.blockAttributes.heading1.tagName = "h2"; // https://github.com/basecamp/trix/issues/202
+// Trix.config.blockAttributes.default.tagName = "div";
+// Trix.config.blockAttributes.default.breakOnReturn = true;
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     name: String,
@@ -291,7 +298,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "trix-toolbar .trix-button-group,\ntrix-toolbar .trix-button,\ntrix-toolbar .trix-button:not(:first-child) {\n  border: none;\n}\ntrix-toolbar .trix-button:hover {\n  color: #000;\n}\n", ""]);
+exports.push([module.i, "trix-toolbar .trix-button-group,\ntrix-toolbar .trix-button,\ntrix-toolbar .trix-button:not(:first-child) {\n  border: none;\n}\ntrix-toolbar .trix-button:hover {\n  color: #000;\n}\n.trix-button--icon-increase-nesting-level,\n.trix-button--icon-decrease-nesting-level {\n  display: none;\n}\n", ""]);
 
 // exports
 

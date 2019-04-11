@@ -15,11 +15,14 @@ class CreateTemplatesTable extends Migration
     {
         Schema::create('templates', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('source_id');
             $table->string('name');
-            $table->text('body');
-            $table->text('frame');
-            $table->text('head');
             $table->string('type', 30);
+            $table->mediumText('description')->nullable();
+            $table->string('url')->nullable();
+            $table->text('body');
+            $table->text('positions')->nullable();
+            $table->char('active', 1);
             $table->timestamps();
         });
     }

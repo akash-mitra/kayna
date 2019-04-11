@@ -3,115 +3,132 @@
 @section('header')
 <div class="py-4 px-6">
         <h1 class="w-full p-2">
-                <span class="text-lg font-semibold text-grey-darker uppercase borqder-b">
-                        Templates 
+                <span class="text-lg font-semibold text-indigo uppercase">
+                        Template Library
                 </span>
         </h1>
 
-        <h3 class="px-2 text-sm font-light text-grey-dark">
+        <h3 class="px-2 text-sm font-light text-indigo-darker">
                 Import new templates for various content types.
         </h3>
-</div>        
+</div>
 @endsection
 
 
 @section('main')
-        
-        <div class="pt-4 flex justify-end">
-                <a href="/admin/content-types" class="no-underline border border-teal px-4 py-2 rounded text-sm  hover:bg-teal hover:text-white text-teal mr-2">
-                        Template Assignments
-                </a>
 
-                <button id="btnNew" @click="newTemplate" class="border border-teal px-2 py-2 rounded text-sm bg-teal hover:bg-orange hover:border-orange text-white shadow">
-                        New Template
-                </button>
+<div class="px-6 py-4">
+
+        <div class="w-full flex flex-wrap uppercase text-sm font-bold">
+                <span v-for="(tab, index) in tabs" :class="active_tab!=index+1? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-t-2 border-indigo'" class="py-4 px-8" @click="select(tab, $event)" v-text="tab"></span>
         </div>
 
-        <div class="w-full mt-8 bg-white shadow">
-                <table class="w-full text-left table-collapse">
-                        <thead class="uppercase text-xs font-semibold text-grey-darker border-b-2">
-                                <tr>
-                                        <th class="p-4">#</th>
-                                        <th class="p-4">Name</th>
-                                        <th class="p-4">Used In</th>
-                                        <th class="p-4">Created</th>
-                                </tr>
-                        </thead>
-                        <tbody class="align-baseline">
-                                @foreach($templates as $template)
-                                        <tr class="hover:bg-grey-lightest hover:shadow-inner cursor-pointer border-b border-blue-lightest">
-                                                <td class="px-4 py-2 border-t border-grey-light whitespace-no-wrap text-sm">{{ $loop->iteration }}</td>
-                                                <td class="px-4 py-2 border-t border-grey-light whitespace-no-wrap">
-                                                        <a href="{{ route('templates.show', $template->id)}}" class="no-underline text-blue">
-                                                                {{ $template->name }}
-                                                        </a>
-                                                </td>
-                                                <td class="px-4 py-2 border-t border-grey-light font-mono text-purple-dark whitespace-no-wrap text-sm">{!! implode(", ", $template->used_in) !!}</td>
-                                                <td class="px-4 py-2 border-t border-grey-light whitespace-no-wrap text-sm">{{ $template->created_at->diffForHumans() }}</td>
-                                        </tr>
-                                @endforeach
-                        </tbody>
-                </table>
 
-                <div class="w-full bg-grey-lightest h-12 flex justify-between px-2 py-2 font-normal text-xs text-blue-light border-b">
-                        {{ $templates->links() }}
+        <div v-for="(tab, index) in tabs">
+                <div v-show="active_tab===index+1" class="w-full text-sm bg-white">
+                        <h3 class="w-full px-8 py-2 pt-8 uppercase text-xs text-grey-darker font-light">Installed</h3>
+                        <div class="w-full shadow px-4 pt-2 pb-4 flex flex-wrap">
+                                <div v-for="template in filterTemplatesFor(applied_templates, tab)" class="my-2 p-2 w-full md:w-1/3 md:max-w-xs">
+                                        <template-tile v-bind:template="template" @apply-template="onApplyTemplate"></template-tile>
+                                </div>
+                        </div>
+                        <h3 class="w-full px-8 py-2 pt-8 uppercase text-xs text-grey-darker font-light">Available</h3>
+                        <div class="w-full shadow px-4 pt-2 pb-4 flex flex-wrap">
+                                <div v-for="template in filterTemplatesFor(public_templates, tab)" class="my-2 p-2 w-full md:w-1/3 md:max-w-xs">
+                                        <template-tile v-bind:template="template" @install-template="onInstallTemplate"></template-tile>
+                                </div>
+                        </div>
                 </div>
         </div>
 
-        <p class="text-xs text-right py-4 text-grey-darker">
-                {{ count($templates) }} records found
-        </p>
+        <form id="frmInstall" method="post" action="{{route('templates.install')}}">
+                @csrf
+                <input id="inputTemplateId1" type="hidden" name="template">
+        </form>
 
-        <base-modal :show="showModal" cover="1/3" @close="showModal=false">
-                <h4 slot="header" class="w-full text-blue-dark font-semibold bg-grey-lightest border-blue-lighter border-b qshadow py-4 px-8">
-                        What template do you want to create?
-                </h4>
+        <form id="frmApply" method="post" action="{{route('templates.apply')}}">
+                @csrf
+                <input id="inputTemplateId2" type="hidden" name="template">
+        </form>
+</div>
 
-                <div  class="w-full max-w-lg mx-auto px-8 pt-2 pb-4 border-b hover:bg-blue-lightest cursor-pointer" @click="createTemplate('home')">
-                        <h3 class="text-blue font-light py-1">Homepage Template</h3>
-                        <p class="text-grey-dark">Template for the first page or the landing page of your blog</p>
-                </div>
-                <div  class="w-full max-w-lg mx-auto px-8 pt-2 pb-4 border-b hover:bg-blue-lightest cursor-pointer" @click="createTemplate('page')">
-                        <h3 class="text-blue font-light py-1">Page Template</h3>
-                        <p class="text-grey-dark">Page templates are used to display individual pages of your blog</p>
-                </div>
-                <div  class="w-full max-w-lg mx-auto px-8 pt-2 pb-4 border-b hover:bg-blue-lightest cursor-pointer" @click="createTemplate('category')">
-                        <h3 class="text-blue font-light py-1">Category Template</h3>
-                        <p class="text-grey-dark">This template is used to display pages of a specific category chronologically</p>
-                </div>
-                <div  class="w-full max-w-lg mx-auto px-8 pt-2 pb-4 border-b hover:bg-blue-lightest cursor-pointer" @click="createTemplate('profile')">
-                        <h3 class="text-blue font-light py-1">Profile Template</h3>
-                        <p class="text-grey-dark">Profile template is used to show the profile page of a registered user</p>
-                </div>
 
-                <div slot="footer" class="bg-blue-lightest border-blue-lighter border-t h-4">
-        </base-modal>
-        
 @endsection
 
 @section('script')
 
-        <script>
-                // document.getElementById('btnSearch').onclick = function () {
-                //         location.href = '{{ route('templates.index') }}' + '?q=' + document.getElementById('txtSearch').value 
-                // }
+<script src="/js/template-tile.js"></script>
 
-                new Vue({
-                        el: 'main',
-                        data: {
-                                showModal: false
+<script>
+        new Vue({
+                el: 'main',
+                data: {
+                        active_tab: 1,
+                        tabs: ['home', 'page', 'profile', 'category'],
+                        applied_templates: @json($templates),
+                        public_templates: [],
+                        showModal: false
+                },
+
+                methods: {
+
+                        select: function(choice, event) {
+                                this.active_tab = this.tabs.indexOf(choice) + 1
                         },
-                        methods: {
-                                newTemplate: function () {
-                                        this.showModal = true
-                                },
 
-                                createTemplate: function (type) {
-                                        location.href = "/admin/templates/create/" + type
-                                }
-                        }
-                })
+                        // newTemplate: function() {
+                        //         this.showModal = true
+                        // },
 
-        </script>
+                        // createTemplate: function(type) {
+                        //         location.href = "/admin/templates/create/" + type
+                        // },
+
+                        filterTemplatesFor: function(templates, type) {
+                                return templates.filter(item => item.type === type)
+                        },
+
+                        onInstallTemplate: function(templateId) {
+                                var form = document.getElementById("frmInstall");
+                                var inputTemplate = document.getElementById("inputTemplateId1");
+                                inputTemplate.value = templateId;
+                                form.submit();
+                        },
+
+                        onApplyTemplate: function(templateId) {
+                                var form = document.getElementById("frmApply");
+                                var inputTemplate = document.getElementById("inputTemplateId2");
+                                inputTemplate.value = templateId;
+                                form.submit();
+                        },
+
+                        // Merges list of all the available templates with the
+                        // list of templates currently in use
+                        // mergeTemplates(public_templates) {
+                        //         for (let i = 0; i < public_templates.length; i++) {
+                        //                 t = public_templates[i]
+                        //                 // for (let j = 0; j < this.applied_templates.length; j++) {
+                        //                 //         if (t.id === this.applied_templates[j].source_id) {
+
+                        //                 //         }
+                        //                 // }
+                        //                 this.applied_templates.push(t)
+                        //         }
+                        // }
+                },
+
+                created: function() {
+                        let p = this
+                        axios.get("{{route('templates.templates')}}")
+                                .then((response) => {
+                                        p.public_templates = response.data
+                                })
+                                .catch((error) => {
+                                        console.log(error)
+                                })
+
+                }
+        })
+</script>
 
 @endsection

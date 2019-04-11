@@ -6,6 +6,9 @@
     trix-toolbar .trix-button:hover {
         color: #000
     }
+
+    .trix-button--icon-increase-nesting-level,
+    .trix-button--icon-decrease-nesting-level { display: none; }
 </style>
 <template>
     <div>
@@ -32,6 +35,10 @@
         name: false,
         size: false
     }
+    Trix.config.blockAttributes.heading1.tagName = "h2"
+    // https://github.com/basecamp/trix/issues/202
+    // Trix.config.blockAttributes.default.tagName = "div";
+    // Trix.config.blockAttributes.default.breakOnReturn = true;
 
     export default {
 
