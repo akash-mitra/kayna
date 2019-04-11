@@ -92,7 +92,6 @@ class ModuleController extends Controller
         $content = $request->input('code');
         
         $data = request(['name', 'type', 'position', 'exceptions', 'applicables', 'active']);
-        
 
 
         Module::updateTemplate($module->name, $filename, $content);
@@ -100,7 +99,7 @@ class ModuleController extends Controller
 
         return [
             'status' => 'success',
-            'flash' => ['message' => 'module [' . $module->name . '] saved']
+            'flash' => ['message' => 'Module ' . $module->name . ' saved successfully']
                 
         ];
     }

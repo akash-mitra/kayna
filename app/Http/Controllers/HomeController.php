@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use DB;
+use App\Page;
+use App\Category;
 
 class HomeController extends Controller
 {
@@ -13,7 +15,20 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $pages = Page::with('category')->orderBy('updated_at', 'desc')->paginate(5);
+        $data['pages'] = $pages->toArray();
+
+        $categories = Category::take(10)->get();
+        $data['categories'] = $categories->toArray();
+
+        $data['common'] = [
+            "sitename" => "Kayna",
+            "sitetitle" => "A BlogTheory site",
+            "metadesc" => "A friendly website",
+            "metakey" => ""
+        ];
+        // return $data;
+        return compiledView('home', $data);
     }
 
     public function dashboard()

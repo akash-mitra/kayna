@@ -21,7 +21,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::with('parent')->get();
+        $categories = Category::with('parent', 'pages')->get();
+        // return $categories;
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -75,7 +76,9 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        $categoryData = $category->load('pages','parent');
+        // return $categoryData;
+        return compiledView('category', $categoryData->toArray());
     }
 
     /**

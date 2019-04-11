@@ -32,7 +32,7 @@
         <thead class="uppercase text-xs font-semibold text-grey-darker border-b-2">
             <tr>
                 <th class="p-4">Name</th>
-                <th class="hidden sm:table-cell p-4">Publications</th>
+                <th class="hidden sm:table-cell p-4">Posts</th>
                 <th class="hidden sm:table-cell p-4">Created</th>
                 <th class="p-4">Actions</th>
             </tr>
@@ -40,7 +40,7 @@
         <tbody class="align-baseline">
             <tr v-for="category in filter_categories">
 
-                <td class="px-4 py-2 font-mono text-xs text-puqrple-dark whitespace-no-wrap">
+                <td class="px-4 py-2 font-mono text-xs text-puqrple-dark">
 
                     <span class="py-1 text-grey-dark text-xs" v-text="typeof category.parent.name === 'undefined'? '': category.parent.name + ' /'"></span>
                     <a v-bind:href="editCategory(category.id)" class="no-underline text-sm font-medium text-blue">
@@ -50,7 +50,7 @@
 
                 </td>
                 <td class="hidden sm:table-cell px-4 py-2 font-mono text-xs text-purple-dark whitespace-no-wrap">
-                    10
+                    <span v-text="category.pages.length"></span>
                 </td>
                 <td class="hidden sm:table-cell px-4 py-2 font-mono text-xs text-purple-dark whitespace-no-wrap" v-text="category.created_ago">
                 </td>
@@ -121,4 +121,4 @@
     })
 </script>
 
-@endsection 
+@endsection

@@ -40,7 +40,7 @@
 
         <ul class="menu-list hidden md:block w-full text-center sm:text-left sm:w-1/3 md:w-full list-reset py-4 sm:border-l sm:border-r md:border-l-0 md:border-r-0">
             <li class="pb-2">
-                <span class="px-6 text-indigo-light font-semibold text-xs uppercase">User</span>
+                <span class="px-6 text-indigo-light font-semibold text-xs uppercase">Audience</span>
             </li>
             <li class="px-6 md:px-8 py-2">
                 <a class="hover:text-teal text-grey-darker no-underline font-hairline" href="/admin/users">
@@ -48,29 +48,29 @@
                 </a>
             </li>
             <li class="px-6 md:px-8 py-2">
-                <a class="hover:text-teal text-grey-darker no-underline font-hairline" href="#">
+                <span class="text-grey no-underline font-hairline" href="#">
                     Service
-                </a>
+                </span>
             </li>
             <li class="px-6 md:px-8 py-2">
-                <a class="hover:text-teal text-grey-darker no-underline font-hairline" href="#">
+                <span class="text-grey no-underline font-hairline" href="#">
                     Subscription
-                </a>
+                </span>
             </li>
             <li class="px-6 md:px-8 py-2">
-                <a class="hover:text-teal text-grey-darker no-underline font-hairline" href="#">
+                <span class="text-grey no-underline font-hairline" href="#">
                     Comments
-                </a>
+                </span>
             </li>
             <li class="px-6 md:px-8 py-2">
-                <a class="hover:text-teal text-grey-darker no-underline font-hairline" href="#">
+                <span class="text-grey no-underline font-hairline" href="#">
                     Mailing List
-                </a>
+                </span>
             </li>
             <li class="px-6 md:px-8 py-2">
-                <a class="hover:text-teal text-grey-darker no-underline font-hairline" href="#">
+                <span class="text-grey no-underline font-hairline" href="#">
                     Social Engagement
-                </a>
+                </span>
             </li>
         </ul>
 

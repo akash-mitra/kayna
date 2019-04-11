@@ -1,7 +1,17 @@
 @extends('admin.layout')
 
 
-
+@section('header')
+<div class="py-2 px-6 flex items-center">
+    <div>
+        <h1 class="w-full p-2">
+            <span class="text-lg font-light text-indigo uppercase">
+                User Profile
+            </span>
+        </h1>
+    </div>
+</div>
+@endsection
 @section('main')
 
 <div class="w-full bg-grey-lightest h-1screen">
@@ -12,7 +22,7 @@
             <div>
                 <h1 class="w-full text-2xl font-light text-grey-darker">
                     @{{ profile.name }}
-                    <span class="bg-purple text-white text-xs rounded-lg shadow px-2 py-1 ml-2">@{{ profile.type }}</span>
+                    <span class="align-middle bg-purple text-white text-xs rounded-lg shadow px-2 py-1 ml-2">@{{ profile.type }}</span>
                 </h1>
                 <span class="mt-2 text-grey-dark text-sm">Joined @{{ profile.created_ago }}</span>
             </div>
@@ -40,7 +50,7 @@
             </select>
             <p v-show="!showTypeInput" v-text="profile.type" class="w-full py-2 h-16 text-grey-dark text-sm"></p>
 
-            
+
 
             <div class="py-2 flex justify-between border-b border-dotted items-center">
                 <span class="text-indigo text-sm">Bio / About</span>
@@ -53,7 +63,7 @@
             <p v-show="!showBioInput" class="w-full py-2 h-16 text-grey-dark text-sm" v-text="about"></p>
             <textarea v-show="showBioInput" v-model="profile.bio" class="w-full bg-grey-lightest p-2 h-24 border rounded shadow-inner text-grey-dark text-sm"></textarea>
 
-            
+
 
             @if($profile->id === auth()->user()->id)
             <div class="py-2 flex justify-between border-b border-dotted items-center">
@@ -210,4 +220,4 @@
     })
 </script>
 
-@endsection 
+@endsection

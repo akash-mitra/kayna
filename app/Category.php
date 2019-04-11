@@ -36,11 +36,11 @@ class Category extends Model
         return $this->belongsTo(\App\Category::class, 'parent_id')->withDefault();
     }
 
-    public static function props()
-    {
-        return [
-            ['name' => 'name', 'description' => 'Category Name', 'visibility' => true],
-            ['name' => 'description', 'description' => 'Category Description', 'visibility' => true]
-        ];
-    }
+    // public static function props()
+    // {
+    //     return [
+    //         ['name' => 'name', 'description' => 'Category Name', 'visibility' => true],
+    //         ['name' => 'description', 'description' => 'Category Description', 'visibility' => true]
+    //     ];
+    // }
 }
