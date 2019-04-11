@@ -27,6 +27,8 @@ class HomeController extends Controller
             "metadesc" => "A friendly website",
             "metakey" => ""
         ];
+
+        $data['user'] = auth()->user();
         // return $data;
         return compiledView('home', $data);
     }
