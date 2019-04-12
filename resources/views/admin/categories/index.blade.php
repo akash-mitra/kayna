@@ -40,13 +40,13 @@
         <tbody class="align-baseline">
             <tr v-for="category in filter_categories">
 
-                <td class="px-4 py-2 font-mono text-xs text-puqrple-dark">
+                <td class="px-6 py-4 text-xs max-w-xs">
 
                     <span class="py-1 text-grey-dark text-xs" v-text="typeof category.parent.name === 'undefined'? '': category.parent.name + ' /'"></span>
                     <a v-bind:href="editCategory(category.id)" class="no-underline text-sm font-medium text-blue">
                         <span v-text="category.name"></span>
                     </a>
-                    <p class="py-2 text-sm font-sans" v-text="category.description"></p>
+                    <p class="text-grey-dark  my-2 text-sm font-sans truncate" v-text="category.description"></p>
 
                 </td>
                 <td class="hidden sm:table-cell px-4 py-2 font-mono text-xs text-purple-dark whitespace-no-wrap">

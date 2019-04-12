@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Template;
 use \Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
@@ -26,6 +27,10 @@ class TemplateController extends Controller
     }
 
 
+    /**
+     * Returns a list of templates from the BlogTheory's 
+     * public repository
+     */
     public function templates()
     {
         $client = new Client();
@@ -81,10 +86,12 @@ class TemplateController extends Controller
         $selected_template_id = $request->input('template');
         $template = Template::findOrFail($selected_template_id);
         
-        // Make sure no other template belonging to this type has active flag set to Y
-        Template::where('type', $template->type)->update(['active' => 'N']);
+        // place the template in view folder
+        $content = Storage::disk('repository')->get($template->filename);
+        Template::refreshViewTemplate($template->type, $content);
 
-        // then set this active flag to Y
+        // update the database
+        Template::where('type', $template->type)->update(['active' => 'N']);
         $template->active = 'Y';
         $template->save();
 
@@ -95,6 +102,10 @@ class TemplateController extends Controller
     public function installTemplate ($template) 
     {
         $body = $this->downloadTemplateBody ($template['url']);
+        
+        $templateBladeFile = Template::getFileFromTemplateName($template['name'], $template['type']);
+
+        Storage::disk('repository')->put($templateBladeFile, $body);
 
         $newTemplate = new Template([
             'source_id' => $template['id'],
@@ -102,7 +113,8 @@ class TemplateController extends Controller
             'type' => $template['type'],
             'description' => $template['description'],
             'url' => $template['url'],
-            'body' => $body,
+            'filename' => $templateBladeFile,
+            'parameters' => null,
             'positions' => null,
             'active' => 'N'
         ]);
@@ -125,8 +137,15 @@ class TemplateController extends Controller
 
     public function form(Template $template) 
     {
+        $body = Storage::disk('repository')->get($template->filename);
+
+        $template['body'] = $body;
+
         return view('admin.templates.form', compact('template'));
     }
+
+
+    
 
     /**
      * Show the form for creating a new resource.
@@ -199,9 +218,25 @@ class TemplateController extends Controller
      */
     public function update(Request $request, Template $template)
     {
+        $name = $request->input('name');
+        $description = $request->input('description');
+        $body = $request->input('body');
+        $templateBladeFile = Template::getFileFromTemplateName($name, $template->type);
+
+        Storage::disk('repository')->delete ($template->filename);
+        Storage::disk('repository')->put ($templateBladeFile, $body);
+
+        if ($template->isActive()) {
+            Template::refreshViewTemplate( $template->type, $body);
+        }
+        
+
+        // TODO 
+        // In use template must be copied to right place
+
         $template = tap($template->fill([
-            'name' => $request->input('name'),
-            'body' => $request->input('body')
+            'name' => $name,
+            'description' => $description
         ]))->save();
 
         $request->session()->flash( 'message', 'template [' . $template->name . '] saved');
@@ -216,7 +251,13 @@ class TemplateController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Template $template)
-    { }
+    {
+        Storage::disk('repository')->delete($template->filename);
+
+        $template->delete();
+
+        return redirect()->route('templates.index')->with('message', $template->name . " deleted successfully");
+    }
 
     private function getAPIForContentType($type)
     {

@@ -79,10 +79,21 @@ class PageController extends Controller
         $pageData = $page->load('author', 'category', 'content');
 
         if ($pageData->status != 'Live') {
-            return abort(404, "This page is currently off-line.");
+            return abort(503, "This page is currently unavailable.");
         }
-        // return $pageData;
-        return compiledView('page', $pageData->toArray());
+
+        // return[
+        //     "resource" => $pageData,
+        //     "common" => []
+        // ];
+        // return compiledView('page', $pageData->toArray());
+
+        return view('page', [
+            "resource" => $pageData,
+            "common" => (object) [
+                "sitename" => "Kayna"
+            ]
+        ]);
     }
 
     /**

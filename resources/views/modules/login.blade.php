@@ -1,6 +1,6 @@
 @auth
-    <a href="{{$user['url']}}" class="no-underline">
-        <img src="{{ $user['avatar'] }}" class="h-8 w-8 rounded-full" />
+    <a href="{{ auth()->user()->url }}" class="no-underline">
+        <img src="{{ auth()->user()->avatar }}" class="h-8 w-8 rounded-full" />
     </a>
 @endauth
 @guest

@@ -4,16 +4,48 @@ namespace App;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Template extends Model
 {
-    protected $fillable = ['source_id', 'name', 'type', 'description', 'url', 'body', 'positions', 'active'];
+    protected $fillable = ['source_id', 'name', 'type', 'description', 'url', 'filename', 'parameters', 'positions', 'active'];
 
-    protected $append = ['used_in'];
+    // protected $append = ['used_in'];
 
-    public function getUsedInAttribute()
+    // public function getUsedInAttribute()
+    // {
+    //     return DB::table('content_type_templates')->where('template_id', $this->id)->pluck('type')->toArray();
+    // }
+
+    public function isActive() {
+        return $this->active === 'Y';
+    }
+    
+    public static function refreshViewTemplate($type, $content)
     {
-        return DB::table('content_type_templates')->where('template_id', $this->id)->pluck('type')->toArray();
+        $viewFileName = 'views/' . $type . '.blade.php';
+
+        if (Storage::disk('resources')->exists($viewFileName)) {
+            Storage::disk('resources')->delete($viewFileName);
+        }
+
+        Storage::disk('resources')->put($viewFileName, $content);
+    }
+
+
+    /**
+     * Creates a filename from the template name and template types.
+     * 
+     * Removes all special characters and space and replace them 
+     * with underscore only.
+     */
+    public static function getFileFromTemplateName($name, $type) {
+        return 'templates'
+            . '/' 
+            . $type 
+            . '/'
+            . preg_replace('/[^A-Z0-9]+/i', '_', strtolower($name)) 
+            . '.blade.php';
     }
 
     // public static function buildFromFrame(array $rows, array $head, String $type)

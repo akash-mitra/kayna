@@ -53,6 +53,17 @@ return [
             'root' => resource_path(),
         ],
 
+        /*
+         |--------------------------------------------------------------------------
+         | Repository:
+         | This is used to download and store additional BlogTheory components
+         | such as templates, 3rd party modules etc.
+         */
+        'repository' => [
+            'driver' => 'local',
+            'root' => storage_path('repository'),
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

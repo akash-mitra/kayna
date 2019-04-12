@@ -1,13 +1,5 @@
 <?php
 
-
-/*
-|--------------------------------------------------------------------------
-| Web Page Routes
-|--------------------------------------------------------------------------
-|
-*/
-
 // All Page related general and admin routes
 Route::get('/pages/{page}/{slug?}', 'PageController@show');
 Route::group(['prefix' => 'admin'], function () {
@@ -55,17 +47,12 @@ Route::get('/admin/templates/public', 'TemplateController@templates')->name('tem
 Route::post('/admin/templates/install', 'TemplateController@install')->name('templates.install')->middleware('admin');
 Route::post('/admin/templates/apply', 'TemplateController@apply')->name('templates.apply')->middleware('admin');
 Route::get('/admin/templates/{template}', 'TemplateController@form')->name('templates.form')->middleware('admin');
-// Route::get('/admin/templates/create/{type}', 'TemplateController@create')->name('templates.create')->middleware('admin');
-// Route::get('/admin/templates/{template}', 'TemplateController@show')->name('templates.show')->middleware('admin');
-// Route::post('/admin/templates', 'TemplateController@store')->name('templates.store')->middleware('admin');
 Route::patch('/admin/templates/{template}', 'TemplateController@update')->name('templates.update')->middleware('admin');
+Route::delete('/admin/templates/{template}', 'TemplateController@destroy')->name('templates.destroy')->middleware('admin');
 
 Route::get('/admin/accesses', 'RestrictionController@index')->name('accesses.index')->middleware('admin');
 Route::post('/admin/accesses/store', 'RestrictionController@createOrUpdate')->name('accesses.createOrUpdate')->middleware('admin');
-// Route::resource('/admin/accesses', 'RestrictionController')->only(['index', 'store'])->middleware('admin');
 
-Route::get('/admin/content-types', 'ContentTypeController@index')->name('content-types.index')->middleware('admin');
-Route::post('/admin/content-types/{contentTypeTemplate}', 'ContentTypeController@update')->name('content-types.update')->middleware('admin');
 Route::get('/admin/settings', 'SettingController@index')->middleware('admin');
 Route::patch('/admin/settings', 'SettingController@update')->middleware('admin');
 

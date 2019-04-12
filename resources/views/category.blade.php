@@ -3,12 +3,12 @@
 
 <head>
     <meta charset="utf-8">
-    <title>{{ $common->sitetitle }}</title>
-    <!-- Home Blade -->
-    <meta name="description" content="{{ $common->metadesc }}">
-    <meta name="keywords" content="{{ $common->metakey }}">
-    <meta name="generator" content="BlogTheory">
+    <title>{{ $resource->name }}</title>
+    <!-- Category Blade -->
+    <meta name="description" content="{{ $resource->description }}">
+    <meta name="keywords" content="{{ $resource->name }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="BlogTheory" />
     <meta name="theme-color" content="#fafafa">
 
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
@@ -60,6 +60,7 @@
             </div>
             <div class="w-full py-6 flex justify-end">
                 @includeIf('modules.login')
+
             </div>
         </header>
     </div>
@@ -67,52 +68,45 @@
     <div class="w-full border-b">
         <div class="container mx-auto lg:flex justify-between px-10">
             <main class="w-full lg:w-2/3 max-w-md py-6">
+                <article>
+                    <header>
+                        @if(! empty($resource->parent_id))
+                        <div class="w-full text-sm text-grey-darker mb-4">{{ $resource->parent->name }}</div>
+                        @endif
+                        <h1 class="pb-8 text-4xl text-indigo-darker font-quick">
+                            {{ $resource->name }}
+                        </h1>
+                        <p class="p-8 bg-grey-lightest text-xl font-sans text-grey-darkest leading-tight italic1 font-thin">
+                            {{ $resource->description }}
+                        </p>
+                    </header>
 
-
-                <div class="w-full font-quick lg:flex lg:flex-wrap">
-                    <p class="uppercase text-grey tracking-wide px-4">Latest Posts</p>
-                    @foreach($resource->pages as $item)
-
-                    @if($loop->first)
-                    <section class="w-full p-4">
-                        @else
-                        <section class="w-full lg:w-1/2 p-4">
-                            @endif
-                            <header>
+                    <div class="content w-full lg:flex lg:flex-wrap">
+                        @foreach($resource->pages as $page)
+                        <div class="w-full flex flex-col justify-between lg:w-1/2 px-2 py-6">
+                            <div class="py-2 font-quick">
                                 <h2 class="my-2">
-                                    <a href="{{ $item['url'] }}" class="no-underline text-indigo-darker hover:text-blue">
-                                        {{ $item->title }}
+                                    <a href="{{ $page['url'] }}" class="no-underline text-blue">
+                                        {{ $page->title }}
                                     </a>
                                 </h2>
-                            </header>
-                            <div class="text-grey-darker @if($loop->first) text-normal @else text-sm @endif">
-                                {{ $item->summary }}
+                                <p>{{ $page->summary }}</p>
                             </div>
-                            <footer>
-                                <div class="text-xs mt-4 text-indigo">
-                                    Published {{ $item->ago }} under {{ $item->category->name }}
-                                </div>
-                            </footer>
-                        </section>
+                            <div class="text-grey text-xs">
+                                Updated on {{ $resource->updated_at->toFormattedDateString() }}
+                            </div>
+                        </div>
                         @endforeach
+                    </div>
+                </article>
+                <div>
+
                 </div>
-
-
             </main>
-
             <aside class="w-full lg:w-1/3 py-6">
-
-                <p class="uppercase text-grey tracking-wide pb-8 font-quick">Browse Categories</p>
-                <div class="w-full font-quick mb-8">
-                    @foreach($resource->categories as $item)
-                    <a href="{{ $item->url }}" class="no-underline text-indigo p-2 rounded-lg bg-indigo-lightest mx-2 font-quick">{{ $item->name }}</a>
-                    @endforeach
-                </div>
-
                 @foreach(getModulesforPosition("aside") as $module)
                 @include($module)
                 @endforeach
-
             </aside>
         </div>
     </div>

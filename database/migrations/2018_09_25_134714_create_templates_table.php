@@ -20,9 +20,10 @@ class CreateTemplatesTable extends Migration
             $table->string('type', 30);
             $table->mediumText('description')->nullable();
             $table->string('url')->nullable();
-            $table->text('body');
+            $table->string('filename');
+            $table->text('parameters')->nullable();
             $table->text('positions')->nullable();
-            $table->char('active', 1);
+            $table->char('active', 'N');
             $table->timestamps();
         });
     }

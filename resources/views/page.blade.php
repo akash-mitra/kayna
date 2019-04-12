@@ -3,12 +3,12 @@
 
 <head>
     <meta charset="utf-8">
-    <title>{{ $common->sitetitle }}</title>
-    <!-- Home Blade -->
-    <meta name="description" content="{{ $common->metadesc }}">
-    <meta name="keywords" content="{{ $common->metakey }}">
-    <meta name="generator" content="BlogTheory">
+    <title>{{ $resource->title }}</title>
+    <!-- Page Blade -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{ $resource->metadesc }}">
+    <meta name="keywords" content="{{ $resource->metakey }}">
+    <meta name="generator" content="BlogTheory" />
     <meta name="theme-color" content="#fafafa">
 
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
@@ -19,14 +19,15 @@
             font-family: 'Quicksand', sans-serif;
         }
 
-        .content p {
-            padding-bottom: 1.5rem;
+        .content div {
+            margin-bottom: 1.5rem;
         }
 
-        .content h3 {
-            padding-bottom: 1.5rem;
+        .content h2 {
+            margin-bottom: 1rem;
         }
     </style>
+
 </head>
 
 <body>
@@ -55,11 +56,12 @@
                 l0.04-0.114l-0.378-3.031l-2.197,2.121L12.271,4.577z" />
                         </g>
                     </svg>
-                    <span class="ml-4 text-4xl font-mono font-semibold">{{ $common->sitename }}</span>
+                    <span class="ml-4 text-4xl font-semibold">{{ $common->sitename }}</span>
                 </a>
             </div>
             <div class="w-full py-6 flex justify-end">
                 @includeIf('modules.login')
+
             </div>
         </header>
     </div>
@@ -67,52 +69,48 @@
     <div class="w-full border-b">
         <div class="container mx-auto lg:flex justify-between px-10">
             <main class="w-full lg:w-2/3 max-w-md py-6">
+                <article>
+                    <header>
+                        <div class="w-full mb-4">
+                            <a href="{{ $resource->category->url }}" class="no-underline text-sm text-blue">{{ $resource->category->name }}</a>
+                        </div>
+                        <h1 class="mb-6 text-4xl text-indigo-darker font-quick">
+                            {!! $resource->title !!}
+                        </h1>
+                        <p class="pb-8 text-xl font-sans text-grey-darkest leading-tight italic1 font-thin">
+                            {!! $resource->summary !!}
+                        </p>
 
+                        <div class="mb-4 p-3 bg-grey-lightest text-sm text-blue-darker font-serif flex justify-between items-center">
+                            <address class="author mr-1">
+                                <a rel="author" href="{{ $resource->author->url }}" class="text-blue no-underline flex items-center">
+                                    <img src="{{ $resource->author->avatar }}" alt="author image" class="rounded-full w-8 h-8 mr-4" />
+                                    {{ $resource->author->name }}
+                                </a>
+                            </address>
 
-                <div class="w-full font-quick lg:flex lg:flex-wrap">
-                    <p class="uppercase text-grey tracking-wide px-4">Latest Posts</p>
-                    @foreach($resource->pages as $item)
+                            <time datetime="2011-08-28" class="text-grey-darker">
+                                {{ $resource->updated_at->toFormattedDateString() }}
+                            </time>
+                            <!-- &nbsp;|&nbsp; -->
+                            <!-- <div class="ml-4">12 min</div> -->
+                        </div>
+                    </header>
 
-                    @if($loop->first)
-                    <section class="w-full p-4">
-                        @else
-                        <section class="w-full lg:w-1/2 p-4">
-                            @endif
-                            <header>
-                                <h2 class="my-2">
-                                    <a href="{{ $item['url'] }}" class="no-underline text-indigo-darker hover:text-blue">
-                                        {{ $item->title }}
-                                    </a>
-                                </h2>
-                            </header>
-                            <div class="text-grey-darker @if($loop->first) text-normal @else text-sm @endif">
-                                {{ $item->summary }}
-                            </div>
-                            <footer>
-                                <div class="text-xs mt-4 text-indigo">
-                                    Published {{ $item->ago }} under {{ $item->category->name }}
-                                </div>
-                            </footer>
-                        </section>
-                        @endforeach
-                </div>
-
-
-            </main>
-
-            <aside class="w-full lg:w-1/3 py-6">
-
-                <p class="uppercase text-grey tracking-wide pb-8 font-quick">Browse Categories</p>
-                <div class="w-full font-quick mb-8">
-                    @foreach($resource->categories as $item)
-                    <a href="{{ $item->url }}" class="no-underline text-indigo p-2 rounded-lg bg-indigo-lightest mx-2 font-quick">{{ $item->name }}</a>
+                    <div class="content text-black font-quick leading-normal">
+                        {!! $resource->content->body !!}
+                    </div>
+                </article>
+                <div class="mt-8">
+                    @foreach(getModulesforPosition("bottom") as $module)
+                    @include($module)
                     @endforeach
                 </div>
-
+            </main>
+            <aside class="w-full lg:w-1/3 py-6">
                 @foreach(getModulesforPosition("aside") as $module)
                 @include($module)
                 @endforeach
-
             </aside>
         </div>
     </div>

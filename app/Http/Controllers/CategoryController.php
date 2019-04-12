@@ -78,7 +78,15 @@ class CategoryController extends Controller
     {
         $categoryData = $category->load('pages','parent');
         // return $categoryData;
-        return compiledView('category', $categoryData->toArray());
+
+        // return compiledView('category', $categoryData->toArray());
+
+        return view('category', [
+            "resource" => $categoryData,
+            "common" => (object)[
+                "sitename" => "Kayna"
+            ]
+        ]);
     }
 
     /**

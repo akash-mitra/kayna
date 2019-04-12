@@ -16,21 +16,23 @@ class HomeController extends Controller
     public function index()
     {
         $pages = Page::with('category')->orderBy('updated_at', 'desc')->paginate(5);
-        $data['pages'] = $pages->toArray();
-
+        
         $categories = Category::take(10)->get();
-        $data['categories'] = $categories->toArray();
-
-        $data['common'] = [
-            "sitename" => "Kayna",
-            "sitetitle" => "A BlogTheory site",
-            "metadesc" => "A friendly website",
-            "metakey" => ""
-        ];
-
-        $data['user'] = auth()->user();
+        
         // return $data;
-        return compiledView('home', $data);
+        // return compiledView('home', $data);
+        return view('home', [
+            "resource" => (object) [
+                "pages" => $pages,
+                "categories" => $categories
+            ],
+            "common" => (object)[
+                "sitename" => "Kayna",
+                "sitetitle" => "A BlogTheory site",
+                "metadesc" => "A friendly website",
+                "metakey" => ""
+            ]
+        ]);
     }
 
     public function dashboard()
