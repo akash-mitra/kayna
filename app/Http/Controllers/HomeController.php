@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+
 use DB;
 use App\Page;
 use App\Category;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -16,13 +19,13 @@ class HomeController extends Controller
     public function index()
     {
         $pages = Page::with('category')->orderBy('updated_at', 'desc')->paginate(5);
-        
+
         $categories = Category::take(10)->get();
-        
+
         // return $data;
         // return compiledView('home', $data);
         return view('home', [
-            "resource" => (object) [
+            "resource" => (object)[
                 "pages" => $pages,
                 "categories" => $categories
             ],
@@ -35,8 +38,20 @@ class HomeController extends Controller
         ]);
     }
 
+
     public function dashboard()
     {
+        if (param('installation') === '1') {
+            if (empty(param('installation_done_till_step'))) {
+                return redirect()->route('installation', 1);
+            } else {
+                if (param('installation_done_till_step') === '1') {
+                    return redirect()->route('installation', 2);
+                } else {
+                    return redirect()->route('installation', 3);
+                }
+            }
+        }
         /**
          *----------------------------------------------------------------------------
          * This query calculates the cumulative sums of post and users growth over time
@@ -59,7 +74,7 @@ class HomeController extends Controller
          *    ) c
          * ) d
          * group by d.dt;
-        **/
+         **/
         $sql = 'select x.dt as date, x.p as pages_added, sum(x.p) over(order by x.dt) as pages_total, x.u as users_added, sum(x.u) over(order by x.dt) as users_total from (select d.dt as dt, sum(d.p) as p, sum(d.u) as u from (select date(created_at) as dt, 1 as p, 0 as u from pages union all select date(created_at) as dt, 0 as p, 1 as u from users) d group by d.dt) x order by 1';
 
         $growth = DB::select(DB::raw($sql));
@@ -76,5 +91,71 @@ class HomeController extends Controller
         }, ['pages' => 0, 'users' => 0]);
 
         return view('admin.dashboard')->with('growth', $growth)->with('recentGrowth', $recentGrowth);
+    }
+
+
+
+    public function install($step)
+    {
+        return view('admin.installation.step' . $step);
+    }
+
+    public function installProcess($step, Request $request)
+    {
+        if (empty($step)) return abort(422, 'Invalid data');
+
+        if ($step === '1') {
+            $request->validate([
+                'admin_name' => 'required|string',
+                'admin_email' => 'required|email|confirmed|unique:users,email',
+                'admin_password' => 'required|min:8',
+            ]);
+
+            DB::table('users')->insert([
+                'name' => $request->input('admin_name'),
+                'email' => $request->input('admin_email'),
+                'type' => 'admin',
+                'password' => bcrypt($request->input('admin_password')),
+                'slug' => uniqid(mt_rand(0, 9999), true),
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+
+            set_param('installation_done_till_step', '1');
+
+            return redirect()->route('installation', 2);
+        }
+
+        if ($step === '2') {
+
+            $request->validate([
+                'logo_text' => 'required|string',
+                'about' => 'nullable|max:255'
+            ]);
+
+            $loginEnable = $request->input('enable_registration') === "true" ? 'yes' : 'no';
+
+            set_param('logo_text', $request->input('logo_text'));
+            set_param('meta_desc', $request->input('about'));
+            set_param('login_native_active', $loginEnable);
+            set_param('installation_done_till_step', '2');
+
+            return redirect()->route('installation', 3);
+        }
+
+        if ($step === '3') {
+            // send email
+            delete_param('installation');
+            delete_param('installation_done_till_step');
+            auth()->user()->delete();
+            Auth::logout();
+            return redirect()->route('login');
+        }
+    }
+
+
+    public function adminLogin()
+    {
+        return view('admin.login.form');
     }
 }

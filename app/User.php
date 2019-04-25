@@ -29,6 +29,27 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+
+    /**
+     * This method overwrites create() method in model. This is done
+     * to ensure that if certain user attributes are not supplied,
+     * then those attributes can be enriched at this level. As an
+     * example, when RegisterController calls User::create()
+     * method, it only supplies 'name', 'email' and 
+     * 'password'. However, other information such 
+     * as slug and types can be enriched here.
+     */
+    protected function create( array $attributes = []) {
+        if(! array_key_exists('slug', $attributes)) {
+            $attributes['slug'] = uniqid(mt_rand(0, 9999), true);
+        }
+        if (! array_key_exists('type', $attributes)) {
+            $attributes['type'] = 'general';
+        }
+        return parent::create($attributes);
+    }
+
+
     public function publications()
     {
         return $this->hasMany(Page::class);

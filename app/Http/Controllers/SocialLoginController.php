@@ -39,8 +39,8 @@ class SocialLoginController extends Controller
             $user = $this->createUserWithProvider($provider, $authenticatedUser);
             Auth::login($user, true);
         }
-
-        return redirect('/admin');
+        // return 'done';
+        return redirect()->intended();
     }
 
     private function createUserWithProvider($provider, $authenticatedUser)

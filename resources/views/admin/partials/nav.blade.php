@@ -47,16 +47,11 @@
                     Users
                 </a>
             </li>
-            <li class="px-6 md:px-8 py-2">
+            <!-- <li class="px-6 md:px-8 py-2">
                 <span class="text-grey no-underline font-hairline" href="#">
                     Service
                 </span>
-            </li>
-            <li class="px-6 md:px-8 py-2">
-                <span class="text-grey no-underline font-hairline" href="#">
-                    Subscription
-                </span>
-            </li>
+            </li> -->
             <li class="px-6 md:px-8 py-2">
                 <span class="text-grey no-underline font-hairline" href="#">
                     Comments
@@ -64,12 +59,18 @@
             </li>
             <li class="px-6 md:px-8 py-2">
                 <span class="text-grey no-underline font-hairline" href="#">
+                    Subscription
+                </span>
+            </li>
+
+            <li class="px-6 md:px-8 py-2">
+                <span class="text-grey no-underline font-hairline" href="#">
                     Mailing List
                 </span>
             </li>
             <li class="px-6 md:px-8 py-2">
                 <span class="text-grey no-underline font-hairline" href="#">
-                    Social Engagement
+                    Social
                 </span>
             </li>
         </ul>
@@ -86,7 +87,7 @@
                     Settings
                 </a>
             </li>
-            
+
         </ul>
 
     </div>

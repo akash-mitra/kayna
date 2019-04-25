@@ -26,8 +26,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-    }
+    { }
 
     /**
      * Store a newly created resource in storage.
@@ -36,8 +35,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-    }
+    { }
 
     /**
      * Display the specified resource.
@@ -46,8 +44,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-    }
+    { }
 
     /**
      * Show the form for editing the specified resource.
@@ -63,7 +60,7 @@ class UserController extends Controller
     }
 
 
-    
+
     public function update(Request $request, User $user)
     {
         // only bio and type fields are updatable
@@ -100,6 +97,5 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-    }
+    { }
 }

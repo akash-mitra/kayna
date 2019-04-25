@@ -54,7 +54,7 @@ class TemplateController extends Controller
     {
         $selected_template_id = $request->input('template');
         $templates = $this->templates();
-        
+
         foreach($templates as $template) {
 
             if ($template['id'] === $selected_template_id) {
@@ -62,7 +62,7 @@ class TemplateController extends Controller
 
                 try {
                     $newTemplate = $this->installTemplate($template);
-
+                    
                 } catch (\Exception $exception) {
                     return response([
                         "status" => 'failed',
@@ -218,14 +218,15 @@ class TemplateController extends Controller
      */
     public function update(Request $request, Template $template)
     {
+        
         $name = $request->input('name');
         $description = $request->input('description');
         $body = $request->input('body');
         $templateBladeFile = Template::getFileFromTemplateName($name, $template->type);
-
+        
         Storage::disk('repository')->delete ($template->filename);
         Storage::disk('repository')->put ($templateBladeFile, $body);
-
+        
         if ($template->isActive()) {
             Template::refreshViewTemplate( $template->type, $body);
         }
@@ -238,7 +239,7 @@ class TemplateController extends Controller
             'name' => $name,
             'description' => $description
         ]))->save();
-
+        
         $request->session()->flash( 'message', 'template [' . $template->name . '] saved');
 
         return redirect()->back();

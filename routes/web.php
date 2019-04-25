@@ -63,8 +63,12 @@ Auth::routes();
 Route::get('/social/login/{provider}', 'SocialLoginController@provider')->name('social.login');
 Route::get('/social/login/{provider}/callback', 'SocialLoginController@callback');
 
-Route::get('/admin', 'HomeController@dashboard')->name('dashboard')->middleware('auth');
+Route::get('/admin', 'HomeController@dashboard')->name('dashboard')->middleware('admin');
+Route::get('/admin/login', 'HomeController@adminLogin')->name('admin.login');
 
 Route::post('/api/search', 'SearchController@search')->name('search');
 
 Route::get('/', 'HomeController@index')->name('home');
+
+Route::get('/admin/installation/{step}', 'HomeController@install')->name('installation')->middleware('admin');
+Route::post('/admin/installation/{step}', 'HomeController@installProcess')->name('installation-process')->middleware('admin');

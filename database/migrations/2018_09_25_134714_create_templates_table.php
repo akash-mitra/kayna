@@ -23,7 +23,7 @@ class CreateTemplatesTable extends Migration
             $table->string('filename');
             $table->text('parameters')->nullable();
             $table->text('positions')->nullable();
-            $table->char('active', 'N');
+            $table->char('active')->default('N');
             $table->timestamps();
         });
     }

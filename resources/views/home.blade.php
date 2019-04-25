@@ -1,32 +1,28 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="en-us">
 
 <head>
-    <meta charset="utf-8">
-    <title>{{ $common->sitetitle }}</title>
-    <!-- Home Blade -->
-    <meta name="description" content="{{ $common->metadesc }}">
-    <meta name="keywords" content="{{ $common->metakey }}">
-    <meta name="generator" content="BlogTheory">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#fafafa">
+  <meta charset="utf-8">
+  <title>{{ $common->sitetitle }}</title>
+  <!-- Home Blade -->
+  <meta name="description" content="{{ $common->metadesc }}">
+  <meta name="keywords" content="{{ $common->metakey }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet"> 
+  <style>
+    .font-quick {
+      font-family: 'Quicksand', sans-serif;
+    }
+    .content p {
+      padding-bottom: 1.5rem;
+    }
+    .content h3 {
+        padding-bottom: 1.5rem;
+    }
+  </style>
 
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
-
-    <style>
-        .font-quick {
-            font-family: 'Quicksand', sans-serif;
-        }
-
-        .content p {
-            padding-bottom: 1.5rem;
-        }
-
-        .content h3 {
-            padding-bottom: 1.5rem;
-        }
-    </style>
+  <!-- <meta name="theme-color" content="#fafafa"> -->
 </head>
 
 <body>
@@ -35,10 +31,11 @@
         <header class="container mx-auto flex items-center px-10">
             <div class="w-full py-6">
                 <a href="/" class="flex items-center no-underline text-indigo-dark">
-                    <svg class="w-12 h-12 fill-current" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
-                        <title>Template Logo</title>
-                        <g>
-                            <path d="M7.406,24.01c-2.895,0-5.25-2.355-5.25-5.25V9.773c0-0.414,0.336-0.75,0.75-0.75h1.196L3.661,7.771
+                <svg class="w-12 h-12 fill-current" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+ viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+                    <title>Kayna Template Logo</title>
+                    <g>
+                        <path d="M7.406,24.01c-2.895,0-5.25-2.355-5.25-5.25V9.773c0-0.414,0.336-0.75,0.75-0.75h1.196L3.661,7.771
                 C2.711,7.602,1.911,7,1.49,6.125C0.616,4.352,0.616,2.228,1.493,0.449c0.103-0.209,0.301-0.36,0.53-0.405
                 C2.07,0.036,2.118,0.031,2.167,0.031c0.184,0,0.362,0.068,0.5,0.191C4.272,1.66,4.54,1.76,4.85,1.875
                 c0.229,0.085,0.514,0.191,1.043,0.532C6.365,2.72,6.73,3.154,6.955,3.664c0.278,0.672,0.307,1.399,0.09,2.076l2.038,3.284h0.028
@@ -52,10 +49,10 @@
                 C3.089,5.989,3.62,6.324,4.194,6.324c0.196,0,0.388-0.038,0.571-0.114c0.37-0.153,0.658-0.441,0.811-0.81
                 c0.153-0.37,0.153-0.777,0-1.146c-0.103-0.234-0.279-0.441-0.504-0.59C4.689,3.416,4.513,3.351,4.328,3.281
                 C3.893,3.119,3.551,2.964,2.489,2.06z M12.271,4.577c0.525,0.599,1.297,0.951,2.103,0.951c0.159,0,0.317-0.014,0.473-0.041
-                l0.04-0.114l-0.378-3.031l-2.197,2.121L12.271,4.577z" />
-                        </g>
-                    </svg>
-                    <span class="ml-4 text-4xl font-mono font-semibold">{{ $common->sitename }}</span>
+                l0.04-0.114l-0.378-3.031l-2.197,2.121L12.271,4.577z"/>
+                    </g>
+                </svg>
+                <span class="ml-4 text-4xl font-mono font-semibold">{{ $common->sitename }}</span>
                 </a>
             </div>
             <div class="w-full py-6 flex justify-end">
@@ -67,52 +64,52 @@
     <div class="w-full border-b">
         <div class="container mx-auto lg:flex justify-between px-10">
             <main class="w-full lg:w-2/3 max-w-md py-6">
-
-
+                
+    
                 <div class="w-full font-quick lg:flex lg:flex-wrap">
                     <p class="uppercase text-grey tracking-wide px-4">Latest Posts</p>
                     @foreach($resource->pages as $item)
-
-                    @if($loop->first)
-                    <section class="w-full p-4">
+                        
+                        @if($loop->first)
+                            <section class="w-full p-4">
                         @else
-                        <section class="w-full lg:w-1/2 p-4">
-                            @endif
-                            <header>
-                                <h2 class="my-2">
-                                    <a href="{{ $item['url'] }}" class="no-underline text-indigo-darker hover:text-blue">
-                                        {{ $item->title }}
-                                    </a>
-                                </h2>
-                            </header>
-                            <div class="text-grey-darker @if($loop->first) text-normal @else text-sm @endif">
-                                {{ $item->summary }}
-                            </div>
-                            <footer>
-                                <div class="text-xs mt-4 text-indigo">
-                                    Published {{ $item->ago }} under {{ $item->category->name }}
+                            <section class="w-full lg:w-1/2 p-4">
+                        @endif
+                                <header>
+                                    <h2 class="my-2">
+                                        <a href="{{ $item->url }}" class="no-underline text-indigo-darker hover:text-blue">
+                                            {{ $item->title }}
+                                        </a>
+                                    </h2>
+                                </header>
+                                <div class="text-grey-darker @if($loop->first) text-normal @else text-sm @endif">
+                                    {{ $item->summary }}
                                 </div>
-                            </footer>
-                        </section>
-                        @endforeach
-                </div>
-
-
-            </main>
-
-            <aside class="w-full lg:w-1/3 py-6">
-
-                <p class="uppercase text-grey tracking-wide pb-8 font-quick">Browse Categories</p>
-                <div class="w-full font-quick mb-8">
-                    @foreach($resource->categories as $item)
-                    <a href="{{ $item->url }}" class="no-underline text-indigo p-2 rounded-lg bg-indigo-lightest mx-2 font-quick">{{ $item->name }}</a>
+                                <footer>
+                                    <div class="text-xs mt-4 text-indigo">
+                                        Published {{ $item->ago }} under {{ $item->category->name }}
+                                    </div>
+                                </footer>
+                            </section>
                     @endforeach
                 </div>
 
+                
+            </main>
+            
+            <aside class="w-full lg:w-1/3 py-6">
+                
+                <p class="uppercase text-grey tracking-wide pb-8 font-quick">Browse Categories</p>
+                <div class="w-full font-quick mb-8">
+                    @foreach($resource->categories as $item)
+                        <a href="{{ $item->url }}" class="no-underline text-indigo p-2 rounded-lg bg-indigo-lightest mx-2 font-quick">{{$item->name}}</a>
+                    @endforeach
+                </div>
+                
                 @foreach(getModulesforPosition("aside") as $module)
-                @include($module)
+                        @include($module)
                 @endforeach
-
+                
             </aside>
         </div>
     </div>
@@ -120,11 +117,10 @@
     <div class="w-full">
         <footer class="container mx-auto lg:flex px-10">
             @foreach(getModulesforPosition("footer") as $module)
-            @include($module)
+                    @include($module)
             @endforeach
         </footer>
-    </div>
+    </div>  
 
 </body>
-
 </html>

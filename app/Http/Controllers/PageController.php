@@ -77,7 +77,7 @@ class PageController extends Controller
     public function show(Page $page)
     {
         $pageData = $page->load('author', 'category', 'content');
-
+        
         if ($pageData->status != 'Live') {
             return abort(503, "This page is currently unavailable.");
         }

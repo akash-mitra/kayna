@@ -14,8 +14,20 @@ use Symfony\Component\Debug\Exception\FatalThrowableError;
 function get_param(String $key)
 {
     return Cache::rememberForever($key, function () use ($key) {
-        return DB::table('parameters')->where('key', $key)->first()->value;
+        return optional(DB::table('parameters')->where('key', $key)->first())->value;
     });
+}
+
+function delete_param(String $key)
+{
+    Cache::forget($key);
+    DB::table('parameters')->where('key', $key)->delete();
+}
+
+function set_param(String $key, String $value)
+{
+    delete_param($key);
+    DB::table('parameters')->insert(['key' => $key, 'value' => $value]);
 }
 
 function param(String $key)

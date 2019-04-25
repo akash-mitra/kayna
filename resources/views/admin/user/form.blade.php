@@ -14,15 +14,17 @@
 @endsection
 @section('main')
 
-<div class="w-full bg-grey-lightest h-1screen">
-    <div class="w-full p-8 flex flex-wrap items-center justify-between">
+<div class="w-full bg-grey-lightest">
+    <div class="w-full p-8 flex flex-wrap items-center justify-between border-t border-b">
         <div class="flex flex-wrap1 items-center">
-            <img :src="profile.avatar" class="rounded-full h-16 w-16 border-white border-4 shadow mr-4" />
-
+            <img v-if="profile.avatar" :src="profile.avatar" class="rounded-full h-16 w-16 border-white border-4 shadow mr-4" />
+            <svg v-else class="w-16 h-16 rounded-full border-4 mr-4 fill-current text-grey-light" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                <path class="heroicon-ui" d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm9 11a1 1 0 0 1-2 0v-2a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v2a1 1 0 0 1-2 0v-2a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v2z" />
+            </svg>
             <div>
                 <h1 class="w-full text-2xl font-light text-grey-darker">
                     @{{ profile.name }}
-                    <span class="align-middle bg-purple text-white text-xs rounded-lg shadow px-2 py-1 ml-2">@{{ profile.type }}</span>
+                    <span class="align-middle bg-purple text-white text-xs rounded-lg shadow px-2 py-1 ml-2 uppercase">@{{ profile.type }}</span>
                 </h1>
                 <span class="mt-2 text-grey-dark text-sm">Joined @{{ profile.created_ago }}</span>
             </div>

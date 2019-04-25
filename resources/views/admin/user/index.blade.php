@@ -43,8 +43,9 @@
                 <td class="px-4 py-2 flex items-center flex-no-wrap text-puqrple-dark">
                     <a :href="user.url" class="no-underline" title="Public Profile">
                         <img v-if="user.avatar" v-bind:src="user.avatar" class="w-8 h-8 rounded-full mr-4">
-                        <svg v-if="!user.avatar" class="w-8 h-8 rounded-full border mr-4 fill-current text-grey-lighter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                            <path class="heroicon-ui" d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm9 11a1 1 0 0 1-2 0v-2a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v2a1 1 0 0 1-2 0v-2a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v2z" /></svg>
+                        <svg v-else class="w-8 h-8 rounded-full border mr-4 fill-current text-grey-lighter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path class="heroicon-ui" d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm9 11a1 1 0 0 1-2 0v-2a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v2a1 1 0 0 1-2 0v-2a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v2z" />
+                        </svg>
                     </a>
                     <a :href="editUser(user.id)" class="py-1 text-sm font-semibold no-underline text-blue hover:text-blue-dark" v-text="user.name"></a>
 
@@ -116,4 +117,4 @@
     })
 </script>
 
-@endsection 
+@endsection
