@@ -12,14 +12,14 @@ class AddUser extends Command
      *
      * @var string
      */
-    protected $signature = 'user:add {name} {email} {password}';
+    protected $signature = 'user:add {name} {email} {password} {type=admin}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Adds an admin user to the system';
+    protected $description = 'Adds a new user to the system';
 
     /**
      * Create a new command instance.
@@ -41,15 +41,20 @@ class AddUser extends Command
         $name = $this->argument('name');
         $email = $this->argument('email');
         $password = $this->argument('password');
+        $type = $this->argument('type');
+
+        // TODO validation needed for the arguments
 
         DB::table('users')->insert([
             'name' => $name,
             'email' => $email,
-            'type' => 'admin',
+            'type' => $type,
             'password' => bcrypt($password),
             'slug' => uniqid(mt_rand(0, 9999), true),
             'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
         ]);
+
+        $this->info('User' . $name . ' added successfully');
     }
 }
