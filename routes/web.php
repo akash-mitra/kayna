@@ -64,7 +64,7 @@ Route::get('/social/login/{provider}', 'SocialLoginController@provider')->name('
 Route::get('/social/login/{provider}/callback', 'SocialLoginController@callback');
 
 Route::get('/admin', 'HomeController@dashboard')->name('dashboard')->middleware('admin');
-Route::get('/admin/login', 'HomeController@adminLogin')->name('admin.login');
+Route::get('/admin/login', 'HomeController@adminLogin')->name('admin.login')->middleware('guest');
 
 Route::post('/api/search', 'SearchController@search')->name('search');
 

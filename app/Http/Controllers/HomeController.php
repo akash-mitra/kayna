@@ -154,6 +154,9 @@ class HomeController extends Controller
     }
 
 
+    /**
+     * Shows a login form for the admin users
+     */
     public function adminLogin()
     {
         return view('admin.login.form');

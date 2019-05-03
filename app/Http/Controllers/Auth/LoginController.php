@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -35,5 +36,25 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    /**
+     * To make sure admin users are redirected to an admin dashboard
+     * while general users redirect to site homepage.
+     */
+    public function redirectTo()
+    {
+        // User type
+        $type = Auth::user()->type;
+
+        switch ($type) {
+            case 'admin':
+                return '/admin/';
+                break;
+            
+            default:
+                return '/';
+                break;
+        }
     }
 }
