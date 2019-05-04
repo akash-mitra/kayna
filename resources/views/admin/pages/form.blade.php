@@ -42,7 +42,7 @@
                         v-model="title" 
                         placeholder="Title" 
                         rows="1" 
-                        @input="clearValidations"
+                        @input="handleTitleInput"
                         class="w-full py-2 default-page-title"
                         :class='title.length>0? "border-none": "border-b"'></textarea>
                 <!-- </span> -->
@@ -406,11 +406,17 @@
                                 return 'Uncategorised'
                         },
 
+                        handleTitleInput: function (event) {
+                            let element = event.target;
+                            element.style.height = 'auto';
+                            element.style.height = (element.scrollHeight) + 'px';
+                            this.clearValidations(event);
+                        },
 
                         handleSummaryInput: function (event) {
                                 let element = document.getElementById('ta_summary');
-                                element.style.height = "5px";
-                                element.style.height = (element.scrollHeight)+"px";
+                                element.style.height = 'auto';
+                                element.style.height = (element.scrollHeight) + 'px';
                                 this.clearValidations(event);
                         },
 
