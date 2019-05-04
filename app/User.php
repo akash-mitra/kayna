@@ -39,11 +39,12 @@ class User extends Authenticatable
      * 'password'. However, other information such 
      * as slug and types can be enriched here.
      */
-    protected function create( array $attributes = []) {
-        if(! array_key_exists('slug', $attributes)) {
+    protected function create(array $attributes = [])
+    {
+        if (!array_key_exists('slug', $attributes)) {
             $attributes['slug'] = uniqid(mt_rand(0, 9999), true);
         }
-        if (! array_key_exists('type', $attributes)) {
+        if (!array_key_exists('type', $attributes)) {
             $attributes['type'] = 'general';
         }
         return parent::create($attributes);
@@ -114,13 +115,48 @@ class User extends Authenticatable
         return auth()->user()->id === $this->id;
     }
 
-    public static function props()
+
+    public function photo($size, $class = 'rounded-full border-2 mr-4')
     {
-        return [
-            ['name' => 'name', 'description' => 'Name of the user', 'visibility' => true],
-            ['name' => 'email', 'description' => 'Email ID of the user', 'visibility' => false],
-            ['name' => 'url', 'description' => 'Link to the public profile of the user', 'visibility' => true],
-            ['name' => 'avatar', 'description' => 'Profile Image of the user', 'visibility' => true]
-        ];
+        $class = $this->_photoSize($size) . $class;
+        $photo = empty($this->avatar) ? $this->dummyProfilePhoto($class) : '<img class="' . $class . '" src="' . $this->avatar . '" />';
+        return $photo;
     }
+
+    private function dummyProfilePhoto($class)
+    {
+        return '<svg class="fill-current text-grey-light ' . $class . '" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path class="heroicon-ui" d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm9 11a1 1 0 0 1-2 0v-2a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v2a1 1 0 0 1-2 0v-2a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v2z"></path>
+                </svg>';
+    }
+
+
+    private function _photoSize($size)
+    {
+        $class = '';
+        switch ($size) {
+            case 'sm':
+                $class = 'w-8 h-8 ';
+                break;
+            case 'md':
+                $class = 'w-12 h-12 ';
+                break;
+            case 'lg':
+                $class = 'w-16 h-16 ';
+                break;
+            case 'xl':
+                $class = 'w-24 h-24 ';
+        }
+        return $class;
+    }
+
+    // public static function props()
+    // {
+    //     return [
+    //         ['name' => 'name', 'description' => 'Name of the user', 'visibility' => true],
+    //         ['name' => 'email', 'description' => 'Email ID of the user', 'visibility' => false],
+    //         ['name' => 'url', 'description' => 'Link to the public profile of the user', 'visibility' => true],
+    //         ['name' => 'avatar', 'description' => 'Profile Image of the user', 'visibility' => true]
+    //     ];
+    // }
 }

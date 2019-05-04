@@ -30,9 +30,22 @@ function set_param(String $key, String $value)
     DB::table('parameters')->insert(['key' => $key, 'value' => $value]);
 }
 
-function param(String $key)
+/**
+ * Gets or sets a parameter value. A parameter value can not be
+ * set as null using this function. While setting parameter
+ * value, it also removes the old value of the parameter 
+ * from the cache. While getting a parameter value, it
+ * caches the value if it is not already cached.
+ * 
+ * @param String $key
+ * @param mixed $value
+ */
+function param(String $key, $value = null)
 {
-    return get_param($key);
+    if ($value === null) {
+        return get_param($key);
+    }
+    return set_param($key, $value);
 }
 
 

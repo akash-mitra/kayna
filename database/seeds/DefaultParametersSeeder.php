@@ -13,7 +13,7 @@ class DefaultParametersSeeder extends Seeder
     public function run()
     {
         DB::table('parameters')->insert(['key' => 'installation', 'value' => '1']);
-        DB::table('parameters')->insert(['key' => 'login_native_active', 'value' => 'yes']);
+        DB::table('parameters')->insert(['key' => 'login_native_active', 'value' => 'no']);
         DB::table('parameters')->insert(['key' => 'login_google_active', 'value' => 'no']);
         DB::table('parameters')->insert(['key' => 'login_facebook_active', 'value' => 'no']);
         DB::table('parameters')->insert(['key' => 'login_google_client_id', 'value' => '']);

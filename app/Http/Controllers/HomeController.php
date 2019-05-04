@@ -43,7 +43,14 @@ class HomeController extends Controller
     {
         if (param('installation') === '1') {
             if (empty(param('installation_done_till_step'))) {
-                return redirect()->route('installation', 1);
+                // return redirect()->route('installation', 1);
+                //TODO 
+                // Above we are skipping the first step of user creation
+                // as the user has already been created in the 
+                // current setup. Later on plan to use this step
+                // for some other configuration purpose.
+
+                return redirect()->route('installation', 2);
             } else {
                 if (param('installation_done_till_step') === '1') {
                     return redirect()->route('installation', 2);
@@ -111,15 +118,16 @@ class HomeController extends Controller
                 'admin_password' => 'required|min:8',
             ]);
 
-            DB::table('users')->insert([
-                'name' => $request->input('admin_name'),
-                'email' => $request->input('admin_email'),
-                'type' => 'admin',
-                'password' => bcrypt($request->input('admin_password')),
-                'slug' => uniqid(mt_rand(0, 9999), true),
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
+            // this is temporarily commented out as users are now being pre-created
+            // DB::table('users')->insert([
+            //     'name' => $request->input('admin_name'),
+            //     'email' => $request->input('admin_email'),
+            //     'type' => 'admin',
+            //     'password' => bcrypt($request->input('admin_password')),
+            //     'slug' => uniqid(mt_rand(0, 9999), true),
+            //     'created_at' => now(),
+            //     'updated_at' => now()
+            // ]);
 
             set_param('installation_done_till_step', '1');
 
@@ -130,7 +138,7 @@ class HomeController extends Controller
 
             $request->validate([
                 'logo_text' => 'required|string',
-                'about' => 'nullable|max:255'
+                'about' => 'required|max:255'
             ]);
 
             $loginEnable = $request->input('enable_registration') === "true" ? 'yes' : 'no';
@@ -147,9 +155,7 @@ class HomeController extends Controller
             // send email
             delete_param('installation');
             delete_param('installation_done_till_step');
-            auth()->user()->delete();
-            Auth::logout();
-            return redirect()->route('login');
+            return redirect()->route('dashboard');
         }
     }
 

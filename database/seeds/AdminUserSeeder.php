@@ -16,7 +16,7 @@ class AdminUserSeeder extends Seeder
             'name' => 'Akash',
             'email' => 'akashmitra@gmail.com',
             'type' => 'admin',
-            'password' => bcrypt('secret'),
+            'password' => bcrypt('secretseven'),
             'slug' => uniqid(mt_rand(0, 9999), true),
             'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')

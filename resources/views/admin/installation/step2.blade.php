@@ -4,8 +4,8 @@
 
 <div class="w-full md:w-3/4 max-w-lg mx-auto h-screen p-4">
         <div class="w-full mt-12 pb-2">
-                <span class="px-12 py-10 text-2xl font-mono font-bold rounded-full bg-indigo-lightest text-indigo-dark">2</span>
-                <span class="py-6 px-2 text-xl text-indigo-dark">Configure the Website</span>
+                <span class="px-12 py-10 text-2xl font-mono font-bold rounded-full bg-indigo-lightest text-indigo-lightest">#</span>
+                <span class="-ml-16 text-2xl text-indigo-dark">Site Configuration</span>
         </div>
 
         <div class="w-full ml-8 mt-2 sm:flex">

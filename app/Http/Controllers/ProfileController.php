@@ -19,7 +19,17 @@ class ProfileController extends Controller
 
         $user->load('publications');
 
-        return compiledView('profile', $user->toArray());
+        // return compiledView('profile', $user->toArray());
+        // return $user;
+        return view('profile', [
+            "resource" => $user,
+            "common" => (object)[
+                "sitename" => "Kayna",
+                "sitetitle" => "A BlogTheory site",
+                "metadesc" => "A friendly website",
+                "metakey" => ""
+            ]
+        ]);
     }
 
     // public function edit(User $user)
@@ -39,7 +49,7 @@ class ProfileController extends Controller
      */
     public function changePassword(Request $request, User $user)
     {
-        if (! $user->isRequestingHerSelf()) {
+        if (!$user->isRequestingHerSelf()) {
             abort(403, 'Permission Denied');
         }
 
