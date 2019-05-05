@@ -126,15 +126,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 trix__WEBPACK_IMPORTED_MODULE_0___default.a.config.attachments.preview.caption = {
   name: false,
   size: false
 };
-trix__WEBPACK_IMPORTED_MODULE_0___default.a.config.blockAttributes.heading1.tagName = "h2"; // https://github.com/basecamp/trix/issues/202
-// Trix.config.blockAttributes.default.tagName = "div";
-// Trix.config.blockAttributes.default.breakOnReturn = true;
-
+trix__WEBPACK_IMPORTED_MODULE_0___default.a.config.blockAttributes.heading1.tagName = "h2";
+trix__WEBPACK_IMPORTED_MODULE_0___default.a.config.blockAttributes.heading2 = {
+  tagName: "h3",
+  terminal: true,
+  breakOnReturn: true,
+  group: false
+};
+trix__WEBPACK_IMPORTED_MODULE_0___default.a.config.lang.heading2 = 'Sub-heading';
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     name: String,
@@ -146,31 +156,41 @@ trix__WEBPACK_IMPORTED_MODULE_0___default.a.config.blockAttributes.heading1.tagN
   mounted: function mounted() {
     var _this = this;
 
-    this.$refs.trix.addEventListener('trix-initialize', function (e) {
+    var t = this.$refs.trix; // Things to do when trix initialize
+
+    t.addEventListener('trix-initialize', function (e) {
       if (_this.autohide) e.target.toolbarElement.style.display = "none";
+
+      _this.addSubHeadingButton(e);
+
       return _this.addUploadButton(e);
-    });
+    }); // auto hiding code
 
     if (this.autohide) {
-      this.$refs.trix.addEventListener("trix-focus", function (event) {
+      t.addEventListener("trix-focus", function (event) {
         event.target.toolbarElement.style.display = "block";
       });
-      this.$refs.trix.addEventListener("trix-blur", function (event) {
-        event.target.toolbarElement.style.display = "none";
+      t.addEventListener("trix-blur", function (event) {
+        // do not hide toolbar if there is selected texts
+        var selection = t.editor.getSelectedRange();
+
+        if (selection[0] == selection[1]) {
+          event.target.toolbarElement.style.display = "none";
+        }
       });
     }
 
-    this.$refs.trix.addEventListener('trix-change', function (e) {
+    t.addEventListener('trix-change', function (e) {
       _this.$emit('input', e.target.innerHTML);
     });
-    this.$refs.trix.addEventListener('trix-attachment-add', function (e) {
+    t.addEventListener('trix-attachment-add', function (e) {
       var attachment = e.attachment;
 
       if (attachment.file) {
         return _this.uploadAttachment(attachment);
       }
     });
-    this.$refs.trix.addEventListener('trix-attachment-remove', function (e) {
+    t.addEventListener('trix-attachment-remove', function (e) {
       if (confirm("Delete this from the server as well?")) return _this.deleteAttachment(e.attachment.attachment.attributes.values.url);
     });
   },
@@ -253,7 +273,7 @@ trix__WEBPACK_IMPORTED_MODULE_0___default.a.config.blockAttributes.heading1.tagN
       button.setAttribute("data-trix-action", "x-attach");
       button.setAttribute("title", "Attach a file");
       button.setAttribute("tabindex", "-1");
-      button.innerText = "Attach a file"; // Attachment of the button to the toolBar
+      button.innerText = "Insert an Image"; // Attachment of the button to the toolBar
 
       var uploadButton = toolBar.querySelector('.trix-button-group.trix-button-group--block-tools').appendChild(button); // When the button is clicked
 
@@ -280,6 +300,12 @@ trix__WEBPACK_IMPORTED_MODULE_0___default.a.config.blockAttributes.heading1.tagN
         fileInput.click();
       });
       return;
+    },
+    addSubHeadingButton: function addSubHeadingButton(e) {
+      var trix = e.target;
+      var toolBar = trix.toolbarElement;
+      var buttonHTML = "<button type=\"button\" style='color: #666;font-size: 20px;' data-trix-attribute='heading2' title=\"Sub-Heading\">H2</button>";
+      toolBar.querySelector(".trix-button--icon-heading-1").insertAdjacentHTML("afterend", buttonHTML);
     }
   }
 });
@@ -298,7 +324,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "trix-toolbar .trix-button-group,\ntrix-toolbar .trix-button,\ntrix-toolbar .trix-button:not(:first-child) {\n  border: none;\n}\ntrix-toolbar .trix-button:hover {\n  color: #000;\n}\n.trix-button--icon-increase-nesting-level,\n.trix-button--icon-decrease-nesting-level {\n  display: none;\n}\n", ""]);
+exports.push([module.i, "trix-toolbar .trix-button-group,\ntrix-toolbar .trix-button,\ntrix-toolbar .trix-button:not(:first-child) {\n  border: none;\n}\ntrix-toolbar .trix-button:hover {\n  color: #000;\n}\n.trix-button--icon-increase-nesting-level,\n.trix-button--icon-decrease-nesting-level {\n  display: none;\n}\ntrix-toolbar trix-button-group--block-tools {\n  border-right: 1px solid #ccc;\n  border-left: 1px solid #ccc;\n}\n", ""]);
 
 // exports
 
