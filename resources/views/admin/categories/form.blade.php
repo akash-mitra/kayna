@@ -50,7 +50,8 @@
                                                 <select v-model="parent_id" name="parent_id" class="appearance-none block w-full bg-grey-lighter text-gr1ey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey">
                                                         <option disabled>Please select one</option>
                                                         <option value="">None (Top level category)</option>
-                                                        <option v-for="category in categories" :value="category.id" v-bind:key="category.id">
+                                                        <option v-for="category in flat" v-if="category.id>0" :value="category.id" v-bind:key="category.id">
+                                                                
                                                                 @{{ category.name }}
                                                         </option>
                                                 </select>
@@ -96,14 +97,61 @@
                         'name': '{{data_get($category, "name")}}',
                         'description': '{{data_get($category, "description")}}',
                         'parent_id': '{{data_get($category, "parent_id")}}',
-                        'categories': @json($categories)
+                        'categories': @json($categories),
+                        'flat': []
                 }
                 new Vue({ el: 'main', 
                         data: data,
-                        computed: {},
+                        computed: {
+                                
+                        },
+                        created: function () {
+                                let root = {
+                                        id: 0,
+                                        name: 'root',
+                                        children: this.createDataTree(this.categories)
+                                }
+                                
+                                this.createFlatIndent(this.flat, root) ;
+                                
+                        },
                         methods: {
                                 checkMandatory: function () {
                                         return true
+                                },
+
+                                createDataTree:  function (dataset) {
+                                        let hashTable = Object.create(null)
+                                        dataset.forEach( aData => hashTable[aData.id] = { ...aData, children : [] } )
+                                        let dataTree = []
+                                        dataset.forEach( aData => {
+                                                if( aData.parent_id ) hashTable[aData.parent_id].children.push(hashTable[aData.id])
+                                                else dataTree.push(hashTable[aData.id])
+                                        } )
+                                        return dataTree
+                                },
+
+                                createFlatIndent: function (struct, tree, level) {
+                                        if (typeof level === 'undefined') level = 0;
+                                        let indentation = '';
+                                        for (let i =1; i < level; i++) indentation += "\u2014";
+                                        struct.push({
+                                                id: tree.id,
+                                                name: indentation + ' ' + tree.name,
+                                                level: level
+                                        });
+                                        // struct.push("name=" + tree.name + " at level=" + level)
+                                        if (tree.children.length > 0) {
+                                                level += 1;
+                                                for(let i = 0; i < tree.children.length; i++) {
+                                                        let t = tree.children[i]
+                                                        // indentedStructure.push (this.createFlatIndent(t, level))
+                                                        this.createFlatIndent(struct, t, level)
+                                                }
+                                        } 
+
+                                        // return indentedStructure;
+                                       
                                 },
 
                                 confirm: function () {
