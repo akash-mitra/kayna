@@ -1831,6 +1831,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['message'],
   data: function data() {
@@ -1867,13 +1869,24 @@ __webpack_require__.r(__webpack_exports__);
       setTimeout(function () {
         _this2.show = false;
       }, 3000);
+    },
+    icon: function icon() {
+      if (this.type === 'error') {
+        return '<svg class="fill-current h-8 w-8 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path class="heroicon-ui" d="M4.93 19.07A10 10 0 1 1 19.07 4.93 10 10 0 0 1 4.93 19.07zm1.41-1.41A8 8 0 1 0 17.66 6.34 8 8 0 0 0 6.34 17.66zM13.41 12l1.42 1.41a1 1 0 1 1-1.42 1.42L12 13.4l-1.41 1.42a1 1 0 1 1-1.42-1.42L10.6 12l-1.42-1.41a1 1 0 1 1 1.42-1.42L12 10.6l1.41-1.42a1 1 0 1 1 1.42 1.42L13.4 12z"/></svg>';
+      }
+
+      if (this.type === 'warning') {
+        return '<svg class="fill-current h-8 w-8 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path class="heroicon-ui" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16zm0 9a1 1 0 0 1-1-1V8a1 1 0 0 1 2 0v4a1 1 0 0 1-1 1zm0 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>';
+      }
+
+      return '<svg class="fill-current h-8 w-8 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path class="heroicon-ui" d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-9a1 1 0 0 1 1 1v4a1 1 0 0 1-2 0v-4a1 1 0 0 1 1-1zm0-4a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>';
     }
   },
   computed: {
     color: function color() {
       if (this.type === 'warning') return 'orange';
       if (this.type === 'error') return 'red';
-      return 'teal';
+      return 'green';
     }
   }
 });
@@ -1951,7 +1964,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".alert-position {\n  position: fixed;\n  right: 25px;\n  bottom: 100px;\n}\n", ""]);
+exports.push([module.i, ".alert-position {\n  position: absolute;\n  top: 80px;\n  right: 40px;\n}\n", ""]);
 
 // exports
 
@@ -6992,8 +7005,7 @@ var render = function() {
       directives: [
         { name: "show", rawName: "v-show", value: _vm.show, expression: "show" }
       ],
-      staticClass:
-        "w-1/3 md:w-1/3 lg:w-1/4 text-sm shadow-md border rounded-lg p-2 alert-position",
+      staticClass: "shadow-lg rounded px-8 py-2 alert-position",
       class:
         "border-" +
         _vm.color +
@@ -7005,10 +7017,11 @@ var render = function() {
       attrs: { role: "alert" }
     },
     [
-      _c("p", {
-        staticClass: "p-2",
-        domProps: { textContent: _vm._s(_vm.body) }
-      })
+      _c("div", { staticClass: "p-2 flex items-center" }, [
+        _c("span", { domProps: { innerHTML: _vm._s(_vm.icon()) } }),
+        _vm._v(" "),
+        _c("span", { domProps: { textContent: _vm._s(_vm.body) } })
+      ])
     ]
   )
 }
