@@ -106,12 +106,20 @@
                                 
                         },
                         created: function () {
+
+                                // we are using this to build a flattened hierarchy from the
+                                // categories data coming from server. The flat structure is
+                                // later used to display the category names in order in select
+                                // option dropdown. We insert a top root node to encompass all
+                                // the parent nodes under a single root tree.
                                 let root = {
                                         id: 0,
                                         name: 'root',
                                         children: this.createDataTree(this.categories)
                                 }
                                 
+                                // this will store the flat structure in the flat variable passed
+                                // to the function 
                                 this.createFlatIndent(this.flat, root) ;
                                 
                         },
@@ -120,6 +128,10 @@
                                         return true
                                 },
 
+                                /**
+                                 * This function takes a flat list with id and parent_id and 
+                                 * converts it to a tree structure.
+                                 */
                                 createDataTree:  function (dataset) {
                                         let hashTable = Object.create(null)
                                         dataset.forEach( aData => hashTable[aData.id] = { ...aData, children : [] } )
@@ -131,6 +143,9 @@
                                         return dataTree
                                 },
 
+                                /**
+                                 * This function takes a tree structure and flattens it with indentation
+                                 */
                                 createFlatIndent: function (struct, tree, level) {
                                         if (typeof level === 'undefined') level = 0;
                                         let indentation = '';
