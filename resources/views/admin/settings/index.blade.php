@@ -171,8 +171,8 @@
 
             <div class="w-full block mt-8">
                 <label class="border py-2 px-4 rounded-lg cursor-pointer bg-grey-lighter">
-                    <input name="editor" type="radio" value="html" v-model="editor"  />
-                    <span class="text-lg1 px-4">HTML Editor</span>
+                    <input name="editor" type="radio" value="html" v-model="editor" disabled />
+                    <span class="text-lg1 px-4 text-grey">HTML Editor</span>
                 </label>
                 <div class="mt-4 text-grey-darker">This is a good ol' HTML editor with all the bells and whistles so that you never feel limited. </div>
             </div>

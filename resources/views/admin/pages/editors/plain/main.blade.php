@@ -1,8 +1,4 @@
-<div class="h-16 fixed pin-t w-full md:w-4/5 flex justify-center items-center border-b bg-white z-20">
-        <trix-toolbar id="my_toolbar" style="padding-top:10px" class="bg-transparent"></trix-toolbar>    
-</div>
-
-<div class="w-full max-w-lg mx-auto p-8 z-10 mt-16" id="trix-main">
+<div class="w-full max-w-lg mx-auto my-8 px-4">
 
         <div class="w-full flex justify-between items-center mb-4">
                 <div class="inline-block relative border rounded">
@@ -27,53 +23,53 @@
                 </div>
         </div>
 
-        <div class="w-full flex flex-col px-2">
+        <div class="w-full flex flex-col">
+                <span class="uppercase tracking-wide text-grey-dark text-sm">Title</span>
                 <textarea name="title"  
+                        id="ta_title" 
                         v-model="title" 
-                        placeholder="Title" 
+                        placeholder="Title"  
                         rows="1" 
                         @input="handleTitleInput"
-                        class="w-full py-2 default-page-title"
-                        :class='title.length>0? "border-none": "border-b"'></textarea>
-                <!-- </span> -->
+                        class="w-full resize-y p-4 text-2xl bg-grey-lightest rounded my-4 border font-serif"
+                        ></textarea>
+                
                 <ul class="-ml-5 mt-2"><li v-for="e in validations.title" v-text="e" class="text-xs font-normal text-red"></li></ul>
         </div>
 
-        <div class="flex flex-col py-2 px-2 text-sm font-light text-grey-dark">
+        <div class="flex flex-col py-2">
+                <span class="uppercase tracking-wide text-grey-dark text-sm">Summary</span>
                 <textarea 
                         name="summary"
                         id="ta_summary" 
                         v-model="summary" 
                         placeholder="Short Summary" 
-                        rows="3" 
+                        rows="4" 
                         @input="handleSummaryInput"
-                        class="mt-4 h-12 1bg-grey w-full py-2 default-page-summary"
-                        :class='summary.length>0? "border-none": "border-b"'></textarea>
+                        class="w-full resize-y p-4 italic bg-grey-lightest rounded my-4 border font-sans"
+                        ></textarea>
                 <ul class="-ml-5 mt-2"><li v-for="e in validations.summary" v-text="e" class="text-xs font-normal text-red"></li></ul>
         </div>
 
         
-        <div class="w-full px-2 mt-6 text-right">
-                
-                <p class="border-b border-dotted pb-2 text-xs text-grey-dark font-mono">2 min read</p>
-
-        </div>
-        
-        <div class="w-full px-2">
-                <editor  
-                        name="body" 
+        <div class="w-full py-2">
+               <span class="uppercase tracking-wide text-grey-dark text-sm">Content</span>
+                <textarea 
+                        name="body"
+                        id="ta_body" 
                         v-model="body" 
-                        :value="body" 
-                        :autohide=true 
-                        :css_class='body.length==0? "bg-grey-lightest": "bg-transparent"'
-                        placeholder="Tell your story...">
-                </editor>
+                        placeholder="Tell your story..." 
+                        rows="20"
+                        @input="handleBodyInput" 
+                        class="w-full resize-y p-4 text-sm bg-grey-lightest rounded my-4 border font-mono"
+                        ></textarea>
+
         </div>
+</div>  
 
 
 
-
-        <base-modal :show="show_info_modal" cover="2/3" @close="show_info_modal=null">
+<base-modal :show="show_info_modal" cover="2/3" @close="show_info_modal=null">
 
         <h4 slot="header" class="w-full text-blue-dark font-semibold bg-grey-lightest border-blue-lighter border-b qshadow py-4 px-8 mb-2">
                         Review Page Information
@@ -229,9 +225,3 @@
                 class="py-2 px-8 pull-right text-white rounded bg-teal hover:bg-teal-dark">Confirm</button>
         </div>
 </base-modal>
-</div>  
-
-
-<div class="w-full max-w-lg mx-auto flex justify-between my-2 p-4"></div>
-
-
