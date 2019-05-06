@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use App\Category;
 use Illuminate\Http\Request;
 
@@ -113,12 +114,21 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         
+        Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'parent_id' => [function ($attribute, $value, $fail) use ($category) {
+                if ($category->id === $value) {
+                    $fail('Category can not be created under itself.');
+                }
+            }]
+        ])->validate();
+        
+
         $category = tap($category->fill(request(['name', 'description', 'parent_id'])))->save();
     
         return [
             "status" => "success",
             "flash" => ["message" => "Category [" . $category->name . "] saved"]
-                //"page" => $page
         ];
     }
 

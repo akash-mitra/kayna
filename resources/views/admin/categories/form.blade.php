@@ -196,10 +196,13 @@
                                 updateAtServer: function () {
                                         axios.patch( '/admin/categories/' + this.id, {
                                                 'name': this.name, 'description': this.description, 'parent_id': this.parent_id
-                                        }).then (function (response) {
-                                                
-                                                flash({message: response.data.flash.message})
-                                        });
+                                        }).then (
+                                                (response) => { flash({message: response.data.flash.message}) },
+                                                (error)    => { 
+                                                        // console.log(error.response.data.errors)
+                                                        flash({message: error.response.data.message, type: 'error'}) 
+                                                },
+                                        )
                                 },
                         }
                 })
