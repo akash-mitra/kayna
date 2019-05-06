@@ -164,9 +164,9 @@
             <div class="w-full block">
                 <label class="border py-2 px-4 rounded-lg cursor-pointer bg-grey-lighter">
                     <input name="editor" type="radio" value="plain" v-model="editor" />
-                    <span class="text-lg1 px-4">No Editor</span>
+                    <span class="text-lg1 px-4">Plain Editor</span>
                 </label>
-                <div class="mt-4 text-grey-darker">Simple text box for raw HTML.</div>
+                <div class="mt-4 text-grey-darker">Simple text box that allows you to input plain text or raw HTML.</div>
             </div>
 
             <div class="w-full block mt-8">
@@ -179,8 +179,8 @@
 
             <div class="w-full block mt-8">
                 <label class="border py-2 px-4 rounded-lg cursor-pointer bg-grey-lighter">
-                    <input name="editor" type="radio" value="wysiwyg" v-model="editor"  />
-                    <span class="text-lg1 px-4">WYSIWYG</span>
+                    <input name="editor" type="radio" value="rich" v-model="editor"  />
+                    <span class="text-lg1 px-4">Rich Text Editor</span>
                 </label>
                 <div class="mt-4 text-grey-darker">This is a WYSIWYG Editor that uses HTML5 <code>contenteditable</code> feature.</div>
             </div>

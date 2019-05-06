@@ -29,12 +29,9 @@
 
         <div class="w-full md:w-4/5 bg-white min-h-screen max-h-screen overflow-x-hidden overflow-y-auto">
             
-            <div class="h-16 fixed w-full md:w-4/5 flex justify-center items-center border-b bg-white z-20">
-                <trix-toolbar id="my_toolbar" style="padding-top:10px" class="bg-transparent"></trix-toolbar>
-                
-            </div>
+            
 
-            <main class="mt-16 w-full z-10">
+            <main class="w-full">
                 
                 @includeIf('admin.pages.editors.'. param('editor') . '.main')
                 

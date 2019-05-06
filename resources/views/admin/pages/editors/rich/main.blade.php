@@ -1,4 +1,8 @@
-<div class="w-full max-w-lg mx-auto p-8">
+<div class="h-16 fixed pin-t w-full md:w-4/5 flex justify-center items-center border-b bg-white z-20">
+        <trix-toolbar id="my_toolbar" style="padding-top:10px" class="bg-transparent"></trix-toolbar>    
+</div>
+
+<div class="w-full max-w-lg mx-auto p-8 z-10 mt-16" id="trix-main">
 
         <div class="w-full flex justify-between items-center mb-4">
                 <div class="inline-block relative border rounded">
@@ -66,6 +70,7 @@
                 </editor>
         </div>
 </div>  
+
 
 <div class="w-full max-w-lg mx-auto flex justify-between my-2 p-4"></div>
 

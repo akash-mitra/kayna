@@ -37,7 +37,7 @@ let data = {
 
 
 new Vue({
-        el: 'main',
+        el: '#trix-main',
         data: data,
         computed: {
                 statusColor: function() {
