@@ -39,8 +39,12 @@ Route::get('/profile/{slug}', 'ProfileController@show')->name('profiles.show');
 Route::post('/admin/users/{user}/password', 'ProfileController@changePassword')->name('profiles.password');
 
 // all media related routes
-Route::resource('media', 'MediaController')->except(['destroy']);
-Route::post('/media/destroy', 'MediaController@destroy')->middleware('auth');
+// Route::group(['prefix' => 'admin'], function () {
+//     Route::resource('media', 'MediaController')->middleware('admin');
+// });
+Route::get('/admin/media', 'MediaController@index')->middleware('auth');
+Route::post('/admin/media', 'MediaController@store')->middleware('auth');
+Route::post('/admin/media/destroy', 'MediaController@destroy')->middleware('auth');
 
 Route::get('/admin/templates', 'TemplateController@index')->name('templates.index')->middleware('admin');
 Route::get('/admin/templates/public', 'TemplateController@templates')->name('templates.templates')->middleware('admin');

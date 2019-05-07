@@ -21,8 +21,8 @@
                 </a>
             </li>
             <li class="px-6 md:px-8 py-2">
-                <a class="hover:text-teal text-grey-darker no-underline font-hairline active" href="/admin/accesses">
-                    Access
+                <a class="hover:text-teal text-grey-darker no-underline font-hairline active" href="/admin/media">
+                    Media
                 </a>
             </li>
             <li class="px-6 md:px-8 py-2">
@@ -72,6 +72,11 @@
                 <span class="text-grey no-underline font-hairline" href="#">
                     Social
                 </span>
+            </li>
+            <li class="px-6 md:px-8 py-2">
+                <a class="hover:text-teal text-grey-darker no-underline font-hairline active" href="/admin/accesses">
+                    Access
+                </a>
             </li>
         </ul>
 

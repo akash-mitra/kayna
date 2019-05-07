@@ -160,7 +160,7 @@
                 form.append("media", file)
 
                 let xhr = new XMLHttpRequest
-                xhr.open("POST", "/media", true)
+                xhr.open("POST", "/admin/media", true)
                 xhr.setRequestHeader("X-CSRF-Token", document.head.querySelector('meta[name="csrf-token"]').content)
                 
                 xhr.upload.onprogress = function (event) {
@@ -190,7 +190,7 @@
 
 
             deleteAttachment: function (url) {
-                axios.post('/media/destroy', { 'url': url })
+                axios.post('/admin/media/destroy', { 'url': url })
                 .then (function (e) {
                     console.log('Attachement media deleted from the server');
                 });

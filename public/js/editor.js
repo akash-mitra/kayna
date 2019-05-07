@@ -228,7 +228,7 @@ trix__WEBPACK_IMPORTED_MODULE_0___default.a.config.lang.heading2 = 'Sub-heading'
       form.append("name", file.name);
       form.append("media", file);
       var xhr = new XMLHttpRequest();
-      xhr.open("POST", "/media", true);
+      xhr.open("POST", "/admin/media", true);
       xhr.setRequestHeader("X-CSRF-Token", document.head.querySelector('meta[name="csrf-token"]').content);
 
       xhr.upload.onprogress = function (event) {
@@ -257,7 +257,7 @@ trix__WEBPACK_IMPORTED_MODULE_0___default.a.config.lang.heading2 = 'Sub-heading'
       return xhr.send(form);
     },
     deleteAttachment: function deleteAttachment(url) {
-      axios.post('/media/destroy', {
+      axios.post('/admin/media/destroy', {
         'url': url
       }).then(function (e) {
         console.log('Attachement media deleted from the server');

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\media;
+use App\Media;
 use Illuminate\Http\Request;
 
 class MediaController extends Controller
@@ -12,8 +12,27 @@ class MediaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $type = $request->input('type');
+        $storage = $request->input('storage');
+        // $size = $request->input('size');
+        $name = $request->input('name');
+
+        $media = Media::query();
+
+        if ($type) { $media->where('type', 'like', '%'.$type. '%'); }
+        if ($storage) { $media->where('storage', 'like', '%'.$storage. '%'); }
+        // if ($size) { $media->where('size', 'like', '%'.$size. '%'); }
+        if ($name) { $media->where('name', 'like', '%'.$name. '%'); }
+
+        $photos = $media->paginate();
+        $query = [
+            'type' => $type,
+            'storage' => $storage,
+            'name' => $name
+        ];
+        return view('admin.media.index')->with('photos', $photos)->with('query', $query);
     }
 
     /**

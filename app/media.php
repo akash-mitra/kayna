@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Model;
 
-class media extends Model
+class Media extends Model
 {
     protected $fillable = ['name', 'type', 'size', 'storage', 'path'];
     
