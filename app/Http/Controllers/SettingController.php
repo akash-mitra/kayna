@@ -6,6 +6,7 @@ use Cache;
 use App\Parameter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Artisan;
 
 class SettingController extends Controller
 {
@@ -35,5 +36,15 @@ class SettingController extends Controller
             "status" => "success",
             "message" => "Parameters updated"
         ];
+    }
+
+
+    public function clearAppCache()
+    {
+        Artisan::call('cache:clear');
+        Artisan::call('config:clear');
+
+        session()->flash('message', 'Application Cache has been cleared!');
+        return back();
     }
 }
