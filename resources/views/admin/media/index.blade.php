@@ -9,7 +9,7 @@
     </h1>
 
     <h3 class="px-2 text-sm font-light text-indigo-darker">
-        Create or Edit Category
+        Browse all your media files in a single place
     </h3>
 </div>
 @endsection
