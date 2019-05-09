@@ -25,5 +25,6 @@ class DefaultParametersSeeder extends Seeder
         DB::table('parameters')->insert(['key' => 'storage_s3_secret', 'value' => '']);
         DB::table('parameters')->insert(['key' => 'storage_s3_key', 'value' => '']);
         DB::table('parameters')->insert(['key' => 'storage_s3_region', 'value' => '']);
+        DB::table('parameters')->insert(['key' => 'editor', 'value' => 'plain']);
     }
 }

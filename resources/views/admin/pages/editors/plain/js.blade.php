@@ -17,7 +17,7 @@ let data = {
         // validations are used for mandatory checks.
         // If any validation checks fail, form is not saved.
         validations: {
-                title: [], summary: []
+                title: [], summary: [], body: []
         },
 
         // qa object stores the quality check information.
@@ -88,17 +88,7 @@ new Vue({
                         let p = this
                         event.target.innerText = "Saving"
                         
-                        axios.post( '/admin/pages', {
-                                category_id: this.category.value,
-                                title: this.title,
-                                summary: this.summary,
-                                metadesc: this.metadesc,
-                                metakeys: this.metakeys_string,
-                                media_url: this.media_url,
-                                page_url: this.page_url,
-                                status: this.status,
-                                body: this.body,
-                        }).then (function (response) {
+                        axios.post( '/admin/pages', this.mapData()).then (function (response) {
                                 
                                 event.target.innerText = "Save"
                                 
@@ -115,9 +105,18 @@ new Vue({
                 },
 
                 updateAtServer: function () {
-                        console.log(this.category)
-                        axios.patch( '/admin/pages/' + this.id, {
-                                id: this.id,
+                        //console.log(this.category)
+                        axios.patch( '/admin/pages/' + this.id, this.mapData()).then (function (response) {
+                                flash({message: response.data.flash.message})
+                                //console.log(response);
+                        });
+                },
+
+                mapData: function () {
+                        this.title = this.strip(this.title)
+                        this.summary = this.strip(this.summary)
+                        let mappedData = {
+                                // id: this.id,
                                 category_id: this.category.value,
                                 title: this.title,
                                 summary: this.summary,
@@ -127,10 +126,16 @@ new Vue({
                                 page_url: this.page_url,
                                 status: this.status,
                                 body: this.body,
-                        }).then (function (response) {
-                                flash({message: response.data.flash.message})
-                                console.log(response);
-                        });
+                        }
+                        
+                        if (this.id !== '') mappedData['id'] = this.id
+
+                        return mappedData
+                },
+
+                strip: function (html) {
+                        var doc = new DOMParser().parseFromString(html, 'text/html');
+                        return doc.body.textContent || "";
                 },
 
                 showQAChecks: function () {
@@ -174,6 +179,7 @@ new Vue({
 
                 handleBodyInput: function (event) {
                         this.adjustTextAreaHeight('ta_body')
+                        // console.log(event.target)
                         if (event) this.clearValidations(event);
                 },
 
