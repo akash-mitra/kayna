@@ -7,7 +7,7 @@ let data = {
         id: '{{data_get($page, "id")}}',
         category: { text: '{{ data_get($page, "category.name") }}', value: {{ data_get($page, "category.id", 0) }} },
         title: '{{data_get($page, "title")}}',
-        summary: '{{data_get($page, "summary")}}',
+        summary: '{{nl2br(data_get($page, "summary"))}}',
         metadesc: '{{data_get($page, "metadesc")}}',
         metakeys_string: '{{data_get($page, "metakeys")}}',
         media_url: '{{data_get($page, "media_url")}}',
