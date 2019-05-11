@@ -18,15 +18,15 @@ class TestCaseSetup extends TestCase
 
     protected function setUp(): void
     {
-            parent::setUp();
+        parent::setUp();
 
-            $this->user_admin = factory(User::class)->create(['type' => 'admin']);
-            $this->user_author = factory(User::class)->create(['type' => 'author']);
-            $this->user_general = factory(User::class)->create(['type' => 'general']);
+        $this->user_admin = factory(User::class)->create(['type' => 'admin']);
+        $this->user_author = factory(User::class)->create(['type' => 'author']);
+        $this->user_general = factory(User::class)->create(['type' => 'general']);
     }
 
 
-    protected function test_a_page_can_be_created_by ($user)
+    protected function a_page_can_be_created_by($user)
     {
         $page = factory(Page::class)->make();
         $content = '<p>Some random <b>HTML</b> Texts with non-alpha characters such as ` and "</p>';
@@ -49,4 +49,21 @@ class TestCaseSetup extends TestCase
         ]);
     }
 
+
+    protected function a_page_can_not_be_created_by($user)
+    {
+        $page = factory(Page::class)->make();
+        $content = '<p>Some random <b>HTML</b> Texts with non-alpha characters such as ` and "</p>';
+
+        $this->actingAs($user)
+            ->post(route('pages.store'), [
+                'title' => $page->title,
+                'summary' => $page->summary,
+                'body' => $content
+            ])
+            ->assertForbidden();
+
+        // dump($response);
+        //->assertRedirect('/abc');
+    }
 }

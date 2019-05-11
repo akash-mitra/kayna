@@ -1,13 +1,18 @@
 <?php
 
 // All Page related general and admin routes
-Route::get('/pages/{page}/{slug?}', 'PageController@show');
-Route::group(['prefix' => 'admin'], function () {
-    Route::resource('pages', 'PageController')->except(['show'])->middleware('admin');
-});
-Route::get('/api/pages', 'PageController@apiGetAll')->name('api.pages.index');
-Route::get('/api/pages/{page}', 'PageController@apiGet')->name('api.pages.get');
-Route::post('/api/pages/status', 'PageController@apiSetStatus')->name('api.pages.setStatus');
+Route::get('/admin/pages',              'PageController@index')->name('pages.index')->middleware('author');
+Route::post('/admin/pages',             'PageController@store')->name('pages.store')->middleware('author');
+Route::get('/pages/{page}/{slug?}',     'PageController@show')->name('pages.get')->middleware('web');
+Route::get('/admin/pages/create',       'PageController@create')->name('pages.create')->middleware('author');
+Route::patch('/admin/pages/{page}',     'PageController@update')->name('pages.update')->middleware('author');
+Route::get('/admin/pages/{page}/edit',  'PageController@edit')->name('pages.edit')->middleware('author');
+Route::delete('/admin/pages/{page}',    'PageController@destroy')->name('pages.destroy')->middleware('author');
+Route::get('/api/pages',                'PageController@apiGetAll')->name('api.pages.index')->middleware('web');
+Route::get('/api/pages/{page}',         'PageController@apiGet')->name('api.pages.get')->middleware('author');
+Route::post('/api/pages/status',        'PageController@apiSetStatus')->name('api.pages.setStatus')->middleware('web');
+
+
 
 // All Categories related general and admin routes
 Route::get('/categories/{category}/{slug?}', 'CategoryController@show');

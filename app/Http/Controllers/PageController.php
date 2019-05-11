@@ -11,10 +11,10 @@ class PageController extends Controller
 {
 
 
-    public function __construct()
-    {
-        return $this->middleware('auth')->except(['show']);
-    }
+    // public function __construct()
+    // {
+    //     //return $this->middleware('auth')->except(['show']);
+    // }
 
 
     /**
@@ -25,8 +25,8 @@ class PageController extends Controller
     public function index()
     {
         $pages = Page::with(['author', 'category', 'comments'])
-                    ->orderBy('updated_at', 'desc')
-                    ->get();
+            ->orderBy('updated_at', 'desc')
+            ->get();
         return view('admin.pages.index', compact('pages'));
     }
 
@@ -38,8 +38,7 @@ class PageController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('admin.pages.form')->with('categories', $categories)->with('page', null);
-        ;
+        return view('admin.pages.form')->with('categories', $categories)->with('page', null);;
     }
 
     /**
@@ -77,7 +76,7 @@ class PageController extends Controller
     public function show(Page $page)
     {
         $pageData = $page->load('author', 'category', 'content');
-        
+
         if ($pageData->status != 'Live') {
             return abort(503, "This page is currently unavailable.");
         }
@@ -90,7 +89,7 @@ class PageController extends Controller
 
         return view('page', [
             "resource" => $pageData,
-            "common" => (object) [
+            "common" => (object)[
                 "sitename" => "Kayna"
             ]
         ]);
@@ -105,7 +104,7 @@ class PageController extends Controller
     public function edit(Page $page)
     {
         $pageData = $page->load('author', 'category', 'content');
-        
+
         $categories = Category::all();
 
         return view('admin.pages.form')->with('categories', $categories)->with('page', $pageData);
@@ -122,17 +121,17 @@ class PageController extends Controller
     {
         DB::transaction(function () use ($page, $request) {
             tap($page->fill(request(['category_id', 'title', 'summary', 'status', 'media_url', 'metakeys', 'metadesc'])))
-                    ->save()
-                        ->content
-                            ->fill(request(['body']))
-                                ->save();
+                ->save()
+                ->content
+                ->fill(request(['body']))
+                ->save();
         });
 
         return [
-                "status" => "success",
-                "flash" => ["message" => "Page [" . $page->title . "] saved"]
-                //"page" => $page
-            ];
+            "status" => "success",
+            "flash" => ["message" => "Page [" . $page->title . "] saved"]
+            //"page" => $page
+        ];
     }
 
     /**
@@ -149,7 +148,7 @@ class PageController extends Controller
             "status" => "success",
             "flash" => ["message" => "Page [" . $page->title . "] deleted"],
             "page_id" => $page->id
-                //"page" => $page
+            //"page" => $page
         ];
     }
 
