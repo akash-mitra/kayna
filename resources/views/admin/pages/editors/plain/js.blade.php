@@ -8,7 +8,7 @@
                 title: "{{data_get($page, 'title')}}",
                 summary: `{!! data_get($page, 'summary') !!}`,
                 metadesc: "{{data_get($page, 'metadesc')}}",
-                metakeys_string: "{{data_get($page, 'metakeys')}}",
+                metakey_string: "{{data_get($page, 'metakey')}}",
                 media_url: '{{data_get($page, "media_url")}}',
                 page_url: '{{data_get($page, "url")}}',
                 status: '{{data_get($page, "status", "Live")}}',
@@ -32,7 +32,7 @@
                 show_meta_info: false,
                 show_se_preview: false,
                 edit_metadesc: false,
-                edit_metakeys: false,
+                edit_metakey: false,
                 has_error: false,
         };
 
@@ -50,8 +50,8 @@
                                 }
                         },
 
-                        metakeys: function() {
-                                return (this.metakeys_string === null) ? [] : this.metakeys_string.split(',').map(item => item.trim());
+                        metakey: function() {
+                                return (this.metakey_string === null) ? [] : this.metakey_string.split(',').map(item => item.trim());
                         },
                 },
 
@@ -128,7 +128,7 @@
                                         title: this.title,
                                         summary: this.summary,
                                         metadesc: this.metadesc,
-                                        metakeys: this.metakeys_string,
+                                        metakey: this.metakey_string,
                                         media_url: this.media_url,
                                         page_url: this.page_url,
                                         status: this.status,

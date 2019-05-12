@@ -120,17 +120,20 @@ class PageController extends Controller
     public function update(Request $request, Page $page)
     {
         DB::transaction(function () use ($page, $request) {
-            tap($page->fill(request(['category_id', 'title', 'summary', 'status', 'media_url', 'metakeys', 'metadesc'])))
-                ->save()
-                ->content
-                ->fill(request(['body']))
-                ->save();
+
+            $page = tap($page->fill($request->only(['category_id', 'title', 'summary', 'status', 'media_url', 'metakey', 'metadesc'])))->save();
+
+            if ($page->content) {
+                $page->content->fill($request->only(['body']))->save();
+            } else {
+                $page->content()
+                    ->create($request->only(['body']));
+            }
         });
 
         return [
             "status" => "success",
             "flash" => ["message" => "Page [" . $page->title . "] saved"]
-            //"page" => $page
         ];
     }
 
