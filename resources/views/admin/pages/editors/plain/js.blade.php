@@ -1,3 +1,4 @@
+<script src="/js/media-gallery.js"></script>
 <script>
         let data = {
                 id: '{{data_get($page, "id")}}',
@@ -26,7 +27,7 @@
 
                 // qa object stores the quality check information.
                 qa: [],
-
+                show_gallery: false,
                 show_info_modal: false,
                 show_quality_checks: true,
                 show_meta_info: false,

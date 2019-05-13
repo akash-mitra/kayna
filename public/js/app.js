@@ -1791,7 +1791,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['show', 'cover'],
   computed: {
     widthClass: function widthClass() {
-      return 'sm:min-w-fill w-full lg:w-' + this.cover;
+      return 'w-5/6 lg:w-' + this.cover;
     }
   },
   created: function created() {
@@ -6919,7 +6919,8 @@ var render = function() {
               _c(
                 "div",
                 {
-                  staticClass: "bg-white shadow-lg border border-grey-darker",
+                  staticClass:
+                    "max-h-screen overflow-y-scroll bg-white shadow-lg border border-grey-darker",
                   class: _vm.widthClass,
                   on: {
                     click: function($event) {

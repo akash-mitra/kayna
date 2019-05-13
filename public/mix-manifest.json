@@ -2,5 +2,6 @@
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/js/editor.js": "/js/editor.js",
+    "/js/media-gallery.js": "/js/media-gallery.js",
     "/js/template-tile.js": "/js/template-tile.js"
 }

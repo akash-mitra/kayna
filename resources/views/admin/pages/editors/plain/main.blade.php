@@ -15,8 +15,8 @@
                 </div>
 
                 <div>
+                        <button class="m-2 py-2 px-4 text-blue-light hover:text-blue" v-on:click="show_gallery=true">Gallery</button>
                         <button class="m-2 py-2 px-4 text-blue-light hover:text-blue" v-on:click="show_info_modal=true">Review</button>
-
                         <button class="m-2 py-2 px-4 rounded text-teal border border-teal hover:text-white hover:bg-teal" v-on:click="confirm">Save</button>
                 </div>
         </div>
@@ -47,7 +47,15 @@
 </div>
 
 
-
+<base-modal :show="show_gallery" cover="3/4" @close="show_gallery=null">
+        <h4 slot="header" class="w-full text-blue-dark font-semibold bg-grey-lightest border-blue-lighter border-b py-4 px-8">
+                Media Gallery
+        </h4>
+        <div class="w-full bg-grey-lighter">
+                <media-gallery></media-gallery>
+        </div>
+        
+</base-modal>
 <base-modal :show="show_info_modal" cover="2/3" @close="show_info_modal=null">
 
         <h4 slot="header" class="w-full text-blue-dark font-semibold bg-grey-lightest border-blue-lighter border-b qshadow py-4 px-8 mb-2">

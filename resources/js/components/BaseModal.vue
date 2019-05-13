@@ -1,7 +1,7 @@
 <template>
         <div v-if="show" @click="closeModal" class="absolute pin-t pin-l h-screen w-screen z-50" style="background-color: rgba(0,0,0,0.5)">
                 <div class="container mx-auto h-full flex justify-center items-center">
-                        <div :class="widthClass" @click.stop class="bg-white shadow-lg border border-grey-darker">
+                        <div :class="widthClass" @click.stop class="max-h-screen overflow-y-scroll bg-white shadow-lg border border-grey-darker">
 
                                 <div class="w-full flex items-center justify-between">
                                         <slot name="header"></slot>
@@ -30,7 +30,7 @@
         computed: {
 
                 widthClass: function () {
-                        return 'sm:min-w-fill w-full lg:w-' + this.cover
+                        return 'w-5/6 lg:w-' + this.cover
                 }
         },
 

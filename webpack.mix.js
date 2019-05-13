@@ -18,6 +18,7 @@ let PurgecssPlugin = require("purgecss-webpack-plugin");
 mix.js('resources/js/app.js', 'public/js')
 mix.js('resources/js/editor.js', 'public/js')
 mix.js('resources/js/template-tile.js', 'public/js')
+mix.js('resources/js/media-gallery.js', 'public/js')
 
         
 

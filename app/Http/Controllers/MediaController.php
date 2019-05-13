@@ -21,10 +21,16 @@ class MediaController extends Controller
 
         $media = Media::query();
 
-        if ($type) { $media->where('type', 'like', '%'.$type. '%'); }
-        if ($storage) { $media->where('storage', 'like', '%'.$storage. '%'); }
+        if ($type) {
+            $media->where('type', 'like', '%' . $type . '%');
+        }
+        if ($storage) {
+            $media->where('storage', 'like', '%' . $storage . '%');
+        }
         // if ($size) { $media->where('size', 'like', '%'.$size. '%'); }
-        if ($name) { $media->where('name', 'like', '%'.$name. '%'); }
+        if ($name) {
+            $media->where('name', 'like', '%' . $name . '%');
+        }
 
         $photos = $media->paginate();
         $query = [
@@ -41,8 +47,7 @@ class MediaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-    }
+    { }
 
     /**
      * Store a newly created resource in storage.
@@ -72,8 +77,7 @@ class MediaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(media $media)
-    {
-    }
+    { }
 
     /**
      * Show the form for editing the specified resource.
@@ -82,8 +86,7 @@ class MediaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(media $media)
-    {
-    }
+    { }
 
     /**
      * Update the specified resource in storage.
@@ -93,8 +96,7 @@ class MediaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, media $media)
-    {
-    }
+    { }
 
     /**
      * Remove the specified resource from storage.
@@ -113,5 +115,29 @@ class MediaController extends Controller
         $filename = end($urlArray);
 
         return Media::destroy($filename);
+    }
+
+
+    public function apiIndex(Request $request)
+    {
+        $media = Media::query();
+
+        /**
+         * This builds a "like" query based on the query string.
+         * It breaks the query string in individual words and 
+         * tries to match any of those words in image name.
+         */
+        $query = $request->input('query');
+        if (! empty($query)) {
+            $queryArray = explode(" ", $query);
+            // a false where statement so that "or" condition below works
+            $media->where('id', 0); 
+            foreach($queryArray as $q) {
+                if (! empty($q)) $media->orWhere('name', 'like', '%' . $q . '%');
+            }
+        }
+
+
+        return $media->paginate(100);
     }
 }

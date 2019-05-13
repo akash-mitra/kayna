@@ -48,6 +48,7 @@ Route::post('/admin/users/{user}/password', 'ProfileController@changePassword')-
 //     Route::resource('media', 'MediaController')->middleware('admin');
 // });
 Route::get('/admin/media', 'MediaController@index')->middleware('auth');
+Route::get('/api/media', 'MediaController@apiIndex')->middleware('auth');
 Route::post('/admin/media', 'MediaController@store')->middleware('auth');
 Route::post('/admin/media/destroy', 'MediaController@destroy')->middleware('auth');
 

@@ -420,7 +420,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-// add the Vue file for the templte tile application
+// add the Vue file for the template tile application
 Vue.component('template-tile', __webpack_require__(/*! ./app/TemplateTile.vue */ "./resources/js/app/TemplateTile.vue").default);
 
 /***/ }),
