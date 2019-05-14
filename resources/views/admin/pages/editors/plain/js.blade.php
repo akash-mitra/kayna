@@ -146,6 +146,13 @@
                                 return doc.body.textContent || "";
                         },
 
+                        insertMedia: function (media) {
+                                this.show_gallery = false
+                                const ta = document.getElementById('ta_body')
+                                let url = '\n<img src="' + media.url + '" />\n'
+                                this.insertAtCursor(ta, url)
+                        },
+
                         showQAChecks: function() {
                                 this.show_quality_checks = true
                                 this.show_meta_info = false
@@ -264,6 +271,31 @@
 
                                 return checks
 
+                        },
+
+                        insertAtCursor: function (myField, myValue) {
+                                //IE support
+                                if (document.selection) {
+                                        myField.focus();
+                                        sel = document.selection.createRange();
+                                        sel.text = myValue;
+                                }
+                                //MOZILLA and others
+                                else if (myField.selectionStart || myField.selectionStart == '0') {
+                                        console.log(myField.selectionStart + ' and ' + myField.selectionEnd)
+                                        var startPos = myField.selectionStart;
+                                        var endPos = myField.selectionEnd;
+                                        // myField.value = myField.value.substring(0, startPos)
+                                        // + myValue
+                                        // + myField.value.substring(endPos, myField.value.length);
+                                        this.body = this.body.substring(0, startPos)
+                                        + myValue
+                                        + this.body.substring(endPos, this.body.length);
+                                        myField.selectionStart = startPos + myValue.length;
+                                        myField.selectionEnd = startPos + myValue.length;
+                                } else {
+                                        myField.value += myValue;
+                                }
                         },
 
                         getKeywords: function() {

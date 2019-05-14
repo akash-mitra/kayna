@@ -52,7 +52,7 @@
                 Media Gallery
         </h4>
         <div class="w-full bg-grey-lighter">
-                <media-gallery></media-gallery>
+                <media-gallery @selected="insertMedia"></media-gallery>
         </div>
         
 </base-modal>

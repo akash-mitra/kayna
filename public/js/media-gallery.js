@@ -131,6 +131,50 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['readonly'],
   data: function data() {
@@ -138,7 +182,9 @@ __webpack_require__.r(__webpack_exports__);
       photos: [],
       message: 'Loading Images...',
       query: '',
-      searchResult: null
+      searchResult: null,
+      pane: 'gallery',
+      selectedPhoto: {}
     };
   },
   created: function created() {
@@ -147,6 +193,13 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     doSearch: function doSearch() {
       this.getFromServer(this.query);
+    },
+    select: function select(photo) {
+      this.pane = 'photo';
+      this.selectedPhoto = photo;
+    },
+    choose: function choose() {
+      this.$emit('selected', this.selectedPhoto);
     },
     getFromServer: function getFromServer(query) {
       var p = this;
@@ -181,7 +234,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".image-contain {\n  max-height: 100px;\n  min-height: 100px;\n  overflow: hidden;\n}\n.image-container {\n  max-height: 300px;\n}\n", ""]);
+exports.push([module.i, ".thumbnail-container {\n  max-height: 450px;\n}\n.thumbnail {\n  height: 100px;\n  overflow: hidden;\n}\n.postcard-container {\n  max-height: 450px;\n}\n.postcard {\n  max-height: 400px;\n  overflow: scroll;\n}\n.mg-photo {\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n}\n", ""]);
 
 // exports
 
@@ -832,102 +885,329 @@ var render = function() {
   return _c("div", { staticClass: "w-full" }, [
     _c(
       "div",
-      { staticClass: "w-full mx-auto py-4 px-4 bg-grey-lighter flex" },
-      [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.query,
-              expression: "query"
-            }
-          ],
-          staticClass:
-            "p-2 w-full rounded-l-lg rounded-r-lg sm:rounded-r-none border-l border-r sm:border-r-0 border-t border-b border-blue-lighter bg-white",
-          attrs: { type: "text", placeholder: "search..." },
-          domProps: { value: _vm.query },
-          on: {
-            keyup: function($event) {
-              if (
-                !$event.type.indexOf("key") &&
-                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-              ) {
-                return null
-              }
-              return _vm.doSearch($event)
-            },
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.query = $event.target.value
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c(
-          "div",
+      {
+        directives: [
           {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.pane === "gallery",
+            expression: "pane==='gallery'"
+          }
+        ],
+        staticClass:
+          "w-full mx-auto py-4 px-4 bg-grey-lighter flex flex-no-wrap"
+      },
+      [
+        _c("div", { staticClass: "flex w-full" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.query,
+                expression: "query"
+              }
+            ],
             staticClass:
-              "hidden sm:flex relative pin-r rounded-r-lg border-r border-t border-b border-blue-lighter bg-white py-1 px-2  items-center"
-          },
-          [
-            _vm.searchResult
-              ? _c("span", {
-                  staticClass:
-                    "py-1 px-2 bg-grey-lighter rounded-lg text-xs whitespace-no-wrap",
-                  domProps: { textContent: _vm._s(_vm.searchResult) }
-                })
-              : _vm._e()
-          ]
-        )
+              "p-2 w-full rounded-l-lg rounded-r-lg sm:rounded-r-none border-l border-r sm:border-r-0 border-t border-b border-blue-lighter bg-white",
+            attrs: { type: "text", placeholder: "search..." },
+            domProps: { value: _vm.query },
+            on: {
+              keyup: function($event) {
+                if (
+                  !$event.type.indexOf("key") &&
+                  _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                ) {
+                  return null
+                }
+                return _vm.doSearch($event)
+              },
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.query = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "hidden sm:flex relative pin-r rounded-r-lg border-r border-t border-b border-blue-lighter bg-white py-1 px-2  items-center"
+            },
+            [
+              _vm.searchResult
+                ? _c("span", {
+                    staticClass:
+                      "py-1 px-2 bg-grey-lighter rounded-lg text-xs whitespace-no-wrap",
+                    domProps: { textContent: _vm._s(_vm.searchResult) }
+                  })
+                : _vm._e()
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("button", { staticClass: "mx-2" }, [
+          _c(
+            "svg",
+            {
+              staticClass:
+                "h-8 w-8 p-2 text-grey-dark fill-current border rounded-full",
+              attrs: {
+                xmlns: "http://www.w3.org/2000/svg",
+                viewBox: "0 0 20 20"
+              }
+            },
+            [
+              _c("path", {
+                attrs: { d: "M13 10v6H7v-6H2l8-8 8 8h-5zM0 18h20v2H0v-2z" }
+              })
+            ]
+          )
+        ])
       ]
     ),
     _vm._v(" "),
     _c(
       "div",
       {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.pane === "gallery",
+            expression: "pane==='gallery'"
+          }
+        ],
         staticClass:
-          "w-full flex flex-wrap px-4 image-container overflow-y-scroll"
+          "w-full flex flex-wrap px-4 thumbnail-container overflow-y-scroll"
       },
       _vm._l(_vm.photos, function(photo) {
         return _c(
           "div",
           { key: photo.id, staticClass: "w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5" },
           [
-            _c("div", { staticClass: "bg-white shadow mr-4 mb-4" }, [
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "w-full flex items-center justify-center image-contain"
-                },
-                [_c("img", { attrs: { src: "/" + photo.path } })]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "w-full flex bg-white justify-between text-grey-dark text-xs p-2"
-                },
-                [
-                  _c("span", {
-                    domProps: {
-                      textContent: _vm._s(photo.storage.toUpperCase())
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("span", [_vm._v(_vm._s(photo.size) + " KB")])
-                ]
-              )
-            ])
+            _c(
+              "div",
+              {
+                staticClass: "bg-white shadow mr-4 mb-4 cursor-pointer",
+                on: {
+                  click: function($event) {
+                    return _vm.select(photo)
+                  }
+                }
+              },
+              [
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "w-full flex items-center justify-center thumbnail"
+                  },
+                  [
+                    _c("img", {
+                      staticClass: "mg-photo",
+                      attrs: { src: photo.url }
+                    })
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "w-full flex bg-white justify-between text-grey-dark text-xs p-2"
+                  },
+                  [
+                    _c("span", {
+                      domProps: {
+                        textContent: _vm._s(photo.storage.toUpperCase())
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("span", [_vm._v(_vm._s(photo.size) + " KB")])
+                  ]
+                )
+              ]
+            )
           ]
         )
       }),
       0
     ),
+    _vm._v(" "),
+    _vm.pane === "photo"
+      ? _c(
+          "div",
+          { staticClass: "w-full mx-auto py-4 px-4 bg-grey-lighter flex" },
+          [
+            _c(
+              "button",
+              {
+                staticClass: "flex items-center",
+                on: {
+                  click: function($event) {
+                    _vm.pane = "gallery"
+                  }
+                }
+              },
+              [
+                _c(
+                  "svg",
+                  {
+                    staticClass:
+                      "fill-current h-8 w-8 rounded-full border p-2 text-grey-dark mr-2",
+                    attrs: {
+                      xmlns: "http://www.w3.org/2000/svg",
+                      viewBox: "0 0 20 20"
+                    }
+                  },
+                  [
+                    _c("polygon", {
+                      attrs: {
+                        points:
+                          "3.828 9 9.899 2.929 8.485 1.515 0 10 .707 10.707 8.485 18.485 9.899 17.071 3.828 11 20 11 20 9 3.828 9"
+                      }
+                    })
+                  ]
+                ),
+                _vm._v(" "),
+                _c("p", {
+                  staticClass: "text-blue-darker text-xl",
+                  domProps: { textContent: _vm._s(_vm.selectedPhoto.name) }
+                })
+              ]
+            )
+          ]
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.pane === "photo"
+      ? _c(
+          "div",
+          {
+            staticClass:
+              "w-full flex justify-center items-center px-4 postcard-container overflow-y-scroll"
+          },
+          [
+            _c(
+              "div",
+              { staticClass: "w-full bg-white shadow mr-4 mb-4 xl:flex" },
+              [
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "w-full xl:w-4/5 flex items-center justify-center postcard"
+                  },
+                  [
+                    _c("img", {
+                      staticClass: "mg-photo",
+                      attrs: { src: _vm.selectedPhoto.url }
+                    })
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "w-full xl:w-1/5 text-xs p-2 flex flex-no-wrap xl:flex-wrap xl:content-between justify-between items-center",
+                    staticStyle: { "background-color": "aliceblue" }
+                  },
+                  [
+                    _c(
+                      "button",
+                      {
+                        staticClass:
+                          "h-10 xl:mx-auto mb-2 xl:w-full py-2 px-6 bg-green text-white rounded shadow text-xl",
+                        on: { click: _vm.choose }
+                      },
+                      [_vm._v("Choose")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "xl:w-full flex xl:flex-wrap justify-start content-start"
+                      },
+                      [
+                        _c("div", { staticClass: "w-full m-2" }, [
+                          _c("p", { staticClass: "text-grey-dark uppercase" }, [
+                            _vm._v("Name")
+                          ]),
+                          _vm._v(" "),
+                          _c("p", {
+                            staticClass: "text-blue-darker",
+                            domProps: {
+                              textContent: _vm._s(_vm.selectedPhoto.name)
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "w-full m-2 hidden lg:block" },
+                          [
+                            _c(
+                              "p",
+                              { staticClass: "text-grey-dark uppercase" },
+                              [_vm._v("Type")]
+                            ),
+                            _vm._v(" "),
+                            _c("p", {
+                              staticClass: "text-blue-darker",
+                              domProps: {
+                                textContent: _vm._s(
+                                  _vm.selectedPhoto.type.toUpperCase()
+                                )
+                              }
+                            })
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "w-full m-2" }, [
+                          _c("p", { staticClass: "text-grey-dark uppercase" }, [
+                            _vm._v("Size")
+                          ]),
+                          _vm._v(" "),
+                          _c("p", { staticClass: "text-blue-darker" }, [
+                            _vm._v(_vm._s(_vm.selectedPhoto.size) + " KB")
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "w-full m-2 hidden lg:block" },
+                          [
+                            _c(
+                              "p",
+                              { staticClass: "text-grey-dark uppercase" },
+                              [_vm._v("Storage")]
+                            ),
+                            _vm._v(" "),
+                            _c("p", {
+                              staticClass: "text-blue-darker",
+                              domProps: {
+                                textContent: _vm._s(
+                                  _vm.selectedPhoto.storage.toUpperCase()
+                                )
+                              }
+                            })
+                          ]
+                        )
+                      ]
+                    )
+                  ]
+                )
+              ]
+            )
+          ]
+        )
+      : _vm._e(),
     _vm._v(" "),
     _vm.message
       ? _c(

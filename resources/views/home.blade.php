@@ -8,7 +8,7 @@
   <meta name="description" content="{{ $common->metadesc }}">
   <meta name="keywords" content="{{ $common->metakey }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@0.7.4/dist/tailwind.min.css?v=1" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet"> 
   <style>
     .font-quick {

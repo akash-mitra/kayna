@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Media extends Model
 {
     protected $fillable = ['name', 'type', 'size', 'storage', 'path'];
+    protected $appends = ['url'];
     
     // Static Global Variables
     protected static $allowedExtensions = ['jpeg', 'jpg', 'png', 'bmp', 'gif'];
@@ -93,6 +94,12 @@ class Media extends Model
         $media->delete();
 
         return $media;
+    }
+
+
+    public function getUrlAttribute()
+    {
+        return ($this->storage === 'public' ? '/' : '') . $this->path;
     }
 
 
