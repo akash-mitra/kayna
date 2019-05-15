@@ -1,6 +1,5 @@
 <template>
         <div class="w-full">
-
                 <div v-show="pane==='gallery'" class="w-full mx-auto py-4 px-4 bg-grey-lighter flex flex-no-wrap">
                         <div class="flex w-full">
                                 <input class="p-2 w-full rounded-l-lg rounded-r-lg sm:rounded-r-none border-l border-r sm:border-r-0 border-t border-b border-blue-lighter bg-white" 
@@ -13,10 +12,9 @@
                                 </div>
                         </div>
                         <button class="mx-2" title="Upload Image" @click="pane='upload'">
-                                <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="h-8 w-8 p-2 text-blue-dark fill-current border border-blue rounded-full hover:bg-blue hover:text-white"><path d="M13 10v6H7v-6H2l8-8 8 8h-5zM0 18h20v2H0v-2z"/></svg> -->
                                 <svg class="h-10 w-8 text-blue-dark fill-current hover:bg-blue-lightest hover:text-blue" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                                <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
-                                                        </svg>
+                                        <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                                </svg>
                         </button>
                 </div>
                 
@@ -25,7 +23,7 @@
 
                                 <div class="bg-white shadow mr-4 mb-4 cursor-pointer" @click="select(photo)">                
                                         <div class="w-full flex items-center justify-center thumbnail">
-                                                <img :src="photo.url" class="mg-photo"/>
+                                                <img v-bind:data-src="photo.url" class="mg-photo"/>
                                         </div>
                                         <div class="w-full flex bg-white justify-between text-grey-dark text-xs p-2">
                                                 <span v-text="photo.storage.toUpperCase()"></span>
@@ -126,7 +124,16 @@
 
 <script>
 export default {
-        props: ['readonly'],
+        props: {
+                readonly: {
+                        type: Boolean,
+                        default: false
+                },
+                lazyload: {
+                        type: Boolean,
+                        default: true
+                }
+        },
         data: function () {
                 return {
                         photos: [],
@@ -140,6 +147,10 @@ export default {
         },
         created: function () {
                 this.getFromServer()
+        },
+
+        updated: function () {
+                this.enableLazyLoad()
         },
 
         methods: {
@@ -157,10 +168,7 @@ export default {
                 },
 
                 uploadFiles: function () {
-
-                        let files = document.getElementById('files').files;
-                        let p = this;
-
+                        let files = document.getElementById('files').files, p = this;
                         for(let i = 0; i < files.length; i++) {
                                 let upf = {
                                         name: files[i].name,
@@ -170,8 +178,8 @@ export default {
                                         completion: 0
                                 };
                                 
-                                upf.formdata.append('media', files[i]);
-                                upf.formdata.append('name', files[i].name + '_try2');
+                                upf.formdata.append('media', files[i])
+                                upf.formdata.append('name', files[i].name)
                                 // upf.formdata.append("Content-Type", files[i].type);
                                 
                                 upf.ajax.upload.onprogress = function (e) {
@@ -188,33 +196,35 @@ export default {
                                 }
                                 // ajax.upload.addEventListener('abort', abortHandler, false);
                                 
-                                upf.ajax.open('POST', '/admin/media');
-                                upf.ajax.setRequestHeader("X-CSRF-Token", document.head.querySelector('meta[name="csrf-token"]').content);
+                                upf.ajax.open('POST', '/admin/media')
+                                upf.ajax.setRequestHeader("X-CSRF-Token", document.head.querySelector('meta[name="csrf-token"]').content)
                                 upf.ajax.onreadystatechange = function () {
                                         if (upf.ajax.readyState === 4 && upf.ajax.status === 201) {
-                                                let photo = JSON.parse(upf.ajax.responseText);
-                                                p.photos.push(photo);
+                                                let photo = JSON.parse(upf.ajax.responseText)
+                                                p.photos.push(photo)
                                         }
                                         if (upf.ajax.readyState === 4 && upf.ajax.status != 201) {
                                                 upf.status = 'Error uploading the file (Status = ' + upf.ajax.status + ')'
                                                 upf.completion = 0
                                         }
                                 };
-                                upf.ajax.send(upf.formdata);
-
-                                this.uploadableFiles.push(upf);
-                                
+                                upf.ajax.send(upf.formdata)
+                                this.uploadableFiles.push(upf)
                         }
                 },
 
-                getFromServer: function (query) {
+                // Gets media data from the server. If a query string is 
+                // provided then only returns the data that fulfill
+                // the search conditions in query string.
+                getFromServer: function (query, callback) {
                         const p = this
-                        let url = '/api/media' + (typeof query != 'undefined'? '?query=' + encodeURIComponent(query):'')
+                        let url = '/api/media' + ((typeof query != 'undefined' && query != null) ? '?query=' + encodeURIComponent(query):'')
                         axios.get(url)
                         .then(function (response) {
                                 p.photos = response.data.data
                                 p.message = null
                                 p.searchResult = response.data.total + ' image(s)'
+                                if (typeof callback != 'undefined') callback.call()
                         })
                         .catch(function (error) {
                                 p.message = 'Request failed with ' + error.response.status + ': ' + error.response.statusText
@@ -225,6 +235,46 @@ export default {
                 },
 
 
+                // This is an experimental function that enables
+                // lazy-loading. This can be toggled via the
+                // optional "lazyloading" attribute
+                enableLazyLoad: function () {
+                        let images = document.querySelectorAll('.mg-photo');
+                        
+                        const config = {
+                                root: document.querySelector('.thumbnail-container'),
+                                // If the image gets within 100px in the Y axis, start the download.
+                                rootMargin: '0px 0px 50px 0px'
+                        };
+                        
+                        // check if intersection observer is supported via browser
+                        if (!('IntersectionObserver' in window) || this.lazyload === false) {
+                                // if not, just load all immediately
+                                Array.from(images).forEach(function(image) {
+                                        console.log('unsupported loading')
+                                        if(! image.src) image.src = image.dataset.src
+                                })
+                        } else {
+                                // The observer is supported
+                                let observer = new IntersectionObserver(function (entries) {
+                                        // Loop through the entries
+                                        entries.forEach(image => {
+                                                // Are we in viewport?
+                                                if (image.isIntersecting) {
+                                                        // Stop watching and load the image
+                                                        console.log('Loading: ' + image.target.dataset.src)
+                                                        observer.unobserve(image.target)
+                                                        image.target.src = image.target.dataset.src
+                                                }
+                                        })
+                                }, config)
+
+                                // start observing...
+                                images.forEach(image => {
+                                        observer.observe(image)
+                                })
+                        }
+                },
         }
 }
 </script>

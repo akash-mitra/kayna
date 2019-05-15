@@ -219,10 +219,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['readonly'],
+  props: {
+    readonly: {
+      type: Boolean,
+      default: false
+    },
+    lazyload: {
+      type: Boolean,
+      default: true
+    }
+  },
   data: function data() {
     return {
       photos: [],
@@ -236,6 +243,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     this.getFromServer();
+  },
+  updated: function updated() {
+    this.enableLazyLoad();
   },
   methods: {
     doSearch: function doSearch() {
@@ -251,8 +261,8 @@ __webpack_require__.r(__webpack_exports__);
     uploadFiles: function uploadFiles() {
       var _this = this;
 
-      var files = document.getElementById('files').files;
-      var p = this;
+      var files = document.getElementById('files').files,
+          p = this;
 
       var _loop = function _loop(i) {
         var upf = {
@@ -263,7 +273,7 @@ __webpack_require__.r(__webpack_exports__);
           completion: 0
         };
         upf.formdata.append('media', files[i]);
-        upf.formdata.append('name', files[i].name + '_try2'); // upf.formdata.append("Content-Type", files[i].type);
+        upf.formdata.append('name', files[i].name); // upf.formdata.append("Content-Type", files[i].type);
 
         upf.ajax.upload.onprogress = function (e) {
           upf.status = 'Uploaded ' + Math.round(e.loaded / 1000) + ' KB...';
@@ -305,13 +315,17 @@ __webpack_require__.r(__webpack_exports__);
         _loop(i);
       }
     },
-    getFromServer: function getFromServer(query) {
+    // Gets media data from the server. If a query string is 
+    // provided then only returns the data that fulfill
+    // the search conditions in query string.
+    getFromServer: function getFromServer(query, callback) {
       var p = this;
-      var url = '/api/media' + (typeof query != 'undefined' ? '?query=' + encodeURIComponent(query) : '');
+      var url = '/api/media' + (typeof query != 'undefined' && query != null ? '?query=' + encodeURIComponent(query) : '');
       axios.get(url).then(function (response) {
         p.photos = response.data.data;
         p.message = null;
         p.searchResult = response.data.total + ' image(s)';
+        if (typeof callback != 'undefined') callback.call();
       }).catch(function (error) {
         p.message = 'Request failed with ' + error.response.status + ': ' + error.response.statusText;
 
@@ -320,6 +334,43 @@ __webpack_require__.r(__webpack_exports__);
           p.message += '. Make sure you are logged in or refresh the page.';
         }
       });
+    },
+    // This is an experimental function that enables
+    // lazy-loading. This can be toggled via the
+    // optional "lazyloading" attribute
+    enableLazyLoad: function enableLazyLoad() {
+      var images = document.querySelectorAll('.mg-photo');
+      var config = {
+        root: document.querySelector('.thumbnail-container'),
+        // If the image gets within 100px in the Y axis, start the download.
+        rootMargin: '0px 0px 50px 0px'
+      }; // check if intersection observer is supported via browser
+
+      if (!('IntersectionObserver' in window) || this.lazyload === false) {
+        // if not, just load all immediately
+        Array.from(images).forEach(function (image) {
+          console.log('unsupported loading');
+          if (!image.src) image.src = image.dataset.src;
+        });
+      } else {
+        // The observer is supported
+        var observer = new IntersectionObserver(function (entries) {
+          // Loop through the entries
+          entries.forEach(function (image) {
+            // Are we in viewport?
+            if (image.isIntersecting) {
+              // Stop watching and load the image
+              console.log('Loading: ' + image.target.dataset.src);
+              observer.unobserve(image.target);
+              image.target.src = image.target.dataset.src;
+            }
+          });
+        }, config); // start observing...
+
+        images.forEach(function (image) {
+          observer.observe(image);
+        });
+      }
     }
   }
 });
@@ -1128,7 +1179,7 @@ var render = function() {
                   [
                     _c("img", {
                       staticClass: "mg-photo",
-                      attrs: { src: photo.url }
+                      attrs: { "data-src": photo.url }
                     })
                   ]
                 ),
