@@ -27,15 +27,15 @@ class Media extends Model
     protected static $subDirectoryPath = 'media';
     
 
-    public static function buildUrl($storage, $fileName)
-    {
-        if ($storage === 'public') {
-            return asset($fileName);
-        }
-        if ($storage === 's3') {
-            return 'https://'. self::$directoryPath . '.s3.amazonaws.com/'  . $fileName;
-        }
-    }
+    // public static function buildUrl($storage, $fileName)
+    // {
+    //     if ($storage === 'public') {
+    //         return asset($fileName);
+    //     }
+    //     if ($storage === 's3') {
+    //         return 'https://'. self::$directoryPath . '.s3.amazonaws.com/'  . $fileName;
+    //     }
+    // }
 
     public static function store($file, $name)
     {
@@ -45,9 +45,8 @@ class Media extends Model
             $storageType = self::getStorageType();
             
             $path = Storage::disk($storageType)->putFile(self::$subDirectoryPath, $file, self::$visibility);
-
-            $id = DB::table('media')->insertGetId([
-                
+            
+            $media = new Media([    
                 'name' => isset($name) ? $name : $file->getClientOriginalName(),
                 'type' => $file->guessExtension(), // $uri_detail['extension'],
                 'size' => round($sizeInBytes / 1024, 2), // killobytes
@@ -56,14 +55,17 @@ class Media extends Model
                 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
             ]);
+            
+            $media->save();
 
-            return self::buildUrl($storageType, $path);
+            return $media;
+
         } catch (Exception $e) {
             if (Storage::disk($storageType)->exists($path)) {
                 Storage::disk($storageType)->delete($path);
             }
             Media::where('id', $id)->delete();
-            abort(500, $e->getMessage());
+            throw $e;
         }
     }
 
@@ -99,7 +101,14 @@ class Media extends Model
 
     public function getUrlAttribute()
     {
-        return ($this->storage === 'public' ? '/' : '') . $this->path;
+        //return ($this->storage === 'public' ? '/' : '') . $this->path;
+
+        if ($this->storage === 'public') {
+            return asset($this->path);
+        }
+        if ($storage === 's3') {
+            return 'https://'. $this->directoryPath . '.s3.amazonaws.com/'  . $this->path;
+        }
     }
 
 

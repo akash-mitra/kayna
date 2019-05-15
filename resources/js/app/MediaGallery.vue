@@ -12,8 +12,11 @@
                                         <span v-if="searchResult" class="py-1 px-2 bg-grey-lighter rounded-lg text-xs whitespace-no-wrap" v-text="searchResult"></span>
                                 </div>
                         </div>
-                        <button class="mx-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="h-8 w-8 p-2 text-grey-dark fill-current border rounded-full"><path d="M13 10v6H7v-6H2l8-8 8 8h-5zM0 18h20v2H0v-2z"/></svg>
+                        <button class="mx-2" title="Upload Image" @click="pane='upload'">
+                                <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="h-8 w-8 p-2 text-blue-dark fill-current border border-blue rounded-full hover:bg-blue hover:text-white"><path d="M13 10v6H7v-6H2l8-8 8 8h-5zM0 18h20v2H0v-2z"/></svg> -->
+                                <svg class="h-10 w-8 text-blue-dark fill-current hover:bg-blue-lightest hover:text-blue" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                                <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                                                        </svg>
                         </button>
                 </div>
                 
@@ -43,18 +46,16 @@
                 <div v-if="pane==='photo'" class="w-full flex justify-center items-center px-4 postcard-container overflow-y-scroll">
                         <div class="w-full bg-white shadow mr-4 mb-4 xl:flex">                
                                 <div class="w-full xl:w-4/5 flex items-center justify-center postcard">
-                                        <img :src="selectedPhoto.url" class="mg-photo"/>
+                                        <img :src="selectedPhoto.url" class="mg-photo border-2 border-blue-lightest"/>
                                 </div>
-                                <div class="w-full xl:w-1/5 text-xs p-2 flex flex-no-wrap xl:flex-wrap xl:content-between justify-between items-center" style="background-color: aliceblue">
-
-                                        <button class="h-10 xl:mx-auto mb-2 xl:w-full py-2 px-6 bg-green text-white rounded shadow text-xl" @click="choose">Choose</button>
+                                <div class="w-full xl:w-1/5 text-xs px-2 py-2 flex flex-no-wrap xl:flex-wrap xl:content-between justify-between items-center" style="background-color: aliceblue">
 
                                         <div class="xl:w-full flex xl:flex-wrap justify-start content-start">
-                                                <div class="w-full m-2">
+                                                <div class="w-full m-2 hidden sm:block">
                                                         <p class="text-grey-dark uppercase">Name</p>
                                                         <p class="text-blue-darker" v-text="selectedPhoto.name"></p>
                                                 </div>
-                                                <div class="w-full m-2 hidden lg:block">
+                                                <div class="w-full m-2 hidden md:block">
                                                         <p class="text-grey-dark uppercase">Type</p>
                                                         <p class="text-blue-darker" v-text="selectedPhoto.type.toUpperCase()"></p>
                                                 </div>
@@ -67,8 +68,53 @@
                                                         <p class="text-blue-darker" v-text="selectedPhoto.storage.toUpperCase()"></p>
                                                 </div>
                                         </div>
-                                        
+                                        <button class="h-10 xl:mx-auto mb-2 xl:w-full1 py-2 px-6 bg-green text-white rounded shadow text-xl" @click="choose">Choose</button>
                                 </div>
+                        </div>
+                </div>
+
+                <div v-if="pane==='upload'" class="w-full p-4 postcard-container overflow-y-scroll">
+                        
+                        <div class="flex justify-between">
+                                <button class="flex items-center" @click="pane='gallery'">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="fill-current h-8 w-8 rounded-full border p-2 text-grey-dark mr-2"><polygon points="3.828 9 9.899 2.929 8.485 1.515 0 10 .707 10.707 8.485 18.485 9.899 17.071 3.828 11 20 11 20 9 3.828 9"/></svg>
+                                        <p class="text-grey-dark font-light text-lg hidden sm:block">Back to Gallery</p>
+                                </button>
+                                <form id='file-catcher' enctype="multipart/form-data" method="post">
+                                        <div class="w-full flex bg-grey-lighter">
+                                                <label class="flex items-center px-4 py-2 rounded-lg border border-blue bg-white text-blue tracking-wide cursor-pointer hover:bg-blue hover:text-white">
+                                                        <svg class="w-8 h-8 mr-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                                <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                                                        </svg>
+                                                        <p class="text-base leading-normal ">Upload <span class="hidden sm:inline">Media Files</span></p>
+                                                        <input id='files' type='file' name="files" multiple class="hidden" @change="uploadFiles" />
+                                                </label>
+                                        </div>
+                                </form>
+                        </div>
+                        <div id='file-list-display' class="w-full my-4" v-if="uploadableFiles.length > 0">
+                                <table class="w-full my-2 text-sm">
+                                        <thead>
+                                                <tr class="bg-white text-left">
+                                                        <th class="p-2 font-light hidden md:block">#</th>
+                                                        <th class="p-2 font-light">File Name</th>
+                                                        <th class="p-2 font-light">Status</th>
+                                                        <th class="p-2 font-light">Progress</th>
+                                                </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr class="p-2 border-b" v-for="(f, index) in uploadableFiles" v-bind:key="index">
+                                                        <td v-text="index+1" class="text-left p-2 hidden md:block"></td>
+                                                        <td class="text-left p-2" v-text="f.name"></td>
+                                                        <td>
+                                                                <span v-text="f.status"></span>
+                                                        </td>
+                                                        <td>
+                                                                <progress id="progressBar" :value="f.completion" max="100" class="my-2 w-full"></progress>
+                                                        </td>
+                                                </tr>
+                                        </tbody>
+                                </table>
                         </div>
                 </div>
 
@@ -88,7 +134,8 @@ export default {
                         query: '',
                         searchResult: null,
                         pane: 'gallery',
-                        selectedPhoto: {}
+                        selectedPhoto: {},
+                        uploadableFiles: [],
                 }
         },
         created: function () {
@@ -109,6 +156,57 @@ export default {
                         this.$emit('selected', this.selectedPhoto)
                 },
 
+                uploadFiles: function () {
+
+                        let files = document.getElementById('files').files;
+                        let p = this;
+
+                        for(let i = 0; i < files.length; i++) {
+                                let upf = {
+                                        name: files[i].name,
+                                        formdata: new FormData(),
+                                        ajax: new XMLHttpRequest(),
+                                        status: 'Not Started',
+                                        completion: 0
+                                };
+                                
+                                upf.formdata.append('media', files[i]);
+                                upf.formdata.append('name', files[i].name + '_try2');
+                                // upf.formdata.append("Content-Type", files[i].type);
+                                
+                                upf.ajax.upload.onprogress = function (e) {
+                                        upf.status = 'Uploaded ' + Math.round(e.loaded/1000) + ' KB...'
+                                        upf.completion = Math.round((e.loaded/e.total)*100)
+                                }
+                                upf.ajax.upload.onload = function (e) {
+                                        upf.status = 'Complete'
+                                        upf.completion = 100
+                                }
+                                upf.ajax.upload.onerror = function (e) {
+                                        upf.status = 'Error uploading the file'
+                                        upf.completion = 0
+                                }
+                                // ajax.upload.addEventListener('abort', abortHandler, false);
+                                
+                                upf.ajax.open('POST', '/admin/media');
+                                upf.ajax.setRequestHeader("X-CSRF-Token", document.head.querySelector('meta[name="csrf-token"]').content);
+                                upf.ajax.onreadystatechange = function () {
+                                        if (upf.ajax.readyState === 4 && upf.ajax.status === 201) {
+                                                let photo = JSON.parse(upf.ajax.responseText);
+                                                p.photos.push(photo);
+                                        }
+                                        if (upf.ajax.readyState === 4 && upf.ajax.status != 201) {
+                                                upf.status = 'Error uploading the file (Status = ' + upf.ajax.status + ')'
+                                                upf.completion = 0
+                                        }
+                                };
+                                upf.ajax.send(upf.formdata);
+
+                                this.uploadableFiles.push(upf);
+                                
+                        }
+                },
+
                 getFromServer: function (query) {
                         const p = this
                         let url = '/api/media' + (typeof query != 'undefined'? '?query=' + encodeURIComponent(query):'')
@@ -124,7 +222,9 @@ export default {
                                         p.message += '. Make sure you are logged in or refresh the page.'
                                 }
                         })
-                }
+                },
+
+
         }
 }
 </script>

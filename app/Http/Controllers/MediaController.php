@@ -60,14 +60,8 @@ class MediaController extends Controller
         $input = $request->input();
         $uploadedFile = request()->file('media');
         $name = $input['name'];
-
-        try {
-            $url = Media::store($uploadedFile, $name);
-
-            return response()->json(['url' => asset($url)], 201);
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()]);
-        }
+        
+        return Media::store ($uploadedFile, $name);
     }
 
     /**
