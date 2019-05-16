@@ -94,7 +94,7 @@ class Media extends Model
         //return ($this->storage === 'public' ? '/' : '') . $this->path;
 
         if ($this->storage === 'public') {
-            return asset($this->path);
+            return asset('storage/' . $this->path);
         }
         if ($storage === 's3') {
             return 'https://'. $this->directoryPath . '.s3.amazonaws.com/'  . $this->path;
