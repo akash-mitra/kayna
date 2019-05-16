@@ -8,7 +8,7 @@
                 },
                 title: "{{data_get($page, 'title')}}",
                 summary: `{!! data_get($page, 'summary') !!}`,
-                metadesc: "{{data_get($page, 'metadesc')}}",
+                metadesc: `{{data_get($page, 'metadesc')}}`,
                 metakey_string: "{{data_get($page, 'metakey')}}",
                 media_url: '{{data_get($page, "media_url")}}',
                 page_url: '{{data_get($page, "url")}}',
@@ -16,7 +16,7 @@
                 body: `{!! data_get($page, "content.body") !!}`,
                 ago: '{!! data_get($page, "ago") ?? "Just Now" !!}',
                 categories: @json($categories),
-
+                flat: [],
                 // validations are used for mandatory checks.
                 // If any validation checks fail, form is not saved.
                 validations: {
@@ -61,6 +61,12 @@
                         // this.adjustTextAreaHeight('ta_title');
                         // this.adjustTextAreaHeight('ta_summary');
                         // this.adjustTextAreaHeight('ta_body');
+                        let root = { 
+                                id: 0,
+                                name: 'root',
+                                children: this.createDataTree(this.categories)
+                        }       
+                        this.createFlatIndent(this.flat, root) ;
                 },
 
                 methods: {
@@ -296,6 +302,43 @@
                                 } else {
                                         myField.value += myValue;
                                 }
+                        },
+
+                        createDataTree:  function (dataset) {
+                                let hashTable = Object.create(null)
+                                dataset.forEach( aData => hashTable[aData.id] = { ...aData, children : [] } )
+                                let dataTree = []
+                                dataset.forEach( aData => {
+                                        if( aData.parent_id ) hashTable[aData.parent_id].children.push(hashTable[aData.id])
+                                        else dataTree.push(hashTable[aData.id])
+                                } )
+                                return dataTree
+                        },
+
+                        /**
+                         * This function takes a tree structure and flattens it with indentation
+                         */
+                        createFlatIndent: function (struct, tree, level) {
+                                if (typeof level === 'undefined') level = 0;
+                                let indentation = '';
+                                for (let i =1; i < level; i++) indentation += "\u2014";
+                                struct.push({
+                                        id: tree.id,
+                                        name: indentation + ' ' + tree.name,
+                                        level: level
+                                });
+                                // struct.push("name=" + tree.name + " at level=" + level)
+                                if (tree.children.length > 0) {
+                                        level += 1;
+                                        for(let i = 0; i < tree.children.length; i++) {
+                                                let t = tree.children[i]
+                                                // indentedStructure.push (this.createFlatIndent(t, level))
+                                                this.createFlatIndent(struct, t, level)
+                                        }
+                                } 
+
+                                // return indentedStructure;
+                                
                         },
 
                         getKeywords: function() {

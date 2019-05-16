@@ -4,8 +4,9 @@
                 <div class="inline-block relative border rounded">
                         <select class="p-2 rounded-lg block appearance-none w-full hover:bg-grey-lightest text-sm text-grey pr-8 cursor-pointer leading-tight focus:outline-none focus:shqadow-outline" v-model="category.value">
                                 <option :value="0" selected='selected'>Uncategorised</option>
-                                <option v-for="c in categories" v-bind:value="c.id">
-                                        @{{ c.name }}
+                                
+                                <option v-for="category in flat" v-if="category.id>0" :value="category.id" v-bind:key="category.id">                        
+                                        @{{ category.name }}
                                 </option>
                         </select>
                         <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
