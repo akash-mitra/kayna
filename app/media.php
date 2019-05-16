@@ -27,16 +27,6 @@ class Media extends Model
     protected static $subDirectoryPath = 'media';
     
 
-    // public static function buildUrl($storage, $fileName)
-    // {
-    //     if ($storage === 'public') {
-    //         return asset($fileName);
-    //     }
-    //     if ($storage === 's3') {
-    //         return 'https://'. self::$directoryPath . '.s3.amazonaws.com/'  . $fileName;
-    //     }
-    // }
-
     public static function store($file, $name)
     {
         try {
