@@ -1821,6 +1821,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 //
 //
 //
@@ -1839,6 +1841,8 @@ __webpack_require__.r(__webpack_exports__);
     return {
       body: this.message,
       type: 'success',
+      autohide: true,
+      delay: 3000,
       show: false
     };
   },
@@ -1856,19 +1860,38 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     flash: function flash(data) {
       if (data) {
-        this.body = data.message;
-        this.type = data.type;
+        // if the user has straight away sent us a flash message string
+        if (typeof data === 'string' || data instanceof String) {
+          this.body = data;
+        } // if user has sent us an object instead
+
+
+        if (_typeof(data) === 'object' && data !== null) {
+          this.body = data.message;
+
+          if (data.hasOwnProperty('type')) {
+            this.type = data.type;
+          }
+
+          if (data.hasOwnProperty('autohide')) {
+            this.autohide = data.autohide;
+          }
+
+          if (data.hasOwnProperty('delay')) {
+            this.delay = data.delay;
+          }
+        }
       }
 
       this.show = true;
-      this.hide();
+      if (this.autohide) this.hide();
     },
     hide: function hide() {
       var _this2 = this;
 
       setTimeout(function () {
         _this2.show = false;
-      }, 3000);
+      }, this.delay);
     },
     icon: function icon() {
       if (this.type === 'error') {

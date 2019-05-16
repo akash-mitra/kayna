@@ -18,6 +18,8 @@
             return {
                 body: this.message,
                 type: 'success',
+                autohide: true,
+                delay: 3000,
                 show: false
             }
         },
@@ -33,19 +35,29 @@
         methods: {
             flash(data) {
                 if (data) {
-                    this.body = data.message;
-                    this.type = data.type;
+
+                    // if the user has straight away sent us a flash message string
+                    if (typeof data === 'string' || data instanceof String) {
+                        this.body = data
+                    }
+
+                    // if user has sent us an object instead
+                    if (typeof data === 'object' && data !== null) {
+                        this.body = data.message;
+                        if (data.hasOwnProperty('type')) { this.type = data.type }
+                        if (data.hasOwnProperty('autohide')) { this.autohide = data.autohide }
+                        if (data.hasOwnProperty('delay')) { this.delay = data.delay }
+                    }
                 }
 
                 this.show = true;
-
-                this.hide();
+                if (this.autohide) this.hide();
             },
 
             hide() {
                 setTimeout(() => {
                     this.show = false;
-                }, 3000);
+                }, this.delay);
             },
 
             icon() {

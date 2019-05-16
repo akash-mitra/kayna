@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Page;
+use App\Category;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,9 +13,19 @@ class Category extends Model
 
     protected $appends = ['url',  'created_ago', 'updated_ago'];
 
+    public function parent()
+    {
+        return $this->belongsTo(\App\Category::class, 'parent_id')->withDefault();
+    }
+    
     public function pages()
     {
-        return $this->hasMany(\App\Page::class);
+        return $this->hasMany(Page::class);
+    }
+
+    public function subcategories()
+    {
+        return $this->hasMany(Category::class, 'parent_id');
     }
 
     public function getUrlAttribute()
@@ -31,16 +43,6 @@ class Category extends Model
         return empty($this->updated_at)? null : $this->updated_at->diffForHumans();
     }
 
-    public function parent()
-    {
-        return $this->belongsTo(\App\Category::class, 'parent_id')->withDefault();
-    }
+    
 
-    // public static function props()
-    // {
-    //     return [
-    //         ['name' => 'name', 'description' => 'Category Name', 'visibility' => true],
-    //         ['name' => 'description', 'description' => 'Category Description', 'visibility' => true]
-    //     ];
-    // }
 }

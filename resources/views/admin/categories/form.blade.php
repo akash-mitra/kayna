@@ -72,11 +72,18 @@
                         </div>
                 
 
-                <div class="flex items-center">
+                <div class="flex items-center justify-between">
                         <button type="button" 
                                 class="border border-teal px-8 py-2 rounded text-sm bg-teal text-white shadow" 
                                 @click="confirm">
-                                Save                                
+                                Save                  
+                        </button>
+
+                        <button type="button" 
+                                v-if="isNew()===false"
+                                class="text-xs text-red p-2 hover:bg-red hover:text-white rounded hover:shadow" 
+                                @click="destroy">
+                                Delete                       
                         </button>
                 </div>
         </div>
@@ -172,7 +179,7 @@
                                 confirm: function () {
                                         if (this.checkMandatory ()) {
 
-                                                if (this.id === '') {
+                                                if (this.isNew()) {
                                                         this.createAtServer ()
                                                 }
                                                 else {
@@ -204,6 +211,29 @@
                                                 },
                                         )
                                 },
+
+
+                                destroy: function () {
+                                        if(confirm('Are you sure to delete this category?')) {
+                                                axios.delete('/admin/categories/' + this.id)
+                                                .then (
+                                                        (response) => { 
+                                                                flash(response.data.flash.message) 
+                                                                location.href="{{ route('categories.index') }}"
+                                                        },
+                                                        (error)    => { 
+                                                                flash({
+                                                                        message: error.response.data.flash.message, 
+                                                                        type: error.response.data.flash.type
+                                                                }) 
+                                                        },
+                                                )
+                                        }
+                                },
+
+                                isNew: function () {
+                                        return this.id === ''
+                                }
                         }
                 })
         </script>
