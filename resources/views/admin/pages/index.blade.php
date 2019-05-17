@@ -21,19 +21,21 @@
 
 @section('main')
 
-<div class="px-6 py-4 flex justify-between">
+<div class="px-6 py-4 block sm:flex sm:justify-between">
 
-    <input type="text" v-model="needle" id="txtSearch" class="p-3 w-2/3 lg:w-1/2 text-sm bg-white border-grey-lighter rounded border shadow" placeholder="Search title, author, category etc...">
-
-    <a href="{{ route('pages.create') }}" id="btnNew" class="border border-teal px-3 py-3 rounded text-sm bg-teal no-underline hover:bg-orange hover:border-orange text-white shadow">
-        + New Page
+    <div class="w-full md:w-3/4 xl:w-4/5 flex justify-between items-center text-sm bg-white border-grey-lighter rounded-lg border shadow">
+        <input type="text" v-model="needle" id="txtSearch" ref="txtSearchRef" class="p-3 w-full" placeholder="Search title, author, category etc...">
+        <p v-if="needle.length>0" v-text="filter_pages.length + ' item(s)'" class="hidden sm:flex bg-yellow-lighter text-right text-xs text-orange cursor-pointer whitespace-no-wrap px-2 py-1 mr-2 rounded-lg" @click="clear"></p>
+    </div>
+    <a href="{{ route('pages.create') }}" id="btnNew" class="block text-center mt-6 sm:mt-0 border border-teal px-3 py-3 rounded text-sm bg-teal no-underline hover:bg-orange hover:border-orange text-white shadow whitespace-no-wrap">
+        New Page
     </a>
 
 </div>
 
 <div class="w-full px-6">
     
-    <div v-for="page in filter_pages" :class="page.status != 'Live' ? 'bg-grey-lighter': 'bg-white'" class="my-6 rounded">
+    <div v-for="page in filter_pages" :class="page.status != 'Live' ? 'bg-grey-lighter border': 'bg-white'" class="my-6 rounded">
 
         <div class="w-full sm:flex px-6 py-2">
             
@@ -49,7 +51,7 @@
                                     <path class="heroicon-ui" d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm9 11a1 1 0 0 1-2 0v-2a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v2a1 1 0 0 1-2 0v-2a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v2z" />
                                 </svg>
                             </a>
-                            <span>Posted under @{{page.category.name}}, updated @{{page.ago}}</span>
+                            <span>Posted under <a href="{{ route('categories.index')}}" class="no-underline text-grey-darker hover:text-blue">@{{page.category.name}}</a>, updated @{{page.ago}}</span>
                         </p>
 
                         <div class="w-full my-2 py-2 text-xs text-orange-dark">
@@ -65,7 +67,7 @@
         <div class="px-6 bg-grey-lightest text-sm py-1 border-b">
                 <a v-bind:href="page.url" target="_blank" class="p-2 cursor-pointer text-indigo-darker no-underline hover:text-blue">View</a>
                 <button @click="changeStatus(page.id, (page.status != 'Live'? 'Live' : 'Draft'))" v-text="page.status != 'Live'? 'Publish' : 'Take Down'" class="p-2 cursor-pointer text-indigo-darker no-underline hover:text-blue"></button>
-                <button @click="deletePage(page.id)" class="p-2 cursor-pointer text-indigo-darker no-underline hover:text-blue">Delete</button>
+                <button @click="deletePage(page.id)" class="p-2 cursor-pointer text-indigo-darker no-underline hover:text-red">Delete</button>
         </div>
         
     </div> <!-- v-if ends -->
@@ -92,11 +94,30 @@
                 return this.pages.filter(page => {
                     let t = page.title.toLowerCase()
                     let a = page.author.name.toLowerCase()
+                    let c = page.category.name.toLowerCase()
                     return t.indexOf(this.needle.toLowerCase()) != -1 
                             || a.indexOf(this.needle.toLowerCase()) != -1
+                            || c.indexOf(this.needle.toLowerCase()) != -1
                 })
             }
 
+        },
+        
+        mounted: function () {
+            this.$nextTick(() => this.$refs.txtSearchRef.focus())
+        },
+
+        created: function () {
+            
+            // get query param from the URL
+            // https://stackoverflow.com/questions/9870512/how-to-obtain-the-query-string-from-the-current-url-with-javascript
+            // TODO need to move to a common utility file later
+            function getQueryStringValue (key) {  
+                return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));  
+            }
+            let needle = getQueryStringValue("q")
+            if (needle) this.needle = needle
+            
         },
 
         methods: {
@@ -152,6 +173,11 @@
                     if (this.pages[i].id === page_id)
                         return this.pages[i]
                 }
+            },
+
+            // clears search string 
+            clear: function () {
+                this.needle = ''
             }
         }
     })

@@ -17,12 +17,17 @@
 
 @section('main')
 
-<div class="px-6 py-4 flex justify-between">
+<div class="px-6 py-4 block sm:flex sm:justify-between">
 
-    <input type="text" v-model="needle" id="txtSearch" class="p-3 w-2/3 lg:w-1/2 text-sm bg-white border-grey-lighter rounded border shadow" placeholder="Search name or description...">
+    
 
-    <a href="{{ route('categories.create') }}" id="btnNew" class="border border-teal px-3 py-3 rounded text-sm bg-teal no-underline hover:bg-orange hover:border-orange text-white shadow">
-        New <span class="hidden sm:inline-block">Category</span>
+    <div class="w-full md:w-3/4 xl:w-4/5 flex justify-between items-center text-sm bg-white border-grey-lighter rounded-lg border shadow">
+        <input type="text" v-model="needle" id="txtSearch" ref="txtSearchRef" class="p-3 w-full" placeholder="Search name or description...">
+        <p v-if="needle.length>0" v-text="filter_categories.length + ' item(s)'" class="hidden sm:flex bg-yellow-lighter text-right text-xs text-orange cursor-pointer whitespace-no-wrap px-2 py-1 mr-2 rounded-lg" @click="needle=''"></p>
+    </div>
+
+    <a href="{{ route('categories.create') }}" id="btnNew" class="block text-center mt-6 sm:mt-0 border border-teal px-3 py-3 rounded text-sm bg-teal no-underline hover:bg-orange hover:border-orange text-white shadow whitespace-no-wrap">
+        New Category
     </a>
 
 </div>
@@ -38,7 +43,7 @@
             </tr>
         </thead>
         <tbody class="align-baseline">
-            <tr v-for="category in filter_categories">
+            <tr v-for="category in filter_categories" class="border-b">
 
                 <td class="px-6 py-4 text-xs max-w-xs">
 
@@ -49,8 +54,8 @@
                     <p class="text-grey-dark  my-2 text-sm font-sans truncate" v-text="category.description"></p>
 
                 </td>
-                <td class="hidden sm:table-cell px-4 py-2 font-mono text-xs text-purple-dark whitespace-no-wrap">
-                    <span v-text="category.pages.length"></span>
+                <td class="hidden sm:table-cell px-4 py-2 text-xs whitespace-no-wrap">
+                    <a :href="'/admin/pages?q=' + encodeURI(category.name)" v-text="category.pages.length" class="no-underline text-blue bg-indigo-lightest flex items-center justify-center h-6 w-6 rounded-full hover:bg-indigo-light hover:text-white"></a>
                 </td>
                 <td class="hidden sm:table-cell px-4 py-2 font-mono text-xs text-purple-dark whitespace-no-wrap" v-text="category.created_ago">
                 </td>
@@ -87,12 +92,20 @@
         computed: {
 
             filter_categories: function() {
-                return this.categories.filter(category =>
-                    category.name.indexOf(this.needle) != -1
+                return this.categories.filter(category => {
+                    
+                    let t = category.name.toLowerCase()
+                    let d = (category.description === null? '': category.description.toLowerCase())
+                    return t.indexOf(this.needle.toLowerCase()) != -1 
+                            || d.indexOf(this.needle.toLowerCase()) != -1
 
-                )
+                })
             }
 
+        },
+
+        mounted: function () {
+            this.$nextTick(() => this.$refs.txtSearchRef.focus())
         },
 
         methods: {
