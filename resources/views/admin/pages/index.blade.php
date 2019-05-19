@@ -159,8 +159,10 @@
              */
             removePageById: function(page_id) {
                 for (let i = 0; i < this.pages.length; i++) {
-                    if (this.pages[i].id === page_id)
+                    if (this.pages[i].id === page_id) {
                         this.pages.splice(i, 1)
+                        break
+                    }
                 }
             },
 

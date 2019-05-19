@@ -34,11 +34,12 @@
                 </div>
 
 
-                <div v-if="pane==='photo'" class="w-full mx-auto py-4 px-4 bg-grey-lighter flex">
+                <div v-if="pane==='photo'" class="w-full mx-auto py-4 px-4 bg-grey-lighter flex justify-between items-center">
                         <button class="flex items-center" @click="pane='gallery'">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="fill-current h-8 w-8 rounded-full border p-2 text-grey-dark mr-2"><polygon points="3.828 9 9.899 2.929 8.485 1.515 0 10 .707 10.707 8.485 18.485 9.899 17.071 3.828 11 20 11 20 9 3.828 9"/></svg>
                                 <p class="text-blue-darker text-xl" v-text="selectedPhoto.name"></p>
                         </button>
+                        <span @click="destroy(selectedPhoto.id)" v-if="deletable" class="text-red mr-4 px-2 text-sm py-1 hover:border border-red hover:text-white hover:bg-red rounded cursor-pointer">Delete </span>
                 </div>
 
                 <div v-if="pane==='photo'" class="w-full flex justify-center items-center px-4 postcard-container overflow-y-scroll">
@@ -65,8 +66,10 @@
                                                         <p class="text-grey-dark uppercase">Storage</p>
                                                         <p class="text-blue-darker" v-text="selectedPhoto.storage.toUpperCase()"></p>
                                                 </div>
+
+                                                
                                         </div>
-                                        <button class="h-10 xl:mx-auto mb-2 xl:w-full1 py-2 px-6 bg-green text-white rounded shadow text-xl" @click="choose">Choose</button>
+                                        <button v-if="choosable" class="h-10 xl:mx-auto mb-2 xl:w-full1 py-2 px-6 bg-green text-white rounded shadow text-xl" @click="choose">Choose</button>
                                 </div>
                         </div>
                 </div>
@@ -125,7 +128,11 @@
 <script>
 export default {
         props: {
-                readonly: {
+                deletable: {
+                        type: Boolean,
+                        default: false
+                },
+                choosable: {
                         type: Boolean,
                         default: false
                 },
@@ -164,6 +171,22 @@ export default {
                 },
 
                 choose: function () {
+                        
+                        // remove file name extensions
+                        let caption = this.selectedPhoto.name.replace(/\.[^/.]+$/, "") 
+                        
+                        // remove special characters with space
+                        caption = caption.replace(/[^\w\s]/gi, ' ') 
+
+                        // uppercase first letter of each word
+                        caption = caption.toLowerCase()
+                                .split(' ')
+                                .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                                .join(' ');
+
+                        var captionChosen = prompt('Enter an caption for this image', caption);
+                        //TODO we should remove any double quote in captionChosen
+                        this.selectedPhoto['caption'] = captionChosen;
                         this.$emit('selected', this.selectedPhoto)
                 },
 
@@ -235,6 +258,26 @@ export default {
                 },
 
 
+                destroy: function (id) {
+                       
+                       if (confirm("Are you sure that you want to delete this? \nThis will permanently delete this media. This action is unrecoverable.")) {
+                                let p = this
+                                axios.delete('/admin/media/' + id)
+                                .then(function(response) {
+                                        flash({ message: response.data.flash.message })
+                                        let id = response.data.photo_id, l = p.photos.length
+                                        for (let i = 0; i < l; i++) {
+                                                if (p.photos[i].id === id) {
+                                                        p.photos.splice(i, 1)
+                                                        break
+                                                }
+                                        }
+                                        p.pane = 'gallery'
+                                })
+                        }      
+                },
+
+
                 // This is an experimental function that enables
                 // lazy-loading. This can be toggled via the
                 // optional "lazyloading" attribute
@@ -251,7 +294,7 @@ export default {
                         if (!('IntersectionObserver' in window) || this.lazyload === false) {
                                 // if not, just load all immediately
                                 Array.from(images).forEach(function(image) {
-                                        console.log('unsupported loading')
+                                        console.log('IntersectionObserver unsupported loading')
                                         if(! image.src) image.src = image.dataset.src
                                 })
                         } else {
@@ -262,7 +305,7 @@ export default {
                                                 // Are we in viewport?
                                                 if (image.isIntersecting) {
                                                         // Stop watching and load the image
-                                                        console.log('Loading: ' + image.target.dataset.src)
+                                                        //console.log('Loading: ' + image.target.dataset.src)
                                                         observer.unobserve(image.target)
                                                         image.target.src = image.target.dataset.src
                                                 }

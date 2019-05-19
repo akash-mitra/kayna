@@ -60,10 +60,21 @@ class Media extends Model
     }
 
 
-    public static function destroy($filename)
+    public static function destroy($media)
+    {
+        return self::_destroy($media);
+    }
+
+    public static function destroyByFileName($filename)
     {
         $media = Media::where('path', 'like', '%' . $filename)->first();
 
+        return self::_destroy($media);
+    }
+
+
+    public static function _destroy($media)
+    {
         if ($media->storage === 'public') {
             Storage::disk('public')->delete($media->path);
         }

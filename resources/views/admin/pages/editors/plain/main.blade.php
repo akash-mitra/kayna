@@ -1,30 +1,34 @@
-<div class="w-full max-w-lg mx-auto my-8 px-4">
+<div class="w-full bg-white border-b z-20 sticky pin-t py-1">
+        <div class="max-w-lg mx-auto px-4">
+                <div class="flex justify-between items-center">
+                        <div class="inline-block relative rounded">
+                                <select class="py-2 rounded-lg block appearance-none w-full hover:bg-grey-lightest text-sm text-blue pr-8 cursor-pointer leading-tight focus:outline-none" v-model="category.value">
+                                        <option :value="0" selected='selected'>Select Category</option>
+                                        
+                                        <option v-for="category in flat" v-if="category.id>0" :value="category.id" v-bind:key="category.id">                        
+                                                @{{ category.name }}
+                                        </option>
+                                </select>
+                                <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker ">
+                                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
+                                </div>
+                        </div>
 
-        <div class="w-full flex justify-between items-center mb-4">
-                <div class="inline-block relative border rounded">
-                        <select class="p-2 rounded-lg block appearance-none w-full hover:bg-grey-lightest text-sm text-grey pr-8 cursor-pointer leading-tight focus:outline-none focus:shqadow-outline" v-model="category.value">
-                                <option :value="0" selected='selected'>Uncategorised</option>
-                                
-                                <option v-for="category in flat" v-if="category.id>0" :value="category.id" v-bind:key="category.id">                        
-                                        @{{ category.name }}
-                                </option>
-                        </select>
-                        <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
+                        <div class="">
+                                <button class="m-2 py-2 px-4 text-sm text-blue-light hover:text-blue" v-on:click="show_gallery=true">Gallery</button>
+                                <button class="m-2 py-2 px-4 text-sm text-blue-light hover:text-blue" v-on:click="show_info_modal=true">Review</button>
+                                <button class="m-2 py-2 px-4 text-sm1 font-bold rounded text-teal border-teal hover:text-white hover:bg-teal" v-on:click="confirm">Save</button>
                         </div>
                 </div>
-
-                <div>
-                        <button class="m-2 py-2 px-4 text-blue-light hover:text-blue" v-on:click="show_gallery=true">Gallery</button>
-                        <button class="m-2 py-2 px-4 text-blue-light hover:text-blue" v-on:click="show_info_modal=true">Review</button>
-                        <button class="m-2 py-2 px-4 rounded text-teal border border-teal hover:text-white hover:bg-teal" v-on:click="confirm">Save</button>
-                </div>
         </div>
+</div>
+
+<div class="w-full max-w-lg mx-auto p-4 mt-2">
 
         <div class="w-full flex flex-col">
                 <span class="uppercase tracking-wide text-grey-dark text-sm">Title</span>
-                <textarea name="title" id="ta_title" v-model="title" placeholder="Title" rows="1" @input="handleTitleInput" class="w-full resize-y p-4 text-2xl bg-grey-lightest rounded my-4 border font-serif"></textarea>
+                <textarea name="title" id="ta_title" v-model="title" placeholder="Title" rows="1" @input="handleTitleInput" class="w-full resize-y p-4 text-2xl bg-blue-lightest rounded my-4 border border-blue-lighter font-serif"></textarea>
 
                 <ul class="-ml-5 mt-2">
                         <li v-for="e in validations.title" v-text="e" class="text-xs font-normal text-red"></li>
@@ -33,7 +37,7 @@
 
         <div class="flex flex-col py-2">
                 <span class="uppercase tracking-wide text-grey-dark text-sm">Summary</span>
-                <textarea name="summary" id="ta_summary" v-model="summary" placeholder="Short Summary" rows="4" @input="handleSummaryInput" class="w-full resize-y p-4 italic bg-grey-lightest rounded my-4 border font-sans"></textarea>
+                <textarea name="summary" id="ta_summary" v-model="summary" placeholder="Short Summary" rows="4" @input="handleSummaryInput" class="w-full resize-y p-4 italic bg-blue-lightest rounded my-4 border border-blue-lighter font-sans"></textarea>
                 <ul class="-ml-5 mt-2">
                         <li v-for="e in validations.summary" v-text="e" class="text-xs font-normal text-red"></li>
                 </ul>
@@ -42,7 +46,7 @@
 
         <div class="w-full py-2">
                 <span class="uppercase tracking-wide text-grey-dark text-sm">Content</span>
-                <textarea name="body" id="ta_body" v-model="body" placeholder="Tell your story..." rows="20" @input="handleBodyInput" class="w-full resize-y p-4 text-sm bg-grey-lightest rounded my-4 border font-mono"></textarea>
+                <textarea name="body" id="ta_body" v-model="body" placeholder="Tell your story..." rows="20" @input="handleBodyInput" class="w-full resize-y p-4 text-sm bg-blue-lightest rounded my-4 border border-blue-lighter font-mono"></textarea>
 
         </div>
 </div>
@@ -53,7 +57,7 @@
                 Media Gallery
         </h4>
         <div class="w-full bg-grey-lighter">
-                <media-gallery @selected="insertMedia"></media-gallery>
+                <media-gallery @selected="insertMedia" choosable></media-gallery>
         </div>
         
 </base-modal>

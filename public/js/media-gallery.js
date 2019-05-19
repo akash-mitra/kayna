@@ -219,9 +219,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
-    readonly: {
+    deletable: {
+      type: Boolean,
+      default: false
+    },
+    choosable: {
       type: Boolean,
       default: false
     },
@@ -256,6 +263,17 @@ __webpack_require__.r(__webpack_exports__);
       this.selectedPhoto = photo;
     },
     choose: function choose() {
+      // remove file name extensions
+      var caption = this.selectedPhoto.name.replace(/\.[^/.]+$/, ""); // remove special characters with space
+
+      caption = caption.replace(/[^\w\s]/gi, ' '); // uppercase first letter of each word
+
+      caption = caption.toLowerCase().split(' ').map(function (s) {
+        return s.charAt(0).toUpperCase() + s.substring(1);
+      }).join(' ');
+      var captionChosen = prompt('Enter an caption for this image', caption); //TODO we should remove any double quote in captionChosen
+
+      this.selectedPhoto['caption'] = captionChosen;
       this.$emit('selected', this.selectedPhoto);
     },
     uploadFiles: function uploadFiles() {
@@ -335,6 +353,27 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
+    destroy: function destroy(id) {
+      if (confirm("Are you sure that you want to delete this? \nThis will permanently delete this media. This action is unrecoverable.")) {
+        var p = this;
+        axios.delete('/admin/media/' + id).then(function (response) {
+          flash({
+            message: response.data.flash.message
+          });
+          var id = response.data.photo_id,
+              l = p.photos.length;
+
+          for (var i = 0; i < l; i++) {
+            if (p.photos[i].id === id) {
+              p.photos.splice(i, 1);
+              break;
+            }
+          }
+
+          p.pane = 'gallery';
+        });
+      }
+    },
     // This is an experimental function that enables
     // lazy-loading. This can be toggled via the
     // optional "lazyloading" attribute
@@ -349,7 +388,7 @@ __webpack_require__.r(__webpack_exports__);
       if (!('IntersectionObserver' in window) || this.lazyload === false) {
         // if not, just load all immediately
         Array.from(images).forEach(function (image) {
-          console.log('unsupported loading');
+          console.log('IntersectionObserver unsupported loading');
           if (!image.src) image.src = image.dataset.src;
         });
       } else {
@@ -360,7 +399,7 @@ __webpack_require__.r(__webpack_exports__);
             // Are we in viewport?
             if (image.isIntersecting) {
               // Stop watching and load the image
-              console.log('Loading: ' + image.target.dataset.src);
+              //console.log('Loading: ' + image.target.dataset.src)
               observer.unobserve(image.target);
               image.target.src = image.target.dataset.src;
             }
@@ -1211,7 +1250,10 @@ var render = function() {
     _vm.pane === "photo"
       ? _c(
           "div",
-          { staticClass: "w-full mx-auto py-4 px-4 bg-grey-lighter flex" },
+          {
+            staticClass:
+              "w-full mx-auto py-4 px-4 bg-grey-lighter flex justify-between items-center"
+          },
           [
             _c(
               "button",
@@ -1249,7 +1291,23 @@ var render = function() {
                   domProps: { textContent: _vm._s(_vm.selectedPhoto.name) }
                 })
               ]
-            )
+            ),
+            _vm._v(" "),
+            _vm.deletable
+              ? _c(
+                  "span",
+                  {
+                    staticClass:
+                      "text-red mr-4 px-2 text-sm py-1 hover:border border-red hover:text-white hover:bg-red rounded cursor-pointer",
+                    on: {
+                      click: function($event) {
+                        return _vm.destroy(_vm.selectedPhoto.id)
+                      }
+                    }
+                  },
+                  [_vm._v("Delete ")]
+                )
+              : _vm._e()
           ]
         )
       : _vm._e(),
@@ -1368,15 +1426,17 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass:
-                          "h-10 xl:mx-auto mb-2 xl:w-full1 py-2 px-6 bg-green text-white rounded shadow text-xl",
-                        on: { click: _vm.choose }
-                      },
-                      [_vm._v("Choose")]
-                    )
+                    _vm.choosable
+                      ? _c(
+                          "button",
+                          {
+                            staticClass:
+                              "h-10 xl:mx-auto mb-2 xl:w-full1 py-2 px-6 bg-green text-white rounded shadow text-xl",
+                            on: { click: _vm.choose }
+                          },
+                          [_vm._v("Choose")]
+                        )
+                      : _vm._e()
                   ]
                 )
               ]

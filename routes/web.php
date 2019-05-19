@@ -50,7 +50,7 @@ Route::post('/admin/users/{user}/password', 'ProfileController@changePassword')-
 Route::get('/admin/media', 'MediaController@index')->middleware('auth');
 Route::get('/api/media', 'MediaController@apiIndex')->middleware('auth');
 Route::post('/admin/media', 'MediaController@store')->middleware('auth');
-Route::post('/admin/media/destroy', 'MediaController@destroy')->middleware('auth');
+Route::delete('/admin/media/{media}', 'MediaController@destroy')->middleware('auth');
 
 Route::get('/admin/templates', 'TemplateController@index')->name('templates.index')->middleware('admin');
 Route::get('/admin/templates/public', 'TemplateController@templates')->name('templates.templates')->middleware('admin');

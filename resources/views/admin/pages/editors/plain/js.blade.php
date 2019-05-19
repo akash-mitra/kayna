@@ -155,7 +155,7 @@
                         insertMedia: function (media) {
                                 this.show_gallery = false
                                 const ta = document.getElementById('ta_body')
-                                let url = '\n<img src="' + media.url + '" />\n'
+                                let url = '\n<img src="' + media.url + '" alt="' + (media.caption || '') +  '" />\n'
                                 this.insertAtCursor(ta, url)
                         },
 
@@ -288,7 +288,7 @@
                                 }
                                 //MOZILLA and others
                                 else if (myField.selectionStart || myField.selectionStart == '0') {
-                                        console.log(myField.selectionStart + ' and ' + myField.selectionEnd)
+                                        //console.log(myField.selectionStart + ' and ' + myField.selectionEnd)
                                         var startPos = myField.selectionStart;
                                         var endPos = myField.selectionEnd;
                                         // myField.value = myField.value.substring(0, startPos)
