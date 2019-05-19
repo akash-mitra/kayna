@@ -33,7 +33,7 @@
                 <a href="/" class="flex items-center no-underline text-indigo-dark">
                 <svg class="w-12 h-12 fill-current" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
  viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
-                    <title>Kayna Template Logo</title>
+                    <title>{{ $common->sitetitle }}</title>
                     <g>
                         <path d="M7.406,24.01c-2.895,0-5.25-2.355-5.25-5.25V9.773c0-0.414,0.336-0.75,0.75-0.75h1.196L3.661,7.771
                 C2.711,7.602,1.911,7,1.49,6.125C0.616,4.352,0.616,2.228,1.493,0.449c0.103-0.209,0.301-0.36,0.53-0.405
