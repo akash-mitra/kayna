@@ -123,6 +123,28 @@ class User extends Authenticatable
         return $photo;
     }
 
+
+    /**
+     * This function allows to directly update the avatar image
+     * for the user.
+     */
+    public function updateAvatar ($photo) {
+        
+        $name = $this->slug . '.' . explode('/', explode(':', substr($photo, 0, strpos($photo, ';')))[1])[1];
+        $filePath = storage_path('app/public/media/profile/').$name; 
+        $url = asset('storage/media/profile/' . $name);
+
+        \Image::make($photo)->save($filePath);
+        
+        $this->avatar = $url;
+        $this->save();
+        
+        return $url;
+        
+        // $url = Media::store ($photo, $this->slug, false);
+    }
+
+
     private function dummyProfilePhoto($class)
     {
         return '<svg class="fill-current text-grey-light ' . $class . '" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -150,13 +172,5 @@ class User extends Authenticatable
         return $class;
     }
 
-    // public static function props()
-    // {
-    //     return [
-    //         ['name' => 'name', 'description' => 'Name of the user', 'visibility' => true],
-    //         ['name' => 'email', 'description' => 'Email ID of the user', 'visibility' => false],
-    //         ['name' => 'url', 'description' => 'Link to the public profile of the user', 'visibility' => true],
-    //         ['name' => 'avatar', 'description' => 'Profile Image of the user', 'visibility' => true]
-    //     ];
-    // }
+    
 }

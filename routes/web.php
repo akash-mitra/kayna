@@ -38,7 +38,7 @@ Route::group(['prefix' => 'admin'], function () {
 Route::group(['prefix' => 'admin'], function () {
     Route::resource('users', 'UserController')->middleware('admin');
 });
-
+Route::post('/api/users/{slug}', 'UserController@updateAvatar')->name('profiles.updateAvatar');
 // some special routes related to user
 Route::get('/profile/{slug}', 'ProfileController@show')->name('profiles.show');
 Route::post('/admin/users/{user}/password', 'ProfileController@changePassword')->name('profiles.password');

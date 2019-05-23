@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -90,6 +91,28 @@ class UserController extends Controller
         ], 400);
     }
 
+
+    public function updateAvatar ($slug, Request $request)
+    {
+        if (!$request->has('photo') || $this->invalidImageData($request->photo)) {
+            return response()->json([
+                'message' => 'Invalid image data'
+            ], 422);
+        }
+        
+
+        $user = User::findOrFailBySlug($slug);
+
+        $photo = $request->photo;
+
+        $url = $user->updateAvatar($photo);
+
+        return response()->json([
+            "message" => "Avatar Uploaded successfully",
+            "url" => $url
+        ], 201);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -98,4 +121,16 @@ class UserController extends Controller
      */
     public function destroy($id)
     { }
+
+
+    private function invalidImageData($imageData)
+    {
+        try {
+            \Intervention\Image\ImageManagerStatic::make($imageData);
+            return false;
+        } catch (\Exception $e) {
+            return true;
+        }
+    }
+    
 }

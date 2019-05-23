@@ -17,11 +17,13 @@
 <div class="w-full bg-grey-lightest">
     <div class="w-full p-8 flex flex-wrap items-center justify-between border-t border-b">
         <div class="flex flex-wrap1 items-center">
-            <img v-if="profile.avatar" :src="profile.avatar" class="rounded-full h-16 w-16 border-white border-4 shadow mr-4" />
-            <svg v-else class="w-16 h-16 rounded-full border-4 mr-4 fill-current text-grey-light" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                <path class="heroicon-ui" d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm9 11a1 1 0 0 1-2 0v-2a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v2a1 1 0 0 1-2 0v-2a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v2z" />
-            </svg>
-            <div>
+            <div @click="changeImage" class="cursor-pointer" title="Change Profile Picture">
+                <img v-if="profile.avatar" :src="profile.avatar" class="rounded-full h-16 w-16 border-white border-4 shadow mr-4" />
+                <svg v-else class="w-16 h-16 rounded-full border-4 mr-4 fill-current text-grey-light" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                    <path class="heroicon-ui" d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm9 11a1 1 0 0 1-2 0v-2a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v2a1 1 0 0 1-2 0v-2a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v2z" />
+                </svg>
+            </div>
+            <div class="flex flex-col">
                 <h1 class="w-full text-2xl font-light text-grey-darker">
                     @{{ profile.name }}
                     <span class="align-middle bg-purple text-white text-xs rounded-lg shadow px-2 py-1 ml-2 uppercase">@{{ profile.type }}</span>
@@ -115,11 +117,22 @@
     </div>
 </div>
 
+@include('admin.user.image-upload-modal')
+
 @endsection
 
 @section('script')
 
+<script src="{{ mix('/js/cropper.js') }}"></script>
+
 <script>
+    // let image_crop = document.getElementById('image_demo').croppie();
+    
+</script>
+
+<script>
+
+
     new Vue({
 
         el: 'main',
@@ -129,12 +142,19 @@
             passwordHolder: null,
             showPasswordInput: false,
 
+            showImageChangeModal: false,
+
             showBioInput: false,
             previous_bio: null,
 
             showTypeInput: false,
             previous_type: null,
+
+            imgSrc: '',
+            cropImg: '',
         },
+
+        
 
         computed: {
             about: function() {
@@ -169,6 +189,11 @@
                         message: error.response.status + ' ' + error.response.statusText + ': ' + error.response.data.message
                     })
                 })
+            },
+
+            changeImage: function () {
+                this.imgSrc = this.profile.avatar
+                this.showImageChangeModal = true
             },
 
             makeBioEditable: function() {
@@ -217,6 +242,61 @@
                     console.log(error);
                 })
             },
+
+            setImage(e) {
+                const file = e.target.files[0];
+                if (!file.type.includes('image/')) {
+                    alert('Please select an image file');
+                    return;
+                }
+                if (typeof FileReader === 'function') {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        this.imgSrc = event.target.result;
+                        // rebuild cropperjs with the updated source
+                        this.$refs.cropper.replace(event.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    alert('Sorry, FileReader API not supported');
+                }
+            },
+            cropImage() {
+                // get image data for post processing, e.g. upload or setting image src
+                this.cropImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
+            },
+            rotate() {
+                this.$refs.cropper.rotate(90);
+            },
+
+            saveCropImage() {
+                let p = this
+                const url = '/api/users/' + '{{ auth()->user()->slug }}'
+
+                let form = new FormData;
+                form.append("photo", this.cropImg)
+
+                let xhr = new XMLHttpRequest
+                xhr.open("POST", url, true)
+                xhr.setRequestHeader("X-CSRF-Token", document.head.querySelector('meta[name="csrf-token"]').content)
+                
+                // xhr.upload.onprogress = function (event) {
+                //     let progress = (event.loaded / event.total) * 100
+                //     return attachment.setUploadProgress(progress) 
+                // }
+
+                xhr.onload = function () {
+                    let data = JSON.parse(xhr.responseText)
+                    if (xhr.status === 201) {
+                        p.profile.avatar = data.url + '?version=' + Math.random()
+                        p.showImageChangeModal = false
+                    } else {
+                        console.log(data)
+                        alert(data.message)
+                    }
+                }
+                return xhr.send(form)
+            }
 
         }
     })

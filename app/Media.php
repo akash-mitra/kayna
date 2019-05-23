@@ -27,7 +27,29 @@ class Media extends Model
     protected static $subDirectoryPath = 'media';
     
 
-    public static function store($file, $name)
+    /** 
+     * Appends an "url" attribute with the model  
+     **/
+    public function getUrlAttribute()
+    {
+        //return ($this->storage === 'public' ? '/' : '') . $this->path;
+
+        if ($this->storage === 'public') {
+            return asset('storage/' . $this->path);
+        }
+        if ($this->storage === 's3') {
+            return 'https://'. $this->directoryPath . '.s3.amazonaws.com/'  . $this->path;
+        }
+    }
+
+
+    /**
+     * Stores the given file with given name.
+     * If the parameter "register" is set to true (by default), the media
+     * file information will also be written in the media table in database.
+     * If this flag is set to false, the file will be stored in the disk only.
+     */
+    public static function store($file, $name, $register = true)
     {
         try {
             $sizeInBytes = $file->getClientSize(); // bytes
@@ -46,7 +68,7 @@ class Media extends Model
                 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
             ]);
             
-            $media->save();
+            if ($register) $media->save();
 
             return $media;
 
@@ -100,17 +122,7 @@ class Media extends Model
     }
 
 
-    public function getUrlAttribute()
-    {
-        //return ($this->storage === 'public' ? '/' : '') . $this->path;
-
-        if ($this->storage === 'public') {
-            return asset('storage/' . $this->path);
-        }
-        if ($storage === 's3') {
-            return 'https://'. $this->directoryPath . '.s3.amazonaws.com/'  . $this->path;
-        }
-    }
+    
 
 
     private static function getStorageType()

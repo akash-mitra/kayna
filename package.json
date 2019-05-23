@@ -25,6 +25,7 @@
     "dependencies": {
         "cross-env": "^5.2.0",
         "npm": "^6.9.0",
-        "trix": "^1.1.0"
+        "trix": "^1.1.0",
+        "vue-cropperjs": "^3.0.0"
     }
 }
