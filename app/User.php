@@ -128,8 +128,16 @@ class User extends Authenticatable
      * This function allows to directly update the avatar image
      * for the user.
      */
-    public function updateAvatar ($photo) {
+    public function updateAvatar ($photo) 
+    {
         
+        // tries to retrieve the original type of the image by reading the base64 encoded image upload data
+        $type = explode('/', explode(':', substr($photo, 0, strpos($photo, ';')))[1])[1];
+
+        if (empty($type) || !in_array(strtolower($type), ['jpg', 'jpeg', 'png', 'bmp', 'gif'])) {
+            throw new \Exception("Unsupported image format");
+        }
+
         $name = $this->slug . '.' . explode('/', explode(':', substr($photo, 0, strpos($photo, ';')))[1])[1];
         $filePath = storage_path('app/public/media/profile/').$name; 
         $url = asset('storage/media/profile/' . $name);
@@ -140,8 +148,6 @@ class User extends Authenticatable
         $this->save();
         
         return $url;
-        
-        // $url = Media::store ($photo, $this->slug, false);
     }
 
 

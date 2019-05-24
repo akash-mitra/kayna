@@ -1,5 +1,16 @@
 @extends('admin.layout')
+@section('css')
+<style>
+.cropper-crop-box, .cropper-view-box {
+    border-radius: 50%;
+}
 
+.cropper-view-box {
+    box-shadow: 0 0 0 1px #39f;
+    outline: 0;
+}
+</style>
+@endsection
 
 @section('header')
 <div class="py-2 px-6 flex items-center">
@@ -149,7 +160,7 @@
 
             showTypeInput: false,
             previous_type: null,
-
+            /* below are required to facilitate profile image cropping facility */
             imgSrc: '',
             cropImg: '',
         },
@@ -191,6 +202,7 @@
                 })
             },
 
+            // for changinf profile image
             changeImage: function () {
                 this.imgSrc = this.profile.avatar
                 this.showImageChangeModal = true
@@ -243,6 +255,7 @@
                 })
             },
 
+            // reads the uploaded profile image and set the same
             setImage(e) {
                 const file = e.target.files[0];
                 if (!file.type.includes('image/')) {
@@ -261,14 +274,18 @@
                     alert('Sorry, FileReader API not supported');
                 }
             },
+
             cropImage() {
                 // get image data for post processing, e.g. upload or setting image src
                 this.cropImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
             },
+
+            // rotates the image
             rotate() {
                 this.$refs.cropper.rotate(90);
             },
 
+            // save the profile image to server
             saveCropImage() {
                 let p = this
                 const url = '/api/users/' + '{{ auth()->user()->slug }}'
@@ -279,12 +296,6 @@
                 let xhr = new XMLHttpRequest
                 xhr.open("POST", url, true)
                 xhr.setRequestHeader("X-CSRF-Token", document.head.querySelector('meta[name="csrf-token"]').content)
-                
-                // xhr.upload.onprogress = function (event) {
-                //     let progress = (event.loaded / event.total) * 100
-                //     return attachment.setUploadProgress(progress) 
-                // }
-
                 xhr.onload = function () {
                     let data = JSON.parse(xhr.responseText)
                     if (xhr.status === 201) {

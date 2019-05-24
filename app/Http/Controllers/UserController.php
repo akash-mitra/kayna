@@ -92,6 +92,9 @@ class UserController extends Controller
     }
 
 
+    /**
+     * Updates the profile image to server
+     */
     public function updateAvatar ($slug, Request $request)
     {
         if (!$request->has('photo') || $this->invalidImageData($request->photo)) {
@@ -102,9 +105,7 @@ class UserController extends Controller
         
 
         $user = User::findOrFailBySlug($slug);
-
         $photo = $request->photo;
-
         $url = $user->updateAvatar($photo);
 
         return response()->json([
@@ -123,6 +124,10 @@ class UserController extends Controller
     { }
 
 
+    /**
+     * Checks if the image data is valid or not by attempting to 
+     * make the image using Intervention ImageManager
+     */
     private function invalidImageData($imageData)
     {
         try {
