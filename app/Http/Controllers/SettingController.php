@@ -29,7 +29,9 @@ class SettingController extends Controller
     {
         foreach ($request->input() as $key => $value) {
             Cache::forget($key);
-            DB::table('parameters')->where('key', $key)->update(['value' => $value]);
+            DB::table('parameters')->where('key', $key)->update([
+                'value' => $value===null ? '' : $value
+            ]);
         }
 
         return [

@@ -20,25 +20,30 @@
 <div class="pt-4 flex flex-cols border-b">
 
     <div class="w-48 uppercase text-sm font-bold border-t">
-        <div :class="active_tab!=1? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-l-2 border-indigo'" class="py-4 pl-8" @click="select('social', $event)">Login</div>
-        <div :class="active_tab!=2? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-l-2 border-indigo'" class="py-4 pl-8" @click="select('storage', $event)">Storage</div>
-        <div :class="active_tab!=3? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-l-2 border-indigo'" class="py-4 pl-8" @click="select('editor', $event)">Editor</div>
-        <div :class="active_tab!=4? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-l-2 border-indigo'" class="py-4 pl-8" @click="select('cache', $event)">Cache</div>
+        <div :class="active_tab!=1? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-l-2 border-indigo'" class="py-4 pl-8" @click="select('general', $event)">General</div>
+        <div :class="active_tab!=2? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-l-2 border-indigo'" class="py-4 pl-8" @click="select('social', $event)">Login</div>
+        <div :class="active_tab!=3? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-l-2 border-indigo'" class="py-4 pl-8" @click="select('storage', $event)">Storage</div>
+        <div :class="active_tab!=4? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-l-2 border-indigo'" class="py-4 pl-8" @click="select('editor', $event)">Editor</div>
+        <div :class="active_tab!=5? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-l-2 border-indigo'" class="py-4 pl-8" @click="select('cache', $event)">Cache</div>
     </div>
 
     <div v-show="active_tab===1" class="w-full md:flex text-sm bg-white border-t">
+        @include('admin.settings.general-settings')
+    </div>
+    
+    <div v-show="active_tab===2" class="w-full md:flex text-sm bg-white border-t">
         @include('admin.settings.login-settings')
     </div>
 
-    <div v-show="active_tab===2" class="w-full flex flex-wrap text-sm px-2 p-4 bg-white border-t">
+    <div v-show="active_tab===3" class="w-full flex flex-wrap text-sm px-2 p-4 bg-white border-t">
         @include('admin.settings.storage-settings')
     </div>
 
-    <div v-show="active_tab===3" class="w-full md:flex text-sm bg-white border-t">
+    <div v-show="active_tab===4" class="w-full md:flex text-sm bg-white border-t">
         @include('admin.settings.editor-settings')
     </div>
 
-    <div v-show="active_tab===4" class="w-full md:flex text-sm bg-white border-t">
+    <div v-show="active_tab===5" class="w-full md:flex text-sm bg-white border-t">
         @include('admin.settings.cache-settings')
     </div>
 </div>
@@ -50,8 +55,8 @@
     new Vue({
         el: 'main',
         data: {
-            active_tab: 4,
-            tabs: ['social', 'storage', 'editor', 'cache'],
+            active_tab: 1,
+            tabs: ['general', 'social', 'storage', 'editor', 'cache'],
             /* storage related variables */
             storageS3StateClass: 'bg-grey',
 
@@ -61,7 +66,7 @@
             loginNativeStateClass: 'bg-grey',
 
             /* editor related variable */
-            editorStateClass: 'bg-teal-dark shadow hover:bg-teal-light',
+            editorStateClass: 'bg-green shadow hover:bg-green-dark',
 
             /* parameters */
             @foreach($settings as $key => $value)
@@ -82,9 +87,14 @@
              * If no "state" parameter is passed, state is considered enabled.
              */
             change: function(targetClassProperty, state = "enable") {
-                this[targetClassProperty] = state === 'disable' ? 'bg-grey' : 'bg-teal-dark shadow hover:bg-teal-light'
+                this[targetClassProperty] = state === 'disable' ? 'bg-grey' : 'bg-green shadow hover:bg-green-dark'
             },
 
+            /**
+             * This function should only be used if paramters are binary
+             * and target class properties are required to be set. If
+             * parameter is a generic value, use "update" method.
+             */
             save: function(targetClassProperty, parameters) {
 
                 let vm = this,
@@ -107,7 +117,33 @@
                     .catch(error => {
                         flash('Error! Could not reach the API. ' + error)
                     })
-            }
+            },
+
+            /**
+             * Accepts an array of keys. For each member of the keys array
+             * it checks the current value from vue data array, and sends
+             * the values to server for saving against the key
+             */
+            update: function (keys) {
+                
+                let settings = {}, vm = this
+
+                for (let i = 0; i < keys.length; i++) {
+                    let param = keys[i]
+                    settings[param] = vm[param]
+                }
+
+                axios.patch('/admin/settings', settings)
+                    .then(response => {
+                        flash({
+                            message: response.data.message,
+                            type: response.data.status
+                        })
+                    })
+                    .catch(error => {
+                        flash('Error! Could not reach the API. ' + error)
+                    })
+            },
 
         }
     })

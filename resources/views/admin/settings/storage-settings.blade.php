@@ -32,8 +32,9 @@
                     </span>
                 </label>
 
-                <div class="my-2">
-                    <button @click="save('storageS3StateClass', ['storage_s3_active', 'storage_s3_key', 'storage_s3_secret', 'storage_s3_bucket', 'storage_s3_region'])" :class="storageS3StateClass" class="px-4 py-2 rounded text-white">Save</button>
-                </div>
+                
+            </div>
+            <div class="w-full px-8 pt-4 my-2">
+                <button @click="save('storageS3StateClass', ['storage_s3_active', 'storage_s3_key', 'storage_s3_secret', 'storage_s3_bucket', 'storage_s3_region'])" :class="storageS3StateClass" class="px-4 py-2 rounded text-white">Save</button>
             </div>
         </div><!-- end of s3 -->

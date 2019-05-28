@@ -30,10 +30,10 @@ class HomeController extends Controller
                 "categories" => $categories
             ],
             "common" => (object)[
-                "sitename" => "Kayna",
-                "sitetitle" => "A BlogTheory site",
-                "metadesc" => "A friendly website",
-                "metakey" => ""
+                "sitename" => param('sitename'),
+                "sitetitle" => param('tagline'),
+                "metadesc" => param('sitedesc'),
+                "metakey" => param('sitekeys')
             ]
         ]);
     }

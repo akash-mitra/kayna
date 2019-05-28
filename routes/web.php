@@ -1,6 +1,7 @@
 <?php
-
+// --------------------------------------------------------------------------------------------------------------------------
 // All Page related general and admin routes
+// --------------------------------------------------------------------------------------------------------------------------
 Route::get('/admin/pages',              'PageController@index')->name('pages.index')->middleware('author');
 Route::post('/admin/pages',             'PageController@store')->name('pages.store')->middleware('author');
 Route::get('/pages/{page}/{slug?}',     'PageController@show')->name('pages.get')->middleware('web');
@@ -11,7 +12,7 @@ Route::delete('/admin/pages/{page}',    'PageController@destroy')->name('pages.d
 Route::get('/api/pages',                'PageController@apiGetAll')->name('api.pages.index')->middleware('web');
 Route::get('/api/pages/{page}',         'PageController@apiGet')->name('api.pages.get')->middleware('author');
 Route::post('/api/pages/status',        'PageController@apiSetStatus')->name('api.pages.setStatus')->middleware('web');
-
+// --------------------------------------------------------------------------------------------------------------------------
 
 
 // All Categories related general and admin routes

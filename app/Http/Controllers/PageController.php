@@ -81,16 +81,13 @@ class PageController extends Controller
             return abort(503, "This page is currently unavailable.");
         }
 
-        // return[
-        //     "resource" => $pageData,
-        //     "common" => []
-        // ];
-        // return compiledView('page', $pageData->toArray());
-
         return view('page', [
             "resource" => $pageData,
             "common" => (object)[
-                "sitename" => "Kayna"
+                "sitename" => param('sitename'),
+                "sitetitle" => param('tagline'),
+                "metadesc" => param('sitedesc'),
+                "metakey" => param('sitekeys')
             ]
         ]);
     }

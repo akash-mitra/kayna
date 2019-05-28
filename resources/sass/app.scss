@@ -97,7 +97,6 @@
   opacity: 0;
 }
 
-
 .unselectable {
     -moz-user-select: -moz-none;
     -khtml-user-select: none;
@@ -105,4 +104,22 @@
     -ms-user-select: none; 
     -o-user-select: none;
     user-select: none;
+}
+
+p, pre {
+  margin: 1em auto
+}
+
+pre {
+  padding: 1.5em 1em;
+  background-color: #292d3e;
+  color: white;
+  white-space: pre;
+  overflow: scroll;
+  border-radius: 0.25em;
+  box-shadow: 1px 1px 10px #cce
+}
+
+li {
+  margin-bottom: 0.25em
 }

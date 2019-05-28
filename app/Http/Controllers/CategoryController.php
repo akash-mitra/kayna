@@ -85,7 +85,10 @@ class CategoryController extends Controller
         return view('category', [
             "resource" => $categoryData,
             "common" => (object)[
-                "sitename" => "Kayna"
+                "sitename" => param('sitename'),
+                "sitetitle" => param('tagline'),
+                "metadesc" => param('sitedesc'),
+                "metakey" => param('sitekeys')
             ]
         ]);
     }
