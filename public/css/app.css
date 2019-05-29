@@ -6293,6 +6293,23 @@ li {
   margin-bottom: .25em;
 }
 
+table {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 1em;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+  background-color: #fafafa;
+}
+
 @media (min-width: 576px) {
   .sm\:list-reset {
     list-style: none;
