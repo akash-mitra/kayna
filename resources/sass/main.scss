@@ -106,4 +106,35 @@
     user-select: none;
 }
 
+p, pre {
+  margin: 1em auto
+}
+
+pre {
+  padding: 1.5em 1em;
+  background-color: #292d3e;
+  color: white;
+  white-space: pre;
+  overflow: scroll;
+  border-radius: 0.25em;
+  box-shadow: 1px 1px 10px #cce
+}
+
+li {
+  margin-bottom: 0.25em
+}
+
+table {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 1em;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+tr:hover {background-color: #fafafa;}
 

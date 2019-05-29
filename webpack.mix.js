@@ -30,12 +30,22 @@ mix.js('resources/js/cropper.js', 'public/js')
  |--------------------------------------------------------------------------
  |
  */
+
+// APP
+// app.css is produced from app.scss. This file 
+// should only be used in the admin side.
 mix.sass('resources/sass/app.scss', 'public/css').options({
         processCssUrls: false,
         postCss: [tailwindcss('./tailwind.js')],
 })
 
-
+// MAIN
+// main.css is produced from main.scss. This file 
+// is to be used in the front-end side.
+mix.sass('resources/sass/main.scss', 'public/css').options({
+        processCssUrls: false,
+        postCss: [tailwindcss('./tailwind.js')],
+})
 
 
 // Custom PurgeCSS extractor for Tailwind that allows special characters in
