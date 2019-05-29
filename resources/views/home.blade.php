@@ -32,14 +32,39 @@
         <header class="container mx-auto flex items-center px-10">
             <div class="w-full py-2">
                 <a href="/" class="flex items-center no-underline text-indigo-dark align-middle">
-                    <img src="https://flower.app/storage/media/ho8Rkag7bXZd4nt0PNOqgPuLDwLxo3cnya5sgf80.png" alt="Site Logo" class="max-w-full "/>
+                    <img src="https://flower.app/storage/media/ho8Rkag7bXZd4nt0PNOqgPuLDwLxo3cnya5sgf80.png" alt="Site Logo" class="max-w-full"/>
                     <span class="ml-4 text-4xl font-semibold">{{ $common->sitename }}</span>
                 </a>
             </div>
-            <div class="w-full py-6 flex justify-end">
+            
+            <div class="w-full py-2 flex justify-end">
                 @includeIf('modules.login')
             </div>
         </header>
+    </div>
+
+    <div class="w-full bg-indigo-darker flex items-center">
+        <nav class="container mx-auto px-10">
+            <div class="flex flex-no-wrap flex-col md:flex-row overflow-auto">
+                <span onclick="moduleMenuToggle()" class="text-grey-lighter tracking-wide uppercase px-4 py-4 my-0 md:hidden cursor-pointer">
+                    Menu
+                </span>
+                @foreach(App\Category::all() as $c)
+                    <a href="{{ $c->url }}" class="menu-mod-item no-underline text-white whitespace-no-wrap px-4 py-4 my-0 hover:bg-indigo hidden md:block">
+                        {{ $c->name }}
+                    </a>
+                @endforeach
+                <script>
+                    const items = document.getElementsByClassName('menu-mod-item')
+                    function moduleMenuToggle() {
+                        for(let i = 0; i < items.length; i++) {
+                            let item = items[i]
+                            item.classList.toggle('hidden')
+                        }
+                    }
+                </script>
+            </div>
+        </nav>
     </div>
 
     <div class="w-full border-b">

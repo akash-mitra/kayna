@@ -47,6 +47,30 @@
         </header>
     </div>
 
+    <div class="w-full bg-indigo-darker flex items-center">
+        <nav class="container mx-auto px-10">
+            <div class="flex flex-no-wrap flex-col md:flex-row overflow-auto">
+                <span onclick="moduleMenuToggle()" class="text-grey-lighter tracking-wide uppercase px-4 py-4 my-0 md:hidden cursor-pointer">
+                    Menu
+                </span>
+                @foreach(App\Category::all() as $c)
+                    <a href="{{ $c->url }}" class="menu-mod-item no-underline text-white whitespace-no-wrap px-4 py-4 my-0 hover:bg-indigo hidden md:block">
+                        {{ $c->name }}
+                    </a>
+                @endforeach
+                <script>
+                    const items = document.getElementsByClassName('menu-mod-item')
+                    function moduleMenuToggle() {
+                        for(let i = 0; i < items.length; i++) {
+                            let item = items[i]
+                            item.classList.toggle('hidden')
+                        }
+                    }
+                </script>
+            </div>
+        </nav>
+    </div>
+
     <div class="w-full border-b">
         <div class="container mx-auto lg:flex justify-between px-10">
             <main class="w-full lg:w-2/3 max-w-md py-6">
