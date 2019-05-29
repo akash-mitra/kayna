@@ -19,7 +19,8 @@
         /**
          * Shows the modal when clicked on an image
          */
-        document.body.addEventListener('click', function (e) {
+        const mainElement = document.getElementsByTagName("MAIN")[0]
+        mainElement.addEventListener('click', function (e) {
             // close if clicked on image overlay
             if (e.target.id === 'img-overlay') {closeModal()}
 
