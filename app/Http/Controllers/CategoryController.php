@@ -77,7 +77,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        $categoryData = $category->load('pages','parent');
+        $categoryData = $category->load('pages','parent', 'subcategories');
         // return $categoryData;
 
         // return compiledView('category', $categoryData->toArray());

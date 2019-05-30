@@ -32,7 +32,7 @@
 
 <body>
 
-    <div class="w-full border-b">
+    <div class="w-full">
         <header class="container mx-auto flex items-center px-10">
             <div class="w-full py-2">
                 <a href="/" class="flex items-center no-underline text-indigo-dark align-middle">
@@ -71,7 +71,7 @@
         </nav>
     </div>
 
-    <div class="w-full border-b">
+    <div class="w-full">
         <div class="container mx-auto lg:flex justify-between px-10">
             <main class="w-full lg:w-2/3 max-w-md py-6">
                 <article>
@@ -79,33 +79,59 @@
                         @if(! empty($resource->parent_id))
                         <div class="w-full text-sm text-grey-darker mb-4">{{ $resource->parent->name }}</div>
                         @endif
-                        <h1 class="pb-4 text-4xl text-indigo-darker font-quick">
+                        <h1 class="text-4xl text-indigo-darker font-quick">
                             {{ $resource->name }}
                         </h1>
                         @if(! empty($resource->description))
-                        <p class="p-8 bg-grey-lightest text-xl font-sans text-grey-darkest leading-tight italic1 font-thin">
+                        <p class="text-xl font-sans text-grey-darkest leading-tight italic font-thin">
                             {{ $resource->description }}
                         </p>
                         @endif
                     </header>
 
-                    <div class="content w-full lg:flex lg:flex-wrap">
-                        @foreach($resource->pages as $page)
-                        <div class="w-full flex flex-col justify-between lg:w-1/2 px-2 py-6">
-                            <div class="py-2 font-quick">
-                                <h2 class="my-2">
-                                    <a href="{{ $page['url'] }}" class="no-underline text-blue">
-                                        {{ $page->title }}
-                                    </a>
-                                </h2>
-                                <p>{{ $page->summary }}</p>
-                            </div>
-                            <div class="text-grey text-xs">
-                                Updated on {{ $resource->updated_at->toFormattedDateString() }}
-                            </div>
-                        </div>
-                        @endforeach
+                    @if(count($resource->subcategories))
+                    <div class="w-full mt-4">
+                        <h3 class="mt-10 pb-4 text-sm uppercase text-grey-dark font-quick">Sub-Categories</h3>
+                        <table class="border-none">
+                            <tbody>
+                            @foreach($resource->subcategories as $category)
+                                <tr>
+                                    <td class="pl-0 pr-4 text-grey hidden md:table-cell align-top whitespace-no-wrap align-top">
+                                       # {{ $loop->iteration }}
+                                    </td>
+                                    <td class="px-0 align-top">
+                                        <a href="{{ $category->url }}" class="no-underline text-indigo font-bold font-quick">{{ $category->name }}</a>
+                                    </td>
+                                    <td class="px-0 text-grey-darker font-quick">
+                                        {{ $category->description }}
+                                    </td>   
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
                     </div>
+                    @endif
+
+                    @if(count($resource->pages))
+                        <h3 class="mt-10 text-sm uppercase text-grey-dark font-quick">Pages</h3>
+                        <div class="content w-full lg:flex lg:flex-wrap">
+                            @foreach($resource->pages as $page)
+                            <div class="w-full flex flex-col justify-between lg:w-1/2 pr-8 py-4">
+                                <div class="pt-2 font-quick">
+                                    <h2 class="my-2">
+                                        <a href="{{ $page['url'] }}" class="no-underline text-blue">
+                                            {{ $page->title }}
+                                        </a>
+                                    </h2>
+                                    <p class="my-1">{{ $page->summary }}</p>
+                                </div>
+                                <div class="text-grey text-xs">
+                                    Updated on {{ $resource->updated_at->toFormattedDateString() }}
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    @endif
                 </article>
                 <div>
 
