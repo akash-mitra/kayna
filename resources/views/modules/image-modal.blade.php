@@ -6,6 +6,7 @@
 <script>
         const modal = document.getElementById('img-overlay');
         const modalImage = document.getElementById('modal-image');
+        const mainElement = document.getElementsByTagName("MAIN")[0]
         const closeModal = function () {
             modal.style.display = 'none'
             modalImage.src = '#'
@@ -17,13 +18,19 @@
         }
 
         /**
-         * Shows the modal when clicked on an image
+         * Closes the modal when clicked on the black overlay
          */
-        const mainElement = document.getElementsByTagName("MAIN")[0]
-        mainElement.addEventListener('click', function (e) {
-            // close if clicked on image overlay
-            if (e.target.id === 'img-overlay') {closeModal()}
 
+        modal.addEventListener('click', function (e) {
+            if (e.target.id === 'img-overlay') {
+                closeModal()
+            }
+        })
+        
+        /**
+         * Shows the modal when clicked on an image inside main tag
+         */
+        mainElement.addEventListener('click', function (e) {
             // show modal if clicked on an image
             if(e.target.tagName.toUpperCase() === 'IMG' && !e.target.classList.contains('no-modal')) {
                 showImageModal(e.target.src)
