@@ -53,7 +53,7 @@
                 <span onclick="moduleMenuToggle()" class="text-grey-lighter tracking-wide uppercase px-4 py-4 my-0 md:hidden cursor-pointer">
                     Menu
                 </span>
-                @foreach(App\Category::all() as $c)
+                @foreach(App\Category::whereNull('parent_id')->get() as $c)
                     <a href="{{ $c->url }}" class="menu-mod-item no-underline text-white whitespace-no-wrap px-4 py-4 my-0 hover:bg-indigo hidden md:block">
                         {{ $c->name }}
                     </a>
@@ -79,12 +79,14 @@
                         @if(! empty($resource->parent_id))
                         <div class="w-full text-sm text-grey-darker mb-4">{{ $resource->parent->name }}</div>
                         @endif
-                        <h1 class="pb-8 text-4xl text-indigo-darker font-quick">
+                        <h1 class="pb-4 text-4xl text-indigo-darker font-quick">
                             {{ $resource->name }}
                         </h1>
+                        @if(! empty($resource->description))
                         <p class="p-8 bg-grey-lightest text-xl font-sans text-grey-darkest leading-tight italic1 font-thin">
                             {{ $resource->description }}
                         </p>
+                        @endif
                     </header>
 
                     <div class="content w-full lg:flex lg:flex-wrap">

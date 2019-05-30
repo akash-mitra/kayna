@@ -49,7 +49,7 @@
                 <span onclick="moduleMenuToggle()" class="text-grey-lighter tracking-wide uppercase px-4 py-4 my-0 md:hidden cursor-pointer">
                     Menu
                 </span>
-                @foreach(App\Category::all() as $c)
+                @foreach(App\Category::whereNull('parent_id')->get() as $c)
                     <a href="{{ $c->url }}" class="menu-mod-item no-underline text-white whitespace-no-wrap px-4 py-4 my-0 hover:bg-indigo hidden md:block">
                         {{ $c->name }}
                     </a>
