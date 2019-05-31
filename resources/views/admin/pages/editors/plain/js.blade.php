@@ -359,7 +359,9 @@
 
                         getKeywords: function() {
 
-                                let txt = this.body
+                                var span = document.createElement('span');
+                                span.innerHTML = this.body;
+                                let txt = span.textContent || span.innerText;
 
                                 let singleWordTag = {},
                                         doubleWordTag = {}
@@ -376,6 +378,7 @@
                                         'into': true,
                                         'of': true,
                                         'on': true,
+                                        'or': true,
                                         'onto': true,
                                         'between': true,
                                         'and': true,
@@ -407,12 +410,16 @@
                                         'by': true,
                                         'it': true,
                                         'I': true,
+                                        'my': true,
+                                        'me': true,
                                         'you': true,
+                                        'your': true,
                                         'we': true,
                                         'he': true,
                                         'she': true,
                                         'her': true,
                                         'his': true,
+                                        'our': true,
                                         'us': true,
                                         'be': true,
                                         'too': true,
@@ -436,13 +443,78 @@
                                         'down': true,
                                         'must': true,
                                         'for': true,
-                                        'i': true
+                                        'i': true,
+                                        // verbs
+                                        'go': true,
+                                        'going': true,
+                                        'went': true,
+                                        'gone': true,
+                                        'write': true,
+                                        'wrote': true,
+                                        'written': true,
+                                        'come': true,
+                                        'coming': true,
+                                        'came': true,
+                                        'call': true,
+                                        'calling': true,
+                                        'called': true,
+                                        'see': true,
+                                        'seen': true,
+                                        'saw': true,
+                                        'eat': true,
+                                        'eating': true,
+                                        'eaten': true,
+                                        'talk': true,
+                                        'talking': true,
+                                        'talked': true,
+                                        'make': true,
+                                        'making': true,
+                                        'made': true,
+                                        'give': true,
+                                        'giving': true,
+                                        'gave': true,
+                                        'take': true,
+                                        'taking': true,
+                                        'taken': true,
+                                        'like': true,
+                                        'liking': true,
+                                        'liked': true,
+                                        'do': true,
+                                        'doing': true,
+                                        'done': true,
+                                        'begin': true,
+                                        'beginning': true,
+                                        'began': true,
+                                        'end': true,
+                                        'ending': true,
+                                        'ended': true,
+                                        'look': true,
+                                        'looking': true,
+                                        'looked': true,
+                                        'first': true,
+                                        'firstly': true,
+                                        'change': true,
+                                        'changing': true,
+                                        'changed': true,
+                                        'discuss': true,
+                                        'discussed': true,
+                                        'discussing': true,
+                                        'follow': true,
+                                        'followed': true,
+                                        'following': true,
+                                        'suppose': true,
+                                        'imagine': true,
+                                        'under': true,
+                                        'over': true,
+                                        'now': true,
+                                        'then': true,
+                                        'later': true,
                                 }
 
                                 for (let i = 0; i < l; i++) {
                                         c = txt.charAt(i).toLowerCase() // all letters are changed to lower case
 
-                                        if (c === ' ' || c === '.' || c === ',' || c === '!' || c === ';' || c === '-' || c === '—') // all separators 
+                                        if (c === ' ' || c === '.' || c === ',' || c === '!' || c === ';' || c === '-' || c === '—' || c === '\n' || c === '\r' || c === '\t') // all separators 
                                         {
                                                 /*
                                                  * This code ensures that consecutive punctuations or
@@ -456,7 +528,7 @@
                                                  * If the word we built is one of the ignorable words
                                                  * we continue the loop without storing the word
                                                  */
-                                                if (word in ignoreWords) {
+                                                if ((word in ignoreWords) || !isNaN(word)) {
                                                         word = ''
                                                         previousWord = ''
                                                         continue
@@ -514,12 +586,12 @@
                                 }
                                 let singleTags = Object.keys(singleWordTag).sort(function(a, b) {
                                         return singleWordTag[a] < singleWordTag[b]
-                                }).slice(0, 5)
+                                }).slice(0, 3)
                                 let doubleTags = Object.keys(doubleWordTag).sort(function(a, b) {
                                         return doubleWordTag[a] < doubleWordTag[b]
-                                }).slice(0, 5)
-
-                                return doubleTags.concat(singleTags)
+                                }).slice(0, 3)
+                                
+                                return singleTags.concat(doubleTags)
 
                         }
                 }

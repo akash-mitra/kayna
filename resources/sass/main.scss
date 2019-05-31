@@ -106,7 +106,7 @@
     user-select: none;
 }
 
-p, pre {
+main p, main pre, main h1, main h2, main h3, main h4, main h5, main h6, main ul, main ol {
   margin: 1em auto
 }
 
@@ -128,6 +128,8 @@ table {
   width: 100%;
   border: 1px solid #ddd;
   border-collapse: collapse;
+  table-layout: fixed;
+  word-break: break-word;
 }
 
 th, td {

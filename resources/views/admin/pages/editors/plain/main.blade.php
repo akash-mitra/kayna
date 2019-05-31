@@ -17,7 +17,7 @@
 
                         <div class="">
                                 <button class="m-2 py-2 px-4 text-sm text-blue-light hover:text-blue" v-on:click="show_gallery=true">Gallery</button>
-                                <button class="m-2 py-2 px-4 text-sm text-blue-light hover:text-blue" v-on:click="show_info_modal=true">Review</button>
+                                <button class="m-2 py-2 px-4 text-sm text-blue-light hover:text-blue" v-on:click="show_info_modal=true; qa = checkQuality()">Review</button>
                                 <button class="m-2 py-2 px-4 text-sm1 font-bold rounded text-teal border-teal hover:text-white hover:bg-teal" v-on:click="confirm">Save</button>
                         </div>
                 </div>
@@ -109,7 +109,7 @@
 
                 <div class="w-full" v-show="show_quality_checks">
                         <div class="p-4">
-
+                                <p class="text-xs text-grey-dark mb-2 py-1">Quality Checks</p>
                                 <div class="flex flex-wrap text-xs text-grey-darker mb-4">
                                         <div v-if="!qa.length">
                                                 <svg class="fill-current h-4 w-4 mr-2 text-green" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -122,7 +122,10 @@
                                                 <span class="align-top" v-text="ele.message"></span>
                                         </div>
                                 </div>
-
+                                <p class="text-xs text-grey-dark mt-6 mb-2 py-1">Keyword Scanner</p>
+                                <div class="flex flex-wrap text-xs text-grey-darker mb-4">
+                                        <span v-for="word in getKeywords()" v-text="word" class="p-1 border border-blue bg-blue-lightest text-blue text-xs m-1"></span>
+                                </div>
                         </div>
 
                 </div>
