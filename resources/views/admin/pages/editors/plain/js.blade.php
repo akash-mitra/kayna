@@ -153,8 +153,6 @@
                         },
 
                         insertMedia: function (media) {
-                                console.log('received: ')
-                                console.log(media);
                                 this.show_gallery = false
                                 const ta = document.getElementById('ta_body')
                                 let url = '\n<img src="' + media.url + '" alt="' + (media.caption || '') +  '" />\n'
@@ -201,7 +199,7 @@
                         },
 
                         handleBodyInput: function(event) {
-                                this.adjustTextAreaHeight('ta_body')
+                                // this.adjustTextAreaHeight('ta_body') // use fix height for body
                                 // console.log(event.target)
                                 if (event) this.clearValidations(event);
                         },
@@ -281,29 +279,45 @@
 
                         },
 
-                        insertAtCursor: function (myField, myValue) {
+                        insertAtCursor: function (txtarea, myValue) {
+                                // var scrollPos = txtarea.scrollTop
                                 //IE support
                                 if (document.selection) {
-                                        myField.focus();
+                                        txtarea.focus();
                                         sel = document.selection.createRange();
                                         sel.text = myValue;
                                 }
                                 //MOZILLA and others
-                                else if (myField.selectionStart || myField.selectionStart == '0') {
-                                        //console.log(myField.selectionStart + ' and ' + myField.selectionEnd)
-                                        var startPos = myField.selectionStart;
-                                        var endPos = myField.selectionEnd;
-                                        // myField.value = myField.value.substring(0, startPos)
+                                else if (txtarea.selectionStart || txtarea.selectionStart == '0') {
+                                        //console.log(txtarea.selectionStart + ' and ' + txtarea.selectionEnd)
+                                        var startPos = txtarea.selectionStart;
+                                        var endPos = txtarea.selectionEnd;
+                                        
+                                        // txtarea.value = txtarea.value.substring(0, startPos)
                                         // + myValue
-                                        // + myField.value.substring(endPos, myField.value.length);
+                                        // + txtarea.value.substring(endPos, txtarea.value.length);
                                         this.body = this.body.substring(0, startPos)
                                         + myValue
                                         + this.body.substring(endPos, this.body.length);
-                                        myField.selectionStart = startPos + myValue.length;
-                                        myField.selectionEnd = startPos + myValue.length;
+                                        // txtarea.selectionStart = endPos + myValue.length;
+                                        // txtarea.selectionEnd = endPos + myValue.length;
+                                        
+                                        // console.log('Before focus selections: (' + txtarea.selectionStart + ', ' + txtarea.selectionEnd + ')');
+                                        txtarea.focus();
+                                        // txtarea.selectionEnd += myValue.length;
+                                        // console.log('After focus new selection end: (' + txtarea.selectionStart + ', ' + txtarea.selectionEnd + ')');
+                                        // this.setInputSelection(txtarea, startPos, endPos)
+                                        // document.getElementById('ta_body').selectionStart = 0
+                                        // document.getElementById('ta_body').selectionEnd = 0
+                                        // document.getElementById('ta_body').selectionStart = 0
+                                        // document.getElementById('ta_body').focus()
+                                        txtarea.setSelectionRange(startPos, endPos + endPos.length)
                                 } else {
-                                        myField.value += myValue;
+                                        txtarea.value += myValue;
                                 }
+
+                                // txtarea.scrollTop = scrollPos;
+                                
                         },
 
                         createDataTree:  function (dataset) {

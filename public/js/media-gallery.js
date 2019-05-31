@@ -274,8 +274,6 @@ __webpack_require__.r(__webpack_exports__);
       var captionChosen = prompt('Enter an caption for this image', caption); //TODO we should remove any double quote in captionChosen
 
       this.selectedPhoto['caption'] = captionChosen;
-      console.log('emit: ');
-      console.log(this.selectedPhoto);
       this.$emit('selected', this.selectedPhoto);
     },
     uploadFiles: function uploadFiles() {

@@ -184,11 +184,10 @@ export default {
                                 .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
                                 .join(' ');
 
-                        var captionChosen = prompt('Enter an caption for this image', caption);
+                        var captionChosen = prompt('Enter an caption for this image', caption)
                         //TODO we should remove any double quote in captionChosen
-                        this.selectedPhoto['caption'] = captionChosen;
-                        console.log('emit: ');
-                        console.log(this.selectedPhoto);
+                        this.selectedPhoto['caption'] = captionChosen
+
                         this.$emit('selected', this.selectedPhoto)
                 },
 

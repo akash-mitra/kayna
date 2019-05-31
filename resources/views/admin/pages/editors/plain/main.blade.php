@@ -46,7 +46,7 @@
 
         <div class="w-full py-2">
                 <span class="uppercase tracking-wide text-grey-dark text-sm">Content</span>
-                <textarea name="body" id="ta_body" v-model="body" placeholder="Tell your story..." rows="20" @input="handleBodyInput" class="w-full resize-y p-4 text-sm bg-blue-lightest rounded my-4 border border-blue-lighter font-mono"></textarea>
+                <textarea name="body" id="ta_body" v-model="body" placeholder="Tell your story..." rows="20" @input="handleBodyInput" class="w-full h-64 resize-y--unuse p-4 text-sm bg-blue-lightest rounded my-4 border border-blue-lighter font-mono"></textarea>
 
         </div>
 </div>
