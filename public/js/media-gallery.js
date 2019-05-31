@@ -226,15 +226,15 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     deletable: {
       type: Boolean,
-      default: false
+      "default": false
     },
     choosable: {
       type: Boolean,
-      default: false
+      "default": false
     },
     lazyload: {
       type: Boolean,
-      default: true
+      "default": true
     }
   },
   data: function data() {
@@ -274,6 +274,7 @@ __webpack_require__.r(__webpack_exports__);
       var captionChosen = prompt('Enter an caption for this image', caption); //TODO we should remove any double quote in captionChosen
 
       this.selectedPhoto['caption'] = captionChosen;
+      console.log('emit: ' + this.selectedPhoto);
       this.$emit('selected', this.selectedPhoto);
     },
     uploadFiles: function uploadFiles() {
@@ -344,7 +345,7 @@ __webpack_require__.r(__webpack_exports__);
         p.message = null;
         p.searchResult = response.data.total + ' image(s)';
         if (typeof callback != 'undefined') callback.call();
-      }).catch(function (error) {
+      })["catch"](function (error) {
         p.message = 'Request failed with ' + error.response.status + ': ' + error.response.statusText;
 
         if (error.response.status == '403') {
@@ -356,7 +357,7 @@ __webpack_require__.r(__webpack_exports__);
     destroy: function destroy(id) {
       if (confirm("Are you sure that you want to delete this? \nThis will permanently delete this media. This action is unrecoverable.")) {
         var p = this;
-        axios.delete('/admin/media/' + id).then(function (response) {
+        axios["delete"]('/admin/media/' + id).then(function (response) {
           flash({
             message: response.data.flash.message
           });

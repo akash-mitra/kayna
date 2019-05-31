@@ -153,6 +153,7 @@
                         },
 
                         insertMedia: function (media) {
+                                console.log('received: ' + media)
                                 this.show_gallery = false
                                 const ta = document.getElementById('ta_body')
                                 let url = '\n<img src="' + media.url + '" alt="' + (media.caption || '') +  '" />\n'
