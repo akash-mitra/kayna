@@ -36,7 +36,7 @@
         <header class="container mx-auto flex items-center px-10">
             <div class="w-full py-2">
                 <a href="/" class="flex items-center no-underline text-indigo-dark align-middle">
-                    <img src="https://flower.app/storage/media/ho8Rkag7bXZd4nt0PNOqgPuLDwLxo3cnya5sgf80.png" alt="Site Logo" class="max-w-full "/>
+                    <img src="/storage/media/ho8Rkag7bXZd4nt0PNOqgPuLDwLxo3cnya5sgf80.png" alt="Site Logo" class="max-w-full "/>
                     <span class="ml-4 text-4xl font-semibold">{{ $common->sitename }}</span>
                 </a>
             </div>

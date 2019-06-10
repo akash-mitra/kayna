@@ -7,7 +7,7 @@
             Categories
         </span>
     </h1>
-
+    
     <h3 class="px-2 text-sm font-light text-indigo-darker">
         Create or Edit Category
     </h3>
@@ -26,45 +26,46 @@
         <p v-if="needle.length>0" v-text="filter_categories.length + ' item(s)'" class="hidden sm:flex bg-yellow-lighter text-right text-xs text-orange cursor-pointer whitespace-no-wrap px-2 py-1 mr-2 rounded-lg" @click="needle=''"></p>
     </div>
 
-    <a href="{{ route('categories.create') }}" id="btnNew" class="block text-center mt-6 sm:mt-0 border border-teal px-3 py-3 rounded text-sm bg-teal no-underline hover:bg-orange hover:border-orange text-white shadow whitespace-no-wrap">
-        New Category
+    <a href="{{ route('categories.create') }}" id="btnNew" class="flex justify-center items-center mt-4 sm:mt-0 px-4 py-2 rounded text-sm bg-indigo no-underline hover:bg-indigo-dark text-white shadow whitespace-no-wrap">
+        Create Category
     </a>
 
 </div>
 
 <div class="w-full px-6">
-    <table class="w-full bg-white shadow rounded text-left table-collapse">
-        <thead class="uppercase text-xs font-semibold text-grey-darker border-b-2">
+    <table class="w-full mt-2 bg-white shadow rounded text-left table-collapse">
+        <thead class="text-xs font-semibold text-grey-darker border-b-2">
             <tr>
-                <th class="p-4">Name</th>
+                <th class="py-4 px-6">Name</th>
                 <th class="hidden sm:table-cell p-4">Posts</th>
                 <th class="hidden sm:table-cell p-4">Created</th>
-                <th class="p-4">Actions</th>
+                <th class="p-4"></th>
             </tr>
         </thead>
         <tbody class="align-baseline">
-            <tr v-for="category in filter_categories" class="border-b">
+            <tr v-for="category in filter_categories" class="border-b hover:bg-grey-lightest">
 
-                <td class="px-6 py-4 text-xs max-w-xs">
+                <td class="px-6 py-2 text-xs max-w-xs align-middle">
 
                     <span class="py-1 text-grey-dark text-xs" v-text="typeof category.parent.name === 'undefined'? '': category.parent.name + ' /'"></span>
                     <a v-bind:href="editCategory(category.id)" class="no-underline text-sm font-medium text-blue">
                         <span v-text="category.name"></span>
                     </a>
-                    <p class="text-grey-dark  my-2 text-sm font-sans truncate" v-text="category.description"></p>
+                    <p v-if="category.description" class="text-grey-dark  my-2 text-sm font-sans truncate" v-text="category.description"></p>
 
                 </td>
-                <td class="hidden sm:table-cell px-4 py-2 text-xs whitespace-no-wrap">
+                <td class="hidden sm:table-cell px-4 py-2 text-xs whitespace-no-wrap align-middle">
                     <a :href="'/admin/pages?q=' + encodeURI(category.name)" v-text="category.pages.length" class="no-underline text-blue bg-indigo-lightest flex items-center justify-center h-6 w-6 rounded-full hover:bg-indigo-light hover:text-white"></a>
                 </td>
-                <td class="hidden sm:table-cell px-4 py-2 font-mono text-xs text-purple-dark whitespace-no-wrap" v-text="category.created_ago">
+                <td class="hidden sm:table-cell px-4 py-2 font-mono text-xs text-purple-dark whitespace-no-wrap align-middle" v-text="category.created_ago">
                 </td>
-                <td class="px-4 py-2 font-mono text-sm whitespace-no-wrap">
+                <td class="px-4 py-2 font-mono text-sm whitespace-no-wrap align-middle text-right">
                     <a v-bind:href="category.url" class="mb-1 cursor-pointer text-blue no-underline">
-                        <svg viewBox="0 0 20 20" class="fill-current h-3 w-3 text-blue-light" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                            <path d="M12.2928932,3.70710678 L0,16 L0,20 L4,20 L16.2928932,7.70710678 L12.2928932,3.70710678 Z M13.7071068,2.29289322 L16,0 L20,4 L17.7071068,6.29289322 L13.7071068,2.29289322 Z" id="Combined-Shape"></path>
-                        </svg>
-                        View
+                        <svg viewBox="0 0 20 20" class="fill-current h-6 w-6 text-grey" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+							<g id="icon-shape">
+								<polygon id="Combined-Shape" points="12.9497475 10.7071068 13.6568542 10 8 4.34314575 6.58578644 5.75735931 10.8284271 10 6.58578644 14.2426407 8 15.6568542 12.9497475 10.7071068"></polygon>
+							</g>
+						</svg>
                     </a>
                 </td>
             </tr>

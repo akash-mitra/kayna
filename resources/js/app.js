@@ -51,3 +51,4 @@ requireComponent.keys().forEach(fileName => {
 /**
  * Some additional handy functions
  */
+require('./util.js');

@@ -15,13 +15,22 @@ Route::post('/api/pages/status',        'PageController@apiSetStatus')->name('ap
 // --------------------------------------------------------------------------------------------------------------------------
 
 
+
+// --------------------------------------------------------------------------------------------------------------------------
 // All Categories related general and admin routes
-Route::get('/categories/{category}/{slug?}', 'CategoryController@show');
-Route::get('/api/categories', 'CategoryController@apiIndex')->name('api.categories.index');
-Route::get('/api/categories/{category}', 'CategoryController@apiGet')->name('api.categories.get');
-Route::group(['prefix' => 'admin'], function () {
-    Route::resource('categories', 'CategoryController')->except(['show'])->middleware('admin');
-});
+// --------------------------------------------------------------------------------------------------------------------------
+
+Route::get('/admin/categories',                 'CategoryController@index')->name('categories.index')->middleware('author');
+Route::post('/admin/categories',                'CategoryController@store')->name('categories.store')->middleware('author');
+Route::get('/categories/{category}/{slug?}',    'CategoryController@show')->name('categories.get')->middleware('web');
+// Route::get('/pages/{page}/{slug?}',     'CategoryController@show')->name('categories.get')->middleware('web');
+Route::get('/admin/categories/create',          'CategoryController@create')->name('categories.create')->middleware('admin');
+Route::patch('/admin/categories/{category}',    'CategoryController@update')->name('categories.update')->middleware('admin');
+Route::get('/admin/categories/{category}/edit', 'CategoryController@edit')->name('categories.edit')->middleware('admin');
+Route::delete('/admin/categories/{category}',   'CategoryController@destroy')->name('categories.destroy')->middleware('admin');
+Route::get('/api/categories',                   'CategoryController@apiGetAll')->name('api.categories.index')->middleware('web');
+Route::get('/api/categories/{category}',        'CategoryController@apiGet')->name('api.categories.get')->middleware('web');
+// --------------------------------------------------------------------------------------------------------------------------
 
 // All Tags related general and admin routes
 Route::get('/tags/{tag}/{slug?}', 'TagController@show');

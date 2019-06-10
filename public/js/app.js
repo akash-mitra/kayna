@@ -19258,11 +19258,13 @@ requireComponent.keys().forEach(function (fileName) {
   Vue.component(componentName, // Look for the component options on `.default`, which will
   // exist if the component was exported with `export default`,
   // otherwise fall back to module's root.
-  componentConfig.default || componentConfig);
+  componentConfig["default"] || componentConfig);
 });
 /**
  * Some additional handy functions
  */
+
+__webpack_require__(/*! ./util.js */ "./resources/js/util.js");
 
 /***/ }),
 
@@ -19570,6 +19572,140 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FlipSwitch_vue_vue_type_template_id_515ebba8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+
+/***/ }),
+
+/***/ "./resources/js/util.js":
+/*!******************************!*\
+  !*** ./resources/js/util.js ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+(function (util, undefined) {
+  //Private Property
+  var isHot = true; // Public properties
+
+  util.token = document.head.querySelector('meta[name="csrf-token"]'); //Public Methods
+
+  /**
+   * ---------------------------------------------------------------
+   * Creates a form with the given data and submits the form to the
+   * provided URL. If no data is provided, empty form is submitted.
+   * ---------------------------------------------------------------*/
+
+  util.form_post = function (url, data) {
+    if (typeof url === 'undefined') {
+      return;
+    }
+
+    if (typeof data === 'undefined') {
+      data = {};
+    }
+
+    var form = document.createElement('form');
+    form.method = 'post';
+    form.action = url;
+
+    for (var key in data) {
+      if (data.hasOwnProperty(key)) {
+        var hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = key;
+        hiddenField.value = data[key];
+        form.appendChild(hiddenField);
+      }
+    }
+
+    var csrfField = document.createElement('input');
+    csrfField.type = 'hidden';
+    csrfField.name = '_token';
+    csrfField.value = util.token.content;
+    form.appendChild(csrfField);
+    document.body.appendChild(form);
+    form.submit();
+  };
+  /**
+   * ---------------------------------------------------------------
+   * Makes ajax request to the URL with or without the given data
+   * ---------------------------------------------------------------*/
+
+
+  util.ajax = function (type, url, data, success_handler, client_error_handler, server_error_handler, other_error_handler) {
+    if (typeof type === 'undefined') type = 'post';
+    if (typeof url === 'undefined') return;
+    if (typeof data === 'undefined') data = {};
+    if (typeof success_handler === 'undefined') success_handler = function success_handler(response_data) {
+      alert('Operation completed successfully');
+      console.log(response_data);
+    };
+
+    var general_error_handler = function general_error_handler(errorCode, errorMessage) {
+      alert(errorCode + ': ' + errorMessage);
+      console.log(errorCode + ': ' + errorMessage);
+    };
+
+    if (typeof client_error_handler === 'undefined') client_error_handler = general_error_handler;
+    if (typeof server_error_handler === 'undefined') server_error_handler = general_error_handler;
+    if (typeof other_error_handler === 'undefined') other_error_handler = general_error_handler;
+    var handler;
+
+    switch (type) {
+      case 'get':
+        handler = axios.get(url);
+        break;
+
+      case 'post':
+        handler = axios.post(url, data);
+        break;
+
+      case 'patch':
+        handler = axios.patch(url, data);
+        break;
+
+      case 'delete':
+        handler = axios["delete"](url);
+    }
+
+    handler.then(function (response) {
+      console.log('success');
+      success_handler(response.data);
+    });
+    handler["catch"](function (error) {
+      // Error
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        if (error.response.status >= 400 && error.response.status < 500) {
+          client_error_handler(error.response.status, error.response.data);
+        }
+
+        if (error.response.status >= 500) {
+          server_error_handler(error.response.status, error.response.data);
+        } // console.log(error.response.headers);
+
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser 
+        other_error_handler('204', 'The request was made but no response was received. Please try again later.');
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        other_error_handler('000', 'Something wrong happened in setting up the request.');
+        console.log('Error', error.message);
+      } // console.log(error.config);
+
+    });
+  }; // axios.patch('/admin/categories/' + this.id, {
+  //         'name': this.name, 'description': this.description, 'parent_id': this.parent_id
+  // }).then((response) => {
+  //         flash({ message: response.data.flash.message })
+  // })
+  // .catch
+  //Private Method
+  // function addItem(item) {}
+
+})(window.util = window.util || {});
 
 /***/ }),
 
