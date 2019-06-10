@@ -6,6 +6,7 @@ use Validator;
 use App\Category;
 use Illuminate\Http\Request;
 
+
 class CategoryController extends Controller
 {
 
@@ -133,24 +134,18 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        
         $noSubcategories = $category->subcategories()->count();
-        if ($noSubcategories > 0 ) {
-            return response([
-                "status" => "failed",
-                "flash" => [
-                    "message" => "Can not delete as this category has " . $noSubcategories . " sub-categories under it.",
-                    "type" => "warning"
-                ],
-            ], 422);
+
+        if ($noSubcategories > 0) {
+            session()->flash('flash', 'Can not delete as this category has sub-categories under it.');   
+             
+        } else {
+            $category->delete();
+            session()->flash('flash', 'Category [' . $category->name . '] deleted.');
         }
-
-        $category->delete();
-
-        return [
-            "status" => "success",
-            "flash" => ["message" => "Category \"" . $category->name . "\" deleted"],
-            "category_id" => $category->id
-        ];
+        
+        return redirect()->route('categories.index');
     }
 
 

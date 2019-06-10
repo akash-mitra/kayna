@@ -19594,7 +19594,7 @@ __webpack_require__.r(__webpack_exports__);
    * provided URL. If no data is provided, empty form is submitted.
    * ---------------------------------------------------------------*/
 
-  util.form_post = function (url, data) {
+  util.submit = function (url, data, method) {
     if (typeof url === 'undefined') {
       return;
     }
@@ -19603,8 +19603,12 @@ __webpack_require__.r(__webpack_exports__);
       data = {};
     }
 
+    if (typeof method === 'undefined') {
+      method = 'post';
+    }
+
     var form = document.createElement('form');
-    form.method = 'post';
+    form.method = method.toLowerCase() === 'get' ? 'GET' : 'POST';
     form.action = url;
 
     for (var key in data) {
@@ -19622,6 +19626,15 @@ __webpack_require__.r(__webpack_exports__);
     csrfField.name = '_token';
     csrfField.value = util.token.content;
     form.appendChild(csrfField);
+
+    if (method.toLowerCase() === 'delete' || method.toLowerCase() === 'patch' || method.toLowerCase() === 'put') {
+      var methodField = document.createElement('input');
+      methodField.type = 'hidden';
+      methodField.name = '_method';
+      methodField.value = method.toUpperCase();
+      form.appendChild(methodField);
+    }
+
     document.body.appendChild(form);
     form.submit();
   };
@@ -19640,9 +19653,10 @@ __webpack_require__.r(__webpack_exports__);
       console.log(response_data);
     };
 
-    var general_error_handler = function general_error_handler(errorCode, errorMessage) {
-      alert(errorCode + ': ' + errorMessage);
-      console.log(errorCode + ': ' + errorMessage);
+    var general_error_handler = function general_error_handler(statusCode, data) {
+      var message = data.hasOwnProperty('message') ? data.message : 'There is an error while trying to reach server.';
+      alert(statusCode + ': ' + message);
+      console.log(data);
     };
 
     if (typeof client_error_handler === 'undefined') client_error_handler = general_error_handler;

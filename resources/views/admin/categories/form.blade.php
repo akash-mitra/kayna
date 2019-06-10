@@ -38,6 +38,7 @@
                 
                 <div v-cloak v-if="message != null" class="bg-red-lightest text-red-dark p-3 border border-red rounded mb-4">
                         <p v-text="message"></p>
+
                 </div>
                         
                 <div class="flex flex-wrap mb-6">
@@ -120,14 +121,15 @@
                         'parent_id': '{{data_get($category, "parent_id")}}',
                         'categories': @json($categories),
                         'flat': [],
-                        'errors': {},
-                        'message': null
+                        'errors': {!! $errors->toJson() !!},
+                        @if($errors->any())
+                        'message':  'The given data was invalid.' 
+                        @else 
+                        'message': null 
+                        @endif
                 }
                 new Vue({ el: 'main', 
                         data: data,
-                        computed: {
-                                
-                        },
                         created: function () {
 
                                 // we are using this to build a flattened hierarchy from the
@@ -206,12 +208,13 @@
 
                                 createAtServer: function () {
                                         
-                                        util.form_post('{{ route("categories.store") }}', {
+                                        util.submit('{{ route("categories.store") }}', {
                                                 'name': this.name, 'description': this.description, 'parent_id': this.parent_id
                                         });
                                 },
 
                                 updateAtServer: function () {
+                                        let p = this
                                         util.ajax(
                                                 'patch', 
                                                 '/admin/categories/' + this.id,
@@ -222,58 +225,34 @@
                                                 },
                                                 function (data) {
                                                         flash({message: data.flash.message}) 
+                                                },
+                                                function (code, data) {
+                                                        p.message = data.message
+                                                        p.errors = data.hasOwnProperty('errors')? data.errors : {}
+                                                },
+                                                function (code, data) {
+                                                        p.message = data.message
                                                 }
                                         );
-                                        // p = this
-                                        // axios.patch( '/admin/categories/' + this.id, {
-                                        //         'name': this.name, 'description': this.description, 'parent_id': this.parent_id
-                                        // }).then ((response) => { 
-                                        //         flash({message: response.data.flash.message}) 
-                                        // })
-                                        // .catch((error) => {
-                                        //         // Error
-                                        //         if (error.response) {
-                                        //                 // The request was made and the server responded with a status code
-                                        //                 // that falls out of the range of 2xx
-                                                        
-                                        //                 if(error.response.status === 422) {
-                                        //                         p.message = error.response.data.message
-                                        //                         p.errors = error.response.data.errors
-                                        //                 }
-                                        //                 if(error.response.status >= 500) {
-                                        //                         p.message = 'Some error occurred at server side. Try again later'
-                                        //                 }
-                                        //                 // console.log(error.response.headers);
-                                        //         } else if (error.request) {
-                                        //                 // The request was made but no response was received
-                                        //                 // `error.request` is an instance of XMLHttpRequest in the browser 
-                                        //                 p.message = 'The request was made but no response was received. Please try again later.'
-                                        //                 console.log(error.request);
-                                        //         } else {
-                                        //                 // Something happened in setting up the request that triggered an Error
-                                        //                 p.message = 'Something wrong happened in setting up the request.'
-                                        //                 console.log('Error', error.message);
-                                        //         }
-                                        //         console.log(error.config);
-                                        // })
                                 },
 
 
                                 destroy: function () {
                                         if(confirm('Are you sure to delete this category?')) {
-                                                axios.delete('/admin/categories/' + this.id)
-                                                .then (
-                                                        (response) => { 
-                                                                flash(response.data.flash.message) 
-                                                                location.href = "{{ route('categories.index') }}"
-                                                        },
-                                                        (error)    => { 
-                                                                flash({
-                                                                        message: error.response.data.flash.message, 
-                                                                        type: error.response.data.flash.type
-                                                                }) 
-                                                        },
-                                                )
+                                                util.submit('/admin/categories/' + this.id, {}, 'delete');
+                                                // axios.delete('/admin/categories/' + this.id)
+                                                // .then (
+                                                //         (response) => { 
+                                                //                 flash(response.data.flash.message) 
+                                                //                 location.href = "{{ route('categories.index') }}"
+                                                //         },
+                                                //         (error)    => { 
+                                                //                 flash({
+                                                //                         message: error.response.data.flash.message, 
+                                                //                         type: error.response.data.flash.type
+                                                //                 }) 
+                                                //         },
+                                                // )
                                         }
                                 },
 

@@ -11,15 +11,18 @@
          * Creates a form with the given data and submits the form to the
          * provided URL. If no data is provided, empty form is submitted.
          * ---------------------------------------------------------------*/
-        util.form_post = function (url, data) {
+        util.submit = function (url, data, method) {
                 if (typeof url === 'undefined') {
                         return;
                 }
                 if (typeof data === 'undefined') {
                         data = {}
                 }
+                if (typeof method === 'undefined') {
+                        method = 'post'
+                }
                 const form = document.createElement('form')
-                form.method = 'post'
+                form.method = (method.toLowerCase() === 'get'? 'GET' : 'POST')
                 form.action = url
                 for (const key in data) {
                         if (data.hasOwnProperty(key)) {
@@ -35,6 +38,15 @@
                 csrfField.name = '_token';
                 csrfField.value = util.token.content;
                 form.appendChild(csrfField)
+
+                if (method.toLowerCase() === 'delete' || method.toLowerCase() === 'patch' || method.toLowerCase() === 'put') {
+                        const methodField = document.createElement('input');
+                        methodField.type = 'hidden';
+                        methodField.name = '_method';
+                        methodField.value = method.toUpperCase();
+                        form.appendChild(methodField)
+                }
+
                 document.body.appendChild(form)
                 form.submit()
         }
@@ -58,9 +70,10 @@
                         alert('Operation completed successfully');
                         console.log(response_data)
                 };
-                const general_error_handler = function (errorCode, errorMessage) {
-                        alert(errorCode + ': ' + errorMessage);
-                        console.log(errorCode + ': ' + errorMessage)
+                const general_error_handler = function (statusCode, data) {
+                        let message = (data.hasOwnProperty('message')? data.message : 'There is an error while trying to reach server.')
+                        alert(statusCode + ': ' + message);
+                        console.log(data)
                 }
                 if (typeof client_error_handler === 'undefined') client_error_handler = general_error_handler;
                 if (typeof server_error_handler === 'undefined') server_error_handler = general_error_handler;
