@@ -59,6 +59,8 @@ class CategoryController extends Controller
         return redirect()->route('categories.index');
     }
 
+
+
     /**
      * Display the specified resource.
      *
@@ -80,6 +82,8 @@ class CategoryController extends Controller
         ]);
     }
 
+
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -93,6 +97,7 @@ class CategoryController extends Controller
 
         return view('admin.categories.form')->with('category', $category)->with('categories', $categories);
     }
+
 
 
     /**
@@ -126,6 +131,8 @@ class CategoryController extends Controller
         ];
     }
 
+
+
     /**
      * Remove the specified resource from storage.
      *
@@ -149,12 +156,14 @@ class CategoryController extends Controller
     }
 
 
+
     public function apiGetAll()
     {
         return Category::paginate(10);
     }
 
 
+    
     public function apiGet(Category $category)
     {
         return $category;

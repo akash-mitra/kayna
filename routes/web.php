@@ -21,9 +21,8 @@ Route::post('/api/pages/status',        'PageController@apiSetStatus')->name('ap
 // --------------------------------------------------------------------------------------------------------------------------
 
 Route::get('/admin/categories',                 'CategoryController@index')->name('categories.index')->middleware('author');
-Route::post('/admin/categories',                'CategoryController@store')->name('categories.store')->middleware('author');
+Route::post('/admin/categories',                'CategoryController@store')->name('categories.store')->middleware('admin');
 Route::get('/categories/{category}/{slug?}',    'CategoryController@show')->name('categories.get')->middleware('web');
-// Route::get('/pages/{page}/{slug?}',     'CategoryController@show')->name('categories.get')->middleware('web');
 Route::get('/admin/categories/create',          'CategoryController@create')->name('categories.create')->middleware('admin');
 Route::patch('/admin/categories/{category}',    'CategoryController@update')->name('categories.update')->middleware('admin');
 Route::get('/admin/categories/{category}/edit', 'CategoryController@edit')->name('categories.edit')->middleware('admin');

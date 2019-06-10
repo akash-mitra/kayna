@@ -16,9 +16,9 @@ class CategoryTest extends TestCaseSetup
         protected $pCatNoChild, $pCatWithChild, $midCat, $leafCat, $pageInLeafCat;
 
 
-        /**
-         *-----------------------------------------------------------
-        * Create some initial categories in the database 
+        /*
+        *-----------------------------------------------------------
+        * Create some initial categories data in the database 
         *-----------------------------------------------------------
         */
         protected function setUp(): void
@@ -44,8 +44,8 @@ class CategoryTest extends TestCaseSetup
 
 
 
-        /**
-         *-----------------------------------------------------------
+        /*
+        *-----------------------------------------------------------
         * Tests related to categoryController@index
         *-----------------------------------------------------------
         */
@@ -64,12 +64,27 @@ class CategoryTest extends TestCaseSetup
                 return $this->categories_retrieved_by($this->user_general, false);
         }
 
-        /**
-         *-----------------------------------------------------------
+
+
+        /*
+        * ------------------------------------------------------------
+        * Tests for CategoryController@get
+        * ------------------------------------------------------------
+        */
+        public function test_anyone_can_view_pages_inside_category()
+        {
+               return $this->get(route('categories.get', $this->leafCat->id))
+                        ->assertOk()
+                        ->assertSee($this->pageInLeafCat->title);
+        }
+        
+
+
+        /*
+        *-----------------------------------------------------------
         * Tests related to categoryController@create
         *-----------------------------------------------------------
         */
-
         public function test_admin_can_view_category_create_page()
         {
                 return $this->category_create_page_access_by($this->user_admin, true);
@@ -85,13 +100,137 @@ class CategoryTest extends TestCaseSetup
                 return $this->category_create_page_access_by($this->user_general, false);
         }
 
-        /**
+
+        /*
+        *-----------------------------------------------------------
+        * Tests related to categoryController@edit
+        *-----------------------------------------------------------
+        */
+        public function test_admin_can_view_category_edit_page()
+        {
+                return $this->category_edit_page_access_by($this->user_admin, true);
+        }
+
+        public function test_author_can_not_view_category_edit_page()
+        {
+                return $this->category_edit_page_access_by($this->user_author, false);
+        }
+
+        public function test_general_user_can_not_view_category_edit_page()
+        {
+                return $this->category_edit_page_access_by($this->user_general, false);
+        }
+
+
+        /*
+        *-----------------------------------------------------------
+        * Tests related to categoryController@store
+        *-----------------------------------------------------------
+        */
+        public function test_admin_can_store_new_category()
+        {
+                return $this->category_can_be_stored_by($this->user_admin, true);
+        }
+
+        public function test_author_can_not_store_new_category()
+        {
+                return $this->category_can_be_stored_by($this->user_author, false);
+        }
+
+        public function test_general_user_can_not_store_new_category()
+        {
+                return $this->category_can_be_stored_by($this->user_general, false);
+        }
+
+
+
+        /*
+        *-----------------------------------------------------------
+        * Tests related to categoryController@update
+        *-----------------------------------------------------------
+        */
+        public function test_admin_can_update_existing_category()
+        {
+                return $this->category_can_be_updated_by($this->user_admin, true);
+        }
+
+        public function test_author_can_not_update_existing_category()
+        {
+                return $this->category_can_be_updated_by($this->user_author, false);
+        }
+
+        public function test_general_user_can_not_update_existing_category()
+        {
+                return $this->category_can_be_updated_by($this->user_general, false);
+        }
+
+
+
+        /*
+        *-----------------------------------------------------------
+        * Tests related to categoryController@destroy
+        *-----------------------------------------------------------
+        */
+        public function test_admin_can_delete_existing_category()
+        {
+                $this->category_with_no_child_can_be_deleted_by($this->user_admin, true);
+                $this->category_with_child_can_not_be_deleted_by($this->user_admin);
+        }
+
+        public function test_author_can_not_delete_existing_category()
+        {
+                return $this->category_with_no_child_can_be_deleted_by($this->user_author, false);
+        }
+
+        public function test_general_user_can_not_delete_existing_category()
+        {
+                return $this->category_with_no_child_can_be_deleted_by($this->user_general, false);
+        }
+        
+
+        /*
+        * ------------------------------------------------------------
+        * Tests for Validation checks
+        * ------------------------------------------------------------
+        */
+        public function test_category_can_not_be_created_with_empty_name()
+        {
+               $category = [
+                        "name" => '',
+                        "description" => "Category description",
+                        "parent_id" => null
+                ];
+
+                $this->actingAs($this->user_admin)
+                        ->post(route('categories.store'), $category)
+                        ->assertSessionHasErrors('name');
+        }
+
+
+        public function test_category_can_not_be_updated_with_empty_name()
+        {
+                $this->actingAs($this->user_admin)
+                        ->patch(route('categories.update', $this->midCat->id), [
+                                'name' => ''
+                        ])->assertSessionHasErrors('name');
+        }
+
+        public function test_category_can_not_be_updated_with_parent_id_equal_to_self()
+        {
+                $this->actingAs($this->user_admin)
+                        ->patch(route('categories.update', $this->midCat->id), [
+                                'parent_id' => $this->midCat->id
+                        ])->assertSessionHasErrors('parent_id');
+        }
+        
+
+        /*
         *-----------------------------------------------------------
         * Utility methods
         *-----------------------------------------------------------*/
-        protected function categories_retrieved_by ($user, $status = true)
+        protected function categories_retrieved_by ($user, $positiveTest = true)
         {
-                if ($status) {
+                if ($positiveTest) {
                         return $this
                                 ->actingAs($user)
                                 ->get(route('categories.index'))
@@ -109,9 +248,9 @@ class CategoryTest extends TestCaseSetup
                 }
         }
 
-        protected function category_create_page_access_by ($user, $status = true)
+        protected function category_create_page_access_by ($user, $positiveTest = true)
         {
-                if ($status) {
+                if ($positiveTest) {
                         return $this
                                 ->actingAs($user)
                                 ->get(route('categories.create'))
@@ -125,140 +264,110 @@ class CategoryTest extends TestCaseSetup
                                 ->assertForbidden();
                 }
         }
-    }
+
+        protected function category_edit_page_access_by ($user, $positiveTest = true)
+        {
+                if ($positiveTest) {
+                        return $this
+                                ->actingAs($user)
+                                ->get(route('categories.edit', $this->midCat->id))
+                                ->assertOk()
+                                ->assertViewHas('category')
+                                ->assertViewHas('categories');
+                } else {
+                        return $this
+                                ->actingAs($user)
+                                ->get(route('categories.edit', $this->midCat->id))
+                                ->assertForbidden();
+                }
+        }
+
+
+        protected function category_can_be_stored_by ($user, $positiveTest = true)
+        {
+                $category = [
+                        "name" => mt_rand(10000, 99999),
+                        "description" => "Category description",
+                        "parent_id" => null
+                ];
+
+                if ($positiveTest) {
+                        $this->actingAs($user)
+                                ->post(route('categories.store'), $category)
+                                ->assertRedirect();
+
+                        $this->assertDatabaseHas('categories', [
+                                'name' => $category['name']
+                        ]);
+                                
+                } else {
+                        $this->actingAs($user)
+                                ->post(route('categories.store'), $category);
+                                
+                        $this->assertDatabaseMissing('categories', [
+                                'name' => $category['name']
+                        ]);
+                }
+        }
 
 
 
-    /**
-     *-----------------------------------------------------------
-     * Tests related to categoryController@store
-     *-----------------------------------------------------------*/
-//     public function test_a_category_can_be_created_by_admin()
-//     {
-//         $this->a_category_can_be_created_by($this->user_admin);
-//     }
+        protected function category_can_be_updated_by ($user, $positiveTest = true)
+        {
+                $newName = mt_rand(10000, 99999);
 
-//     public function test_a_category_can_be_created_by_author()
-//     {
-//         $this->a_category_can_be_created_by($this->user_author);
-//     }
+                if ($positiveTest) {
+                        $this->actingAs($user)
+                                ->patch(route('categories.update', $this->midCat->id), [
+                                        "name" => $newName
+                                ]);
 
-//     public function test_a_category_can_not_be_created_by_general()
-//     {
-//         $this->a_category_can_not_be_created_by($this->user_general);
-//     }
-
-
-    /**
-     *-----------------------------------------------------------
-     * Tests related to categoryController@update
-     *-----------------------------------------------------------*/
-
-//     public function test_a_category_can_be_updated_by_admin()
-//     {
-//         $this->a_category_can_be_updated_by($this->categories[0], $this->user_admin);
-//     }
-
-//     public function test_a_category_can_be_updated_by_author()
-//     {
-//         $this->a_category_can_be_updated_by($this->categories[1], $this->user_author);
-//     }
-
-//     public function test_a_category_can_not_be_updated_by_general()
-//     {
-//         $this->a_category_can_not_be_updated_by($this->categories[2], $this->user_general);
-//     }
+                        $this->assertDatabaseHas('categories', [
+                                'id' => $this->midCat->id,
+                                'name' => $newName
+                        ]);
+                                
+                } else {
+                        $this->actingAs($user)
+                                ->patch(route('categories.update', $this->midCat->id), [
+                                        "name" => $newName
+                                ]);
+                                
+                        $this->assertDatabaseMissing('categories', [
+                                'id' => $this->midCat->id,
+                                'name' => $newName
+                        ]);
+                }
+        }
 
 
-
-    
-//     protected function a_category_can_be_created_by($user)
-//     {
-//         $category = factory(Category::class)->make();
-//         $content = factory(categoryContent::class)->make();
-
-//         $this->actingAs($user)
-//             ->post(route('categories.store'), [
-//                 'title' => $category->title,
-//                 'summary' => $category->summary,
-//                 'body' => $content->body
-//             ]);
-
-//         $this->assertDatabaseHas('categories', [
-//             'title' => $category->title,
-//             'summary' => $category->summary,
-//             'user_id' => $user->id
-//         ]);
-
-//         $this->assertDatabaseHas('category_contents', [
-//             'body' => $content->body
-//         ]);
-//     }
+        protected function category_with_no_child_can_be_deleted_by ($user, $positiveTest = true)
+        {
+                $this->category_can_be_deleted_by($user, $this->leafCat, $positiveTest);
+        }
 
 
-//     protected function a_category_can_not_be_created_by($user)
-//     {
-//         $category = factory(Category::class)->make();
-//         $content = factory(categoryContent::class)->make();
-
-//         $this->actingAs($user)
-//             ->post(route('categories.store'), [
-//                 'title' => $category->title,
-//                 'summary' => $category->summary,
-//                 'body' => $content->body
-//             ])
-//             ->assertForbidden();
-//     }
+        protected function category_with_child_can_not_be_deleted_by ($user)
+        {
+                $this->category_can_be_deleted_by($user, $this->pCatWithChild, false);
+        }
 
 
-//     protected function a_category_can_be_updated_by($category, $user)
-//     {
-//         $newcategory = factory(Category::class)->make([
-//             'category_id' => rand(0, 100000),
-//             'status' => 'Draft'
-//         ]);
-//         $newcategoryContent = factory(categoryContent::class)->make();
+        protected function category_can_be_deleted_by ($user, $category, $positiveTest = true)
+        {
+                if ($positiveTest) {
+                        $this->actingAs($user)->delete(route('categories.destroy', $category->id));
 
-//         $this->actingAs($user)
-//             ->patch(route('categories.update', $category->id), [
-//                 'id' => $category->id,
-
-//                 'category_id' => $newcategory->category_id,
-//                 'title' => $newcategory->title,
-//                 'summary' => $newcategory->summary,
-//                 'metakey' => $newcategory->metakey,
-//                 'metadesc' => $newcategory->metadesc,
-//                 'media_url' => $newcategory->media_url,
-//                 'status' => $newcategory->status,
-//                 'body' => $newcategoryContent->body
-//             ]);
-
-
-//         $this->assertDatabaseHas('categories', [
-//             'id' => $category->id,
-//             'category_id' => $newcategory->category_id,
-//             'title' => $newcategory->title,
-//             'summary' => $newcategory->summary,
-//             'metakey' => $newcategory->metakey,
-//             'metadesc' => $newcategory->metadesc,
-//             'media_url' => $newcategory->media_url,
-//             'status' => $newcategory->status,
-//         ]);
-
-//         $this->assertDatabaseHas('category_contents', [
-//             'category_id' => $category->id,
-//             'body' => $newcategoryContent->body
-//         ]);
-//     }
-
-
-//     protected function a_category_can_not_be_updated_by($category, $user)
-//     {
-//         $this->actingAs($user)
-//             ->patch(route('categories.update', $category->id), [
-//                 'id' => $category->id,
-//                 'title' => 'some new information'
-//             ])
-//             ->assertForbidden();
-//     }
-// }
+                        $this->assertDatabaseMissing('categories', [
+                                'id' => $category->id,
+                        ]);
+                                
+                } else {
+                        $this->actingAs($user)->delete(route('categories.destroy', $category->id));
+                                
+                        $this->assertDatabaseHas('categories', [
+                                'id' => $category->id,
+                        ]);
+                }
+        }
+}
