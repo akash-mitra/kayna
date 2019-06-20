@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Template extends Model
 {
-    protected $fillable = ['source_id', 'name', 'type', 'description', 'url', 'filename', 'parameters', 'positions', 'active'];
+    protected $fillable = ['source_id', 'name', 'description', 'url', 'resources', 'active'];
 
     // protected $append = ['used_in'];
 
@@ -20,33 +20,127 @@ class Template extends Model
     public function isActive() {
         return $this->active === 'Y';
     }
-    
-    public static function refreshViewTemplate($type, $content)
+
+    /**
+     * Creates the template directory under /resources/views/templates folder.
+     */
+    public function createTemplateDirectory()
     {
-        $viewFileName = 'views/' . $type . '.blade.php';
-
-        if (Storage::disk('resources')->exists($viewFileName)) {
-            Storage::disk('resources')->delete($viewFileName);
-        }
-
-        Storage::disk('resources')->put($viewFileName, $content);
+        Storage::disk('resources')->makeDirectory($this->template_directory);
     }
 
 
     /**
-     * Creates a filename from the template name and template types.
+     * Lists all the files available under the template folder
+     * along with the metadata information of those files
+     */
+    public function getFiles ()
+    {
+        $fileNames = Storage::disk('resources')->files($this->template_directory);
+        
+        $files = [];
+        foreach($fileNames as $name) {
+            $files[] = [
+                "name" => $name,
+                "size" => Storage::disk('resources')->size($name),
+                "updated" => \Carbon\Carbon::createFromTimestamp(
+                        Storage::disk('resources')->lastModified($name)
+                )->format('d-M-Y H:i:s'),
+            ];
+        }
+
+        return $files;
+    }
+
+
+    public function getBladeContent($type)
+    {
+        $fileName = $this->template_directory . '/' . $type . '.blade.php';
+        return $this->getFileContent ($fileName);
+    }
+
+
+    public function setBladeContent($type, $content)
+    {
+        $fileName = $this->template_directory . '/' . $type . '.blade.php';
+        return $this->setFileContent ($fileName, $content);
+    }
+
+
+    public function getFileContent ($fileName)
+    {
+        if (Storage::disk('resources')->exists($fileName)) {
+            return Storage::disk('resources')->get($fileName);
+        }
+        else {
+            return '';
+        }
+    }
+
+
+    public function setFileContent ($fileName, $content)
+    {
+        // if (Storage::disk('resources')->exists($fileName)) {
+            return Storage::disk('resources')->put($fileName, $content);
+        // }
+        // else {
+            // return '';
+        // }
+    }
+
+    /**
+     * Adds "template_directory" attribute to the model.
+     * 
+     */
+    public function getTemplateDirectoryAttribute()
+    {
+        return 'views/templates/' . $this->name;
+    }
+    
+
+    //-------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // public static function refreshViewTemplate($type, $content)
+    // {
+    //     $viewFileName = 'views/' . $type . '.blade.php';
+
+    //     if (Storage::disk('resources')->exists($viewFileName)) {
+    //         Storage::disk('resources')->delete($viewFileName);
+    //     }
+
+    //     Storage::disk('resources')->put($viewFileName, $content);
+    // }
+
+
+    /**
+     * Creates a fileName from the template name and template types.
      * 
      * Removes all special characters and space and replace them 
      * with underscore only.
      */
-    public static function getFileFromTemplateName($name, $type) {
-        return 'templates'
-            . '/' 
-            . $type 
-            . '/'
-            . preg_replace('/[^A-Z0-9]+/i', '_', strtolower($name)) 
-            . '.blade.php';
-    }
+    // public static function getFileFromTemplateName($name, $type) {
+    //     return 'templates'
+    //         . '/' 
+    //         . $type 
+    //         . '/'
+    //         . preg_replace('/[^A-Z0-9]+/i', '_', strtolower($name)) 
+    //         . '.blade.php';
+    // }
 
     // public static function buildFromFrame(array $rows, array $head, String $type)
     // {

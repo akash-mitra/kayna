@@ -19589,10 +19589,43 @@ __webpack_require__.r(__webpack_exports__);
   util.token = document.head.querySelector('meta[name="csrf-token"]'); //Public Methods
 
   /**
+   * Generic DOM Selector 
+   */
+
+  util.get = function (selector) {
+    return document.querySelector(selector);
+  };
+
+  util.click = function (selector, callback) {
+    var els = document.querySelectorAll(selector);
+    var l = els.length;
+
+    for (var i = 0; i < l; i++) {
+      var el = els[i];
+      el.addEventListener("click", callback);
+    }
+  };
+
+  util.confirm = function (message) {
+    var positiveCallback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    var negativeCallback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+    if (typeof positiveCallback != 'function') {
+      positiveCallback = function positiveCallback() {};
+    }
+
+    if (typeof negativeCallback != 'function') {
+      negativeCallback = function negativeCallback() {};
+    }
+
+    if (confirm(message)) positiveCallback();else negativeCallback();
+  };
+  /**
    * ---------------------------------------------------------------
    * Creates a form with the given data and submits the form to the
    * provided URL. If no data is provided, empty form is submitted.
    * ---------------------------------------------------------------*/
+
 
   util.submit = function (url, data, method) {
     if (typeof url === 'undefined') {

@@ -18,13 +18,26 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $pages = Page::with('category')->orderBy('updated_at', 'desc')->paginate(5);
+        $pages = Page::with('category')->where('status', '=', 'Live')->orderBy('updated_at', 'desc')->paginate(10);
 
         $categories = Category::take(10)->get();
 
         // return $data;
         // return compiledView('home', $data);
-        return view('home', [
+        // return view('home', [
+        //     "resource" => (object)[
+        //         "pages" => $pages,
+        //         "categories" => $categories
+        //     ],
+        //     "common" => (object)[
+        //         "sitename" => param('sitename'),
+        //         "sitetitle" => param('tagline'),
+        //         "metadesc" => param('sitedesc'),
+        //         "metakey" => param('sitekeys')
+        //     ]
+        // ]);
+
+        return [
             "resource" => (object)[
                 "pages" => $pages,
                 "categories" => $categories
@@ -35,7 +48,7 @@ class HomeController extends Controller
                 "metadesc" => param('sitedesc'),
                 "metakey" => param('sitekeys')
             ]
-        ]);
+            ];
     }
 
 

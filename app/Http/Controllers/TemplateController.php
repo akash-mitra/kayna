@@ -21,10 +21,57 @@ class TemplateController extends Controller
      */
     public function index()
     {
-        $templates = Template::select(['id', 'source_id', 'name', 'type', 'description', 'url', 'active', 'created_at', 'updated_at'])->get();
+        $templates = Template::all();
         return view('admin.templates.index')
             ->with('templates', $templates);
     }
+
+
+    /**
+     * Shows the initial template creation form
+     * (Before files are added)
+     */
+    public function create()
+    {
+        $template = new Template();
+        $template->resources = [];
+        return view('admin.templates.form', compact('template'));
+    }
+
+
+    /**
+     * This is called when a template is being created for the
+     * first time. It creates the main entry for the template
+     * in the database and creates the template directory.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|min:5|alpha_dash|unique:templates,name',
+            'description' => 'max:255'
+        ]);
+
+        $template = new Template($request->only(['name', 'description']));
+        $template->save();
+        $template->createTemplateDirectory();
+
+        return redirect()->route('templates.edit', $template->id);
+    }
+
+
+
+    /**
+     * Shows the template edit page (after the template has been created)
+     */
+    public function edit(Template $template)
+    {
+        return view('admin.templates.form', compact('template'));
+    }
+
+
+
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 
     /**
@@ -135,14 +182,14 @@ class TemplateController extends Controller
     }
 
 
-    public function form(Template $template) 
-    {
-        $body = Storage::disk('repository')->get($template->filename);
+    // public function form(Template $template) 
+    // {
+    //     $body = Storage::disk('repository')->get($template->filename);
 
-        $template['body'] = $body;
+    //     $template['body'] = $body;
 
-        return view('admin.templates.form', compact('template'));
-    }
+    //     return view('admin.templates.form', compact('template'));
+    // }
 
 
     

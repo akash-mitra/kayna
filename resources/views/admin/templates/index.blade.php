@@ -2,133 +2,135 @@
 
 @section('header')
 <div class="py-4 px-6">
-        <h1 class="w-full p-2">
-                <span class="text-lg font-semibold text-indigo uppercase">
-                        Template Library
-                </span>
-        </h1>
-
-        <h3 class="px-2 text-sm font-light text-indigo-darker">
-                Import new templates for various content types.
-        </h3>
+    <h1 class="w-full p-2">
+        <span class="text-lg font-semibold text-indigo uppercase">
+            Templates
+        </span>
+    </h1>
+    
+    <h3 class="px-2 text-sm font-light text-indigo-darker">
+        Create or Edit Template
+    </h3>
 </div>
 @endsection
 
 
 @section('main')
 
-<div class="px-6 py-4">
+<div class="px-6 py-4 block sm:flex sm:justify-between">
 
-        <div class="w-full flex flex-wrap uppercase text-sm font-bold">
-                <span v-for="(tab, index) in tabs" :class="active_tab!=index+1? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-t-2 border-indigo'" class="py-4 px-8" @click="select(tab, $event)" v-text="tab"></span>
-        </div>
+    
 
+    <div class="w-full md:w-3/4 xl:w-4/5 flex justify-between items-center text-sm bg-white border-grey-lighter rounded-lg border shadow">
+        <input type="text" v-model="needle" id="txtSearch" ref="txtSearchRef" class="p-3 w-full" placeholder="Search name or description...">
+        <p v-if="needle.length>0" v-text="filter_templates.length + ' item(s)'" class="hidden sm:flex bg-yellow-lighter text-right text-xs text-orange cursor-pointer whitespace-no-wrap px-2 py-1 mr-2 rounded-lg" @click="needle=''"></p>
+    </div>
 
-        <div v-for="(tab, index) in tabs">
-                <div v-show="active_tab===index+1" class="w-full text-sm bg-white">
-                        <h3 class="w-full px-8 py-2 pt-8 uppercase text-xs text-grey-darker font-light">Installed</h3>
-                        <div class="w-full shadow px-4 pt-2 pb-4 flex flex-wrap">
-                                <div v-for="template in filterTemplatesFor(applied_templates, tab)" class="my-2 p-2 w-full md:w-1/3 md:max-w-xs">
-                                        <template-tile v-bind:template="template" @apply-template="onApplyTemplate"></template-tile>
-                                </div>
-                        </div>
-                        <h3 class="w-full px-8 py-2 pt-8 uppercase text-xs text-grey-darker font-light">Available</h3>
-                        <div class="w-full shadow px-4 pt-2 pb-4 flex flex-wrap">
-                                <div v-for="template in filterTemplatesFor(public_templates, tab)" class="my-2 p-2 w-full md:w-1/3 md:max-w-xs">
-                                        <template-tile v-bind:template="template" @install-template="onInstallTemplate"></template-tile>
-                                </div>
-                        </div>
-                </div>
-        </div>
+    <a href="{{ route('templates.create') }}" id="btnNew" class="flex justify-center items-center mt-4 sm:mt-0 px-4 py-2 rounded text-sm bg-indigo no-underline hover:bg-indigo-dark text-white shadow whitespace-no-wrap">
+        Create Template
+    </a>
 
-        <form id="frmInstall" method="post" action="{{route('templates.install')}}">
-                @csrf
-                <input id="inputTemplateId1" type="hidden" name="template">
-        </form>
-
-        <form id="frmApply" method="post" action="{{route('templates.apply')}}">
-                @csrf
-                <input id="inputTemplateId2" type="hidden" name="template">
-        </form>
 </div>
 
+<div class="w-full px-6">
+    <table class="w-full mt-2 bg-white shadow rounded text-left table-collapse">
+        <thead class="text-xs font-semibold text-grey-darker border-b-2">
+            <tr>
+                <th class="py-4 px-6">Name</th>
+                <th class="hidden sm:table-cell p-4">Description</th>
+                <th class="hidden sm:table-cell p-4">Active</th>
+                <th class="p-4"></th>
+            </tr>
+        </thead>
+        <tbody class="align-baseline">
+            <tr v-for="template in filter_templates" class="border-b hover:bg-grey-lightest">
+
+                <td class="px-6 py-2 text-xs max-w-xs align-middle">
+                    <a v-bind:href="editTemplate(template.id)" class="no-underline text-sm font-medium text-blue">
+                        <span v-text="template.name"></span>
+                    </a>
+                </td>
+
+                <td class="hidden sm:table-cell px-4 py-2 text-xs whitespace-no-wrap align-middle">
+                    <p v-if="template.description" class="text-grey-dark  my-2 text-sm font-sans truncate" v-text="template.description"></p>
+                </td>
+                
+                <td class="hidden sm:table-cell px-4 py-2 font-mono text-xs text-purple-dark whitespace-no-wrap align-middle" v-text="template.active">
+                </td>
+                <td class="px-4 py-2 font-mono text-sm whitespace-no-wrap align-middle text-right">
+                    <a href="/" class="mb-1 cursor-pointer text-blue no-underline">
+                        <svg viewBox="0 0 20 20" class="fill-current h-6 w-6 text-grey" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+							<g id="icon-shape">
+								<polygon id="Combined-Shape" points="12.9497475 10.7071068 13.6568542 10 8 4.34314575 6.58578644 5.75735931 10.8284271 10 6.58578644 14.2426407 8 15.6568542 12.9497475 10.7071068"></polygon>
+							</g>
+						</svg>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<p class="px-6 text-xs text-right py-4 text-grey-darker">
+    @{{ templates.length }} records found
+</p>
 
 @endsection
 
 @section('script')
 
-<script src="/js/template-tile.js"></script>
-
 <script>
-        new Vue({
-                el: 'main',
-                data: {
-                        active_tab: 1,
-                        tabs: ['home', 'page', 'profile', 'category'],
-                        applied_templates: @json($templates),
-                        public_templates: [],
-                        showModal: false
-                },
+    new Vue({
+        el: 'main',
+        data: {
+            needle: '',
+            templates: @json($templates)
+        },
 
-                methods: {
+        computed: {
 
-                        select: function(choice, event) {
-                                this.active_tab = this.tabs.indexOf(choice) + 1
-                        },
+            filter_templates: function() {
+                return this.templates.filter(template => {
+                    
+                    let t = template.name.toLowerCase()
+                    let d = (template.description === null? '': template.description.toLowerCase())
+                    return t.indexOf(this.needle.toLowerCase()) != -1 
+                            || d.indexOf(this.needle.toLowerCase()) != -1
 
-                        // newTemplate: function() {
-                        //         this.showModal = true
-                        // },
+                })
+            }
 
-                        // createTemplate: function(type) {
-                        //         location.href = "/admin/templates/create/" + type
-                        // },
+        },
 
-                        filterTemplatesFor: function(templates, type) {
-                                return templates.filter(item => item.type === type)
-                        },
+        mounted: function () {
+            this.$nextTick(() => this.$refs.txtSearchRef.focus())
+        },
 
-                        onInstallTemplate: function(templateId) {
-                                var form = document.getElementById("frmInstall");
-                                var inputTemplate = document.getElementById("inputTemplateId1");
-                                inputTemplate.value = templateId;
-                                form.submit();
-                        },
+        methods: {
+            editTemplate: function(id) {
+                return "/admin/templates/" + id
+            },
 
-                        onApplyTemplate: function(templateId) {
-                                var form = document.getElementById("frmApply");
-                                var inputTemplate = document.getElementById("inputTemplateId2");
-                                inputTemplate.value = templateId;
-                                form.submit();
-                        },
+        //     deleteTemplate: function(id) {
+        //         let p = this
+        //         axios.delete('/admin/templates/' + id)
+        //             .then(function(response) {
+        //                 p.removeTemplateById(response.data.template_id)
+        //                 flash({
+        //                     message: response.data.flash.message
+        //                 })
+        //             })
+        //     },
 
-                        // Merges list of all the available templates with the
-                        // list of templates currently in use
-                        // mergeTemplates(public_templates) {
-                        //         for (let i = 0; i < public_templates.length; i++) {
-                        //                 t = public_templates[i]
-                        //                 // for (let j = 0; j < this.applied_templates.length; j++) {
-                        //                 //         if (t.id === this.applied_templates[j].source_id) {
-
-                        //                 //         }
-                        //                 // }
-                        //                 this.applied_templates.push(t)
-                        //         }
-                        // }
-                },
-
-                created: function() {
-                        let p = this
-                        axios.get("{{route('templates.templates')}}")
-                                .then((response) => {
-                                        p.public_templates = response.data
-                                })
-                                .catch((error) => {
-                                        console.log(error)
-                                })
-
-                }
-        })
+        //     removeTemplateById: function(template_id) {
+        //         for (let i = 0; i < this.templates.length; i++) {
+        //             if (this.templates[i].id === template_id)
+        //                 this.templates.splice(i, 1)
+        //         }
+        //     }
+        }
+    })
 </script>
 
 @endsection

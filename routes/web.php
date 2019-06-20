@@ -19,7 +19,6 @@ Route::post('/api/pages/status',        'PageController@apiSetStatus')->name('ap
 // --------------------------------------------------------------------------------------------------------------------------
 // All Categories related general and admin routes
 // --------------------------------------------------------------------------------------------------------------------------
-
 Route::get('/admin/categories',                 'CategoryController@index')->name('categories.index')->middleware('author');
 Route::post('/admin/categories',                'CategoryController@store')->name('categories.store')->middleware('admin');
 Route::get('/categories/{category}/{slug?}',    'CategoryController@show')->name('categories.get')->middleware('web');
@@ -61,13 +60,23 @@ Route::get('/api/media', 'MediaController@apiIndex')->middleware('auth');
 Route::post('/admin/media', 'MediaController@store')->middleware('auth');
 Route::delete('/admin/media/{media}', 'MediaController@destroy')->middleware('auth');
 
+// --------------------------------------------------------------------------------------------------------------------------
+// All Categories related general and admin routes
+// --------------------------------------------------------------------------------------------------------------------------
 Route::get('/admin/templates', 'TemplateController@index')->name('templates.index')->middleware('admin');
-Route::get('/admin/templates/public', 'TemplateController@templates')->name('templates.templates')->middleware('admin');
-Route::post('/admin/templates/install', 'TemplateController@install')->name('templates.install')->middleware('admin');
-Route::post('/admin/templates/apply', 'TemplateController@apply')->name('templates.apply')->middleware('admin');
-Route::get('/admin/templates/{template}', 'TemplateController@form')->name('templates.form')->middleware('admin');
-Route::patch('/admin/templates/{template}', 'TemplateController@update')->name('templates.update')->middleware('admin');
-Route::delete('/admin/templates/{template}', 'TemplateController@destroy')->name('templates.destroy')->middleware('admin');
+Route::get('/admin/templates/create', 'TemplateController@create')->name('templates.create')->middleware('admin');
+Route::get('/admin/templates/{template}/files/{type}', 'TemplateFileController@form')->name('templates.file')->middleware('admin');
+Route::get('/admin/templates/{template}', 'TemplateController@edit')->name('templates.edit')->middleware('admin');
+Route::post('/admin/templates',    'TemplateController@store')->name('templates.store')->middleware('admin');
+Route::post('/admin/templates/{template}/files/{type}', 'TemplateFileController@save')->name('templates.file.save')->middleware('admin');
+// Route::get('/admin/templates/public', 'TemplateController@templates')->name('templates.templates')->middleware('admin');
+// Route::post('/admin/templates/install', 'TemplateController@install')->name('templates.install')->middleware('admin');
+// Route::post('/admin/templates/apply', 'TemplateController@apply')->name('templates.apply')->middleware('admin');
+// Route::get('/admin/templates/{template}', 'TemplateController@form')->name('templates.form')->middleware('admin');
+// Route::patch('/admin/templates/{template}', 'TemplateController@update')->name('templates.update')->middleware('admin');
+// Route::delete('/admin/templates/{template}', 'TemplateController@destroy')->name('templates.destroy')->middleware('admin');
+// --------------------------------------------------------------------------------------------------------------------------
+
 
 Route::get('/admin/accesses', 'RestrictionController@index')->name('accesses.index')->middleware('admin');
 Route::post('/admin/accesses/store', 'RestrictionController@createOrUpdate')->name('accesses.createOrUpdate')->middleware('admin');

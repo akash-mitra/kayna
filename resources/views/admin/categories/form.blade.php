@@ -240,19 +240,7 @@
                                 destroy: function () {
                                         if(confirm('Are you sure to delete this category?')) {
                                                 util.submit('/admin/categories/' + this.id, {}, 'delete');
-                                                // axios.delete('/admin/categories/' + this.id)
-                                                // .then (
-                                                //         (response) => { 
-                                                //                 flash(response.data.flash.message) 
-                                                //                 location.href = "{{ route('categories.index') }}"
-                                                //         },
-                                                //         (error)    => { 
-                                                //                 flash({
-                                                //                         message: error.response.data.flash.message, 
-                                                //                         type: error.response.data.flash.type
-                                                //                 }) 
-                                                //         },
-                                                // )
+                                                
                                         }
                                 },
 

@@ -6,6 +6,36 @@
         util.token = document.head.querySelector('meta[name="csrf-token"]');
 
         //Public Methods
+
+        /**
+         * Generic DOM Selector 
+         */
+        util.get = function (selector) {
+                return document.querySelector(selector);
+        }
+
+
+        util.click = function (selector, callback) {
+                let els = document.querySelectorAll(selector);
+                let l = els.length;
+                for (let i = 0; i < l; i++) {
+                        let el = els[i];
+                        el.addEventListener("click", callback)
+                }
+        }
+
+
+        util.confirm = function (message, positiveCallback = null, negativeCallback = null) {
+                if (typeof positiveCallback != 'function') {
+                        positiveCallback = function () {}
+                }
+                if (typeof negativeCallback != 'function') {
+                        negativeCallback = function () { }
+                }
+                if (confirm(message)) positiveCallback()
+                else negativeCallback()
+        }
+
         /**
          * ---------------------------------------------------------------
          * Creates a form with the given data and submits the form to the
