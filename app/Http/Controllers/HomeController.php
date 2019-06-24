@@ -8,6 +8,7 @@ use App\Page;
 use App\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
@@ -24,20 +25,7 @@ class HomeController extends Controller
 
         // return $data;
         // return compiledView('home', $data);
-        // return view('home', [
-        //     "resource" => (object)[
-        //         "pages" => $pages,
-        //         "categories" => $categories
-        //     ],
-        //     "common" => (object)[
-        //         "sitename" => param('sitename'),
-        //         "sitetitle" => param('tagline'),
-        //         "metadesc" => param('sitedesc'),
-        //         "metakey" => param('sitekeys')
-        //     ]
-        // ]);
-
-        return [
+        return view('home', [
             "resource" => (object)[
                 "pages" => $pages,
                 "categories" => $categories
@@ -48,7 +36,8 @@ class HomeController extends Controller
                 "metadesc" => param('sitedesc'),
                 "metakey" => param('sitekeys')
             ]
-            ];
+        ]);
+
     }
 
 
@@ -150,16 +139,21 @@ class HomeController extends Controller
         if ($step === '2') {
 
             $request->validate([
-                'logo_text' => 'required|string',
+                'sitename' => 'required|string',
                 'about' => 'required|max:255'
             ]);
 
             $loginEnable = $request->input('enable_registration') === "true" ? 'yes' : 'no';
 
-            set_param('logo_text', $request->input('logo_text'));
-            set_param('meta_desc', $request->input('about'));
+            set_param('sitename', $request->input('sitename'));
+            set_param('sitedesc', $request->input('about'));
             set_param('login_native_active', $loginEnable);
             set_param('installation_done_till_step', '2');
+
+            // create a folder for storing user profile photos
+            if(! Storage::disk('public')->exists('media/profile') ) {
+                Storage::disk('public')->makeDirectory('media/profile');
+            }
 
             return redirect()->route('installation', 3);
         }

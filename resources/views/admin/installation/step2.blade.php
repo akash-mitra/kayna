@@ -25,9 +25,9 @@
 
                                 <div class="w-full px-3">
                                         <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="grid-last-name">
-                                                Logo Text
+                                                Website Name
                                         </label>
-                                        <input class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-grey" id="logo_text" type="text" name="logo_text" value="{{ old('logo_text') }}" placeholder="e.g. Magic School">
+                                        <input class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-grey" id="sitename" type="text" name="sitename" value="{{ old('sitename') }}" placeholder="e.g. Magic School">
                                         <p class="text-xs text-grey-dark italic mt-2">Logo text will appear in header beside logo. This may or may not be same as your website name.</p>
                                 </div>
 

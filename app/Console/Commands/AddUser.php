@@ -55,6 +55,6 @@ class AddUser extends Command
             'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
         ]);
 
-        $this->info('User' . $name . ' added successfully');
+        $this->info('User ' . $name . ' added successfully');
     }
 }

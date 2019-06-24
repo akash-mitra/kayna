@@ -24,10 +24,10 @@ class ProfileController extends Controller
         return view('profile', [
             "resource" => $user,
             "common" => (object)[
-                "sitename" => "Kayna",
-                "sitetitle" => "A BlogTheory site",
-                "metadesc" => "A friendly website",
-                "metakey" => ""
+                "sitename" => param('sitename'),
+                "sitetitle" => param('tagline'),
+                "metadesc" => param('sitedesc'),
+                "metakey" => param('sitekeys')
             ]
         ]);
     }

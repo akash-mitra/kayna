@@ -42,7 +42,7 @@ class PageController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created page in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -56,8 +56,10 @@ class PageController extends Controller
                 ->publications()
                 ->create($request->input());
 
-            $page->content()
-                ->create($request->only(['body']));
+            if ($request->filled('body')) {
+                $page->content()->create($request->only(['body']));
+            }
+
         });
 
         return [
@@ -120,12 +122,15 @@ class PageController extends Controller
 
             $page = tap($page->fill($request->only(['category_id', 'title', 'summary', 'status', 'media_url', 'metakey', 'metadesc'])))->save();
 
-            if ($page->content) {
-                $page->content->fill($request->only(['body']))->save();
-            } else {
-                $page->content()
-                    ->create($request->only(['body']));
+            if ($request->filled('body')) {
+
+                if ($page->content) {
+                    $page->content->fill($request->only(['body']))->save();
+                } else {
+                    $page->content()->create($request->only(['body']));
+                }
             }
+            
         });
 
         return [
