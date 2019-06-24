@@ -106,7 +106,7 @@
             </div>
         </div>
 
-        <div class="md:flex">
+        <div class="md:flex md:flex-wrap">
                         
         @foreach($resource->pages as $item)
                         
