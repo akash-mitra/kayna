@@ -170,7 +170,7 @@
                         <div class="flex justify-center mt-6 items-center text-indigo-800">
                             <div class="flex items-center">
                                 <a href="{!! $resource->author->url !!} ">
-                                    {!! $resource->author->photo() !!}  
+                                    {!! $resource->author->photo('sm', 'no-modal rounded-full border-2 mr-4') !!}  
                                 </a>
                                 {{ $resource->author->name }}
                             </div>

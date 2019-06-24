@@ -116,7 +116,7 @@ class User extends Authenticatable
     }
 
 
-    public function photo($size = 'sm', $class = 'rounded-full border-2 mr-4')
+    public function photo($size = 'sm', $class = 'rounded-full border-2')
     {
         $class = $this->_photoSize($size) . $class;
         $photo = empty($this->avatar) ? $this->dummyProfilePhoto($class) : '<img class="' . $class . '" src="' . $this->avatar . '" />';
