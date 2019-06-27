@@ -9,27 +9,75 @@ class TemplateFileController extends Controller
 {
     
     /**
-     * Returns the same template edit form (like edit) but
-     * also sends the content of the specific blade file.
+     * Shows a view to edit or create a template file. 
+     * This view is used to create both standard and non-standard files.
      */
-    public function form (Template $template, $type)
+    public function form (Template $template, $type, Request $request)
     {
-        $content = $template->getBladeContent($type);
+        if ($type === 'other') { // non-standard
+            
+            $fileName = $request->input('filename');
 
-        return view('admin.templates.file', [
-            'template' => $template,
-            'type' => $type,
-            'content' => $content
-        ]);
+            $content = $template->getOtherContent($fileName);
+
+            return view('admin.templates.file', [
+                'template' => $template,
+                'type' => $type,
+                'filename' => $fileName,
+                'content' => $content,
+                'extension' => $this->getFileExtension($fileName)
+            ]);
+
+        }
+        else {
+
+            $content = $template->getBladeContent($type);
+
+            return view('admin.templates.file', [
+                'template' => $template,
+                'type' => $type,
+                'filename' => '',
+                'content' => $content,
+                'extension' => 'PHP'
+            ]);
+
+        }
     }
 
 
+
+    /**
+     * Saves the contents in a template file. If the template 
+     * is in use, it will automatically refresh the template as well.
+     */
     public function save (Template $template, $type, Request $request)
     {
-        //TODO some kind of validation needs to be here
+        //TODO some kind of validation needs to be here about type etc.
         
-        $data = $request->input('data');
-        $template->setBladeContent($type, $data);
+        $fileContent = $request->input('data');
+        $fileName = $request->input('filename');
+
+        if ($type === 'other') {
+            $template->setOtherContent($fileName, $fileContent);
+        } else {
+            $template->setBladeContent($type, $fileContent);
+        }
+
+        if ($template->active === 'Y') $template->activate();
+        
+        session()->flash('flash', 'Success!');
+
         return back();
+        
+    }
+
+
+    private function getFileExtension ($fileName)
+    {
+        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+
+        if (empty($extension)) return 'PHP'; // default
+
+        return strtoupper($extension);
     }
 }

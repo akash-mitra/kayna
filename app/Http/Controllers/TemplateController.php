@@ -70,327 +70,45 @@ class TemplateController extends Controller
 
 
 
-
-    //-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-
     /**
-     * Returns a list of templates from the BlogTheory's 
-     * public repository
+     * Sets the requested template as the default template
      */
-    public function templates()
+    public function setDefault(Request $request)
     {
-        $client = new Client();
+        $template = Template::findOrFail($request->input('template_id'));
 
-        try {
-            $response = $client->get('https://blogtheory.co/repository/templates');
-            $result = $response->getBody();
-        } catch (\Exception $exception) {
+        $template->setDefault();
 
-            return response([
-                'status' => 'failed',
-                'message' => 'Can not read templates from repository [code = ' . $exception->getCode() . ']'
-            ], $exception->getCode());
-        }
+        session()->flash('flash', 'Successfully set as the default template!');
 
-        return json_decode($result, true);
+        return back();
     }
 
-
-    public function install(Request $request)
-    {
-        $selected_template_id = $request->input('template');
-        $templates = $this->templates();
-
-        foreach($templates as $template) {
-
-            if ($template['id'] === $selected_template_id) {
-                $newTemplate = null;
-
-                try {
-                    $newTemplate = $this->installTemplate($template);
-                    
-                } catch (\Exception $exception) {
-                    return response([
-                        "status" => 'failed',
-                        "message" => "Template installation failed [Code " . $exception->getCode() . "]. Try again later."
-                    ], 503);
-                }
-
-                return redirect(route( 'templates.form', $newTemplate->id));
-            }
-        }
-        return [
-            "status" => 'failed',
-            "message" => 'supplied template id is not present'
-        ];
-    }
-
-
-
-    public function apply(Request $request)
-    {
-        $selected_template_id = $request->input('template');
-        $template = Template::findOrFail($selected_template_id);
-        
-        // place the template in view folder
-        $content = Storage::disk('repository')->get($template->filename);
-        Template::refreshViewTemplate($template->type, $content);
-
-        // update the database
-        Template::where('type', $template->type)->update(['active' => 'N']);
-        $template->active = 'Y';
-        $template->save();
-
-        return redirect()->back();
-    }
-
-
-    public function installTemplate ($template) 
-    {
-        $body = $this->downloadTemplateBody ($template['url']);
-        
-        $templateBladeFile = Template::getFileFromTemplateName($template['name'], $template['type']);
-
-        Storage::disk('repository')->put($templateBladeFile, $body);
-
-        $newTemplate = new Template([
-            'source_id' => $template['id'],
-            'name' => $template['name'],
-            'type' => $template['type'],
-            'description' => $template['description'],
-            'url' => $template['url'],
-            'filename' => $templateBladeFile,
-            'parameters' => null,
-            'positions' => null,
-            'active' => 'N'
-        ]);
-
-        return tap($newTemplate)->save();
-    }
-
-
-    public function downloadTemplateBody ($url)
-    {
-        $client = new Client();
-
-        $response = $client->get($url);
-        $result = $response->getBody();
-        $content = $result->getContents();
-
-        return $content;
-    }
-
-
-    // public function form(Template $template) 
-    // {
-    //     $body = Storage::disk('repository')->get($template->filename);
-
-    //     $template['body'] = $body;
-
-    //     return view('admin.templates.form', compact('template'));
-    // }
-
-
-    
 
     /**
-     * Show the form for creating a new resource.
+     * Remove the specified template
      *
-     * @return \Illuminate\Http\Response
-     */
-    // public function create($type)
-    // {
-    //     if (!in_array($type, ['home', 'page', 'category', 'profile'])) {
-    //         return abort(400, 'Invalid template type');
-    //     }
-
-    //     $template = new Template();
-    //     $template->frame = json_encode($this->getDefaultFrame());
-    //     $template->type = $type;
-    //     $props = json_encode($this->getAPIForContentType($type));
-    //     $template->head = json_encode($this->getDefaultHead());
-
-
-    //     return view('admin.templates.form')
-    //         ->with('template', $template)
-    //         ->with('props', $props);
-    // }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    // public function store(Request $request)
-    // {
-    //     $frame = $request->input('frame');
-    //     $head = $request->input('head');
-
-    //     $body = $this->build($frame, $head, $request->input('type'));
-    //     $template = tap(new Template([
-    //         'name' => $request->input('name'),
-    //         'body' => $body,
-    //         'type' => $request->input('type'),
-    //         'frame' => $frame,
-    //         'head' => $head
-    //     ]))->save();
-
-    //     return redirect()->to(route('templates.show', $template->id));
-    // }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Template             $template
-     * @return \Illuminate\Http\Response
-     */
-    // public function show(Template $template)
-    // {
-
-    //     $props = $this->getAPIForContentType($template->type);
-
-    //     return view('admin.templates.form')
-    //         ->with('template', $template)
-    //         ->with('props', json_encode($props));
-    // }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Template             $template
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Template $template)
-    {
-        
-        $name = $request->input('name');
-        $description = $request->input('description');
-        $body = $request->input('body');
-        $templateBladeFile = Template::getFileFromTemplateName($name, $template->type);
-        
-        Storage::disk('repository')->delete ($template->filename);
-        Storage::disk('repository')->put ($templateBladeFile, $body);
-        
-        if ($template->isActive()) {
-            Template::refreshViewTemplate( $template->type, $body);
-        }
-        
-
-        // TODO 
-        // In use template must be copied to right place
-
-        $template = tap($template->fill([
-            'name' => $name,
-            'description' => $description
-        ]))->save();
-        
-        $request->session()->flash( 'message', 'template [' . $template->name . '] saved');
-
-        return redirect()->back();
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Template             $template
+     * @param  \App\Template  $template
      * @return \Illuminate\Http\Response
      */
     public function destroy(Template $template)
     {
-        Storage::disk('repository')->delete($template->filename);
+
+        if ($template->isActive()) {
+            
+            session()->flash('flash', "Active template can not be deleted");
+            
+            return back();
+        }
+
+        $template->removeFiles();
 
         $template->delete();
 
-        return redirect()->route('templates.index')->with('message', $template->name . " deleted successfully");
+        session()->flash('flash', $template->name . " deleted successfully");
+
+        return redirect()->route('templates.index');
     }
 
-    private function getAPIForContentType($type)
-    {
-        $props = [];
-        if ($type === 'page') {
-            $props = \App\Page::props();
-        }
-        if ($type === 'category') {
-            $props = \App\Category::props();
-        }
-        if ($type === 'profile') {
-            $props = \App\User::props();
-        }
-
-        $filteredProps = [];
-        foreach ($props as $prop) {
-            if ($prop['visibility'] === true) {
-                // $prop['class'] = '';
-                array_push($filteredProps, $prop);
-            }
-        }
-
-        return $filteredProps;
-    }
-
-    private function getDefaultFrame()
-    {
-        return [
-            [
-                'class' => 'flex',
-                'cols' => [
-                    [
-                        'class' => 'w-full bg-white flex justify-between',
-                        'positionNames' => 'header',
-                        'positions' => [
-                            [
-                                'name' => 'header',
-                                'class' => '',
-                                'items' => [
-                                    ['name' => 'title', 'class' => 'text-3xl', 'placeholder' => ['tag' => 'span', 'text' => 'The Intersteller Journey to the futures']]
-                                ]
-                            ],
-                            [
-                                'name' => 'login',
-                                'class' => 'p-4',
-                                'items' => []
-                            ]
-                        ]
-                    ]
-                ]
-            ],
-            [
-                'class' => 'flex',
-                'cols' => [
-                    ['class' => 'w-full bg-white', 'positionNames' => 'body', 'positions' => [['name' => 'body', 'class' => '', 'items' => []]]]
-                ]
-            ],
-            [
-                'class' => 'flex',
-                'cols' => [
-                    ['class' => 'w-full bg-white', 'positionNames' => 'footer', 'positions' => [['name' => 'footer', 'class' => '', 'items' => []]]]
-                ]
-            ],
-        ];
-    }
-
-
-    private function getDefaultHead()
-    {
-        return [
-            ['prop' => 'lang', 'default' => 'en', 'value' => 'en'],
-            ['prop' => 'charset', 'default'  => 'UTF-8', 'value'  => 'UTF-8'],
-            ['prop' => 'csrf-token', 'default'  => '{{ csrf_token() }}', 'value'  => '{{ csrf_token() }}'],
-            ['prop' => 'title', 'default' => '{{ $title }}', 'value' => '{{ $title }}'],
-            ['prop' => 'css', 'default' => 'https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css', 'value' => 'https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css'],
-            ['prop' => 'template-css', 'default' => '/storage/css/main.css', 'value' => '/storage/css/main.css'],
-            ['prop' => 'js', 'default' => 'https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js', 'value' => 'https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js'],
-        ];
-    }
-
-    private function build($frame, $head, $type)
-    {
-        $frameJson = json_decode($frame);
-        $headJson = json_decode($head);
-
-        return Template::buildFromFrame($frameJson, $headJson, $type);
-    }
+    
 }

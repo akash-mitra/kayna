@@ -2,6 +2,7 @@
 
 namespace App;
 
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -10,24 +11,36 @@ class Template extends Model
 {
     protected $fillable = ['source_id', 'name', 'description', 'url', 'resources', 'active'];
 
-    // protected $append = ['used_in'];
+    protected $templateDisk = 'local';
 
-    // public function getUsedInAttribute()
-    // {
-    //     return DB::table('content_type_templates')->where('template_id', $this->id)->pluck('type')->toArray();
-    // }
-
+    /**
+     * Checks if this template is currently in use.
+     */
     public function isActive() {
         return $this->active === 'Y';
     }
+
+
+
+    /**
+     * Adds "template_directory" attribute to the model.
+     * 
+     */
+    public function getTemplateDirectoryAttribute()
+    {
+        return 'templates/' . $this->name;
+    }
+
+
 
     /**
      * Creates the template directory under /resources/views/templates folder.
      */
     public function createTemplateDirectory()
     {
-        Storage::disk('resources')->makeDirectory($this->template_directory);
+        Storage::disk($this->templateDisk)->makeDirectory($this->template_directory);
     }
+
 
 
     /**
@@ -36,16 +49,18 @@ class Template extends Model
      */
     public function getFiles ()
     {
-        $fileNames = Storage::disk('resources')->files($this->template_directory);
+        $fileNames = Storage::disk($this->templateDisk)->files($this->template_directory);
         
         $files = [];
         foreach($fileNames as $name) {
             $files[] = [
                 "name" => $name,
-                "size" => Storage::disk('resources')->size($name),
+                "size" => Storage::disk($this->templateDisk)->size($name),
                 "updated" => \Carbon\Carbon::createFromTimestamp(
-                        Storage::disk('resources')->lastModified($name)
+                        Storage::disk($this->templateDisk)->lastModified($name)
                 )->format('d-M-Y H:i:s'),
+                "basename" => basename($name),
+                "dynamic" => ( substr_compare($name, '.blade.php', -10) === 0 ),
             ];
         }
 
@@ -53,6 +68,10 @@ class Template extends Model
     }
 
 
+
+    /**
+     * Returns the contents of standard template files based on the file type
+     */
     public function getBladeContent($type)
     {
         $fileName = $this->template_directory . '/' . $type . '.blade.php';
@@ -60,6 +79,23 @@ class Template extends Model
     }
 
 
+
+    /**
+     * Returns the contents of non-standard template files
+     */
+    public function getOtherContent($fileName)
+    {
+        $fileName = $this->template_directory . '/' . $fileName;
+        return $this->getFileContent ($fileName);
+    }
+
+
+    
+    /**
+     * Saves the template file of provided type with the 
+     * supplied content. If the file already exists, it
+     * will be overwritten with the content.
+     */
     public function setBladeContent($type, $content)
     {
         $fileName = $this->template_directory . '/' . $type . '.blade.php';
@@ -67,10 +103,29 @@ class Template extends Model
     }
 
 
+
+    /**
+     * Saves the supplied content with the file name under the
+     * template directory. If the file is present, it will be
+     * overwritten. This method is generally used to save the 
+     * non-standard files or static files.
+     */
+    public function setOtherContent ($fileName, $content)
+    {
+        $fileName = $this->template_directory . '/' . $fileName;
+        return $this->setFileContent ($fileName, $content);
+    }
+
+
+
+    /**
+     * Retrieves a template file by name. If the file is not
+     * present, empty contents will be returned.
+     */
     public function getFileContent ($fileName)
     {
-        if (Storage::disk('resources')->exists($fileName)) {
-            return Storage::disk('resources')->get($fileName);
+        if (Storage::disk($this->templateDisk)->exists($fileName)) {
+            return Storage::disk($this->templateDisk)->get($fileName);
         }
         else {
             return '';
@@ -78,160 +133,171 @@ class Template extends Model
     }
 
 
-    public function setFileContent ($fileName, $content)
-    {
-        // if (Storage::disk('resources')->exists($fileName)) {
-            return Storage::disk('resources')->put($fileName, $content);
-        // }
-        // else {
-            // return '';
-        // }
-    }
 
     /**
-     * Adds "template_directory" attribute to the model.
-     * 
+     * Saves a template file with the supplied content. 
      */
-    public function getTemplateDirectoryAttribute()
+    public function setFileContent ($fileName, $content)
     {
-        return 'views/templates/' . $this->name;
+        
+        return Storage::disk($this->templateDisk)->put($fileName, $content);
+        
+    }
+
+
+
+    /**
+     * Sets the current template as the default template. If
+     * there is any other template set as default currently, 
+     * that template will be automatically unloaded.
+     */
+    public function setDefault() 
+    {
+        $thisTemplate = $this;
+
+        DB::transaction(function() use ($thisTemplate) {
+    
+            $activeTemplate = Template::where('active', 'Y')->first();
+
+            optional($activeTemplate)->inactivate();
+
+            $thisTemplate->activate();
+        });
+    }
+
+    
+
+    /**
+     * Activates the current template.
+     */
+    public function activate()
+    {
+        $files = $this->getFiles();
+
+        $bladeFiles = array_filter($files, function ($item) {
+            return $item['dynamic'] === true;
+        });
+
+        $staticFiles = array_filter($files, function ($item) {
+            return $item['dynamic'] === false;
+        });
+
+        $this->copyDynamicFilesToViews($bladeFiles);
+
+        $this->copyStaticFilesToPublic($staticFiles);
+
+        $this->active = 'Y';
+
+        $this->save();
+    }
+
+
+
+    /**
+     * Inactivates the current template.
+     */
+    public function inactivate()
+    {
+        $files = $this->getFiles();
+
+        $staticFiles = array_filter($files, function ($item) {
+            return $item['dynamic'] === false;
+        });
+
+        array_map(function ($file) {
+
+            $this->deleteStaticFileIfExists($file);
+            
+        }, $staticFiles);
+
+        $this->active = 'N';
+
+        $this->save();
+    }
+
+
+
+    /**
+     * Removes the template directory and 
+     * all the template files permanently.
+     */
+    public function removeFiles()
+    {
+        return Storage::disk($this->templateDisk)->deleteDirectory($this->template_directory);
     }
     
 
-    //-------------------------------------------------------------------------------------------------------------------------
 
+    /**
+     * Copy the dynamic files (blade.php) from the template
+     * directory to the views directory.
+     */
+    private function copyDynamicFilesToViews ($files)
+    {   
+        
+        foreach ($files as $file) 
+        {
+            $this->deleteDynamicFileIfExists ($file);
 
+            $this->streamCopy($this->templateDisk, $file['name'], 'resources', 'views/' . $file['basename']);
+        }
 
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-    // public static function refreshViewTemplate($type, $content)
-    // {
-    //     $viewFileName = 'views/' . $type . '.blade.php';
-
-    //     if (Storage::disk('resources')->exists($viewFileName)) {
-    //         Storage::disk('resources')->delete($viewFileName);
-    //     }
-
-    //     Storage::disk('resources')->put($viewFileName, $content);
-    // }
 
 
     /**
-     * Creates a fileName from the template name and template types.
-     * 
-     * Removes all special characters and space and replace them 
-     * with underscore only.
+     * Copies the static files from the template directory
+     * to the public directory.
      */
-    // public static function getFileFromTemplateName($name, $type) {
-    //     return 'templates'
-    //         . '/' 
-    //         . $type 
-    //         . '/'
-    //         . preg_replace('/[^A-Z0-9]+/i', '_', strtolower($name)) 
-    //         . '.blade.php';
-    // }
+    private function copyStaticFilesToPublic ($files)
+    {   
+        foreach ($files as $file) 
+        {
+            $this->deleteStaticFileIfExists($file);
 
-    // public static function buildFromFrame(array $rows, array $head, String $type)
-    // {
-    //     $body = '<!DOCTYPE html>' . PHP_EOL;
-    //     $body .= '<html lang="' . self::getHeader($head, 'lang') . '">' . PHP_EOL;
-    //     $body .= '<head>' . PHP_EOL;
-    //     $body .= "\t" . '<meta charset="' . self::getHeader($head, 'charset') . '">' . PHP_EOL;
-    //     $body .= "\t" . '<meta name="viewport" content="width=device-width, initial-scale=1.0">' . PHP_EOL;
-    //     $body .= "\t" . '<meta http-equiv="X-UA-Compatible" content="ie=edge">' . PHP_EOL;
-    //     $body .= "\t" . '<meta name="csrf-token" content="' . self::getHeader($head, 'csrf-token') . '">' . PHP_EOL;
-    //     $body .= "\t" . '<link rel="stylesheet" href="' . self::getHeader($head, 'css')  . '">' . PHP_EOL;
-    //     $body .= "\t" . '<link rel="stylesheet" href="' . self::getHeader($head, 'template-css') . '">' . PHP_EOL;
-    //     $body .= "\t" . '<title></title>' . PHP_EOL;
-    //     $body .= '</head>' . PHP_EOL;
-    //     $body .= '<body>' . PHP_EOL;
+            $this->streamCopy($this->templateDisk, $file['name'], 'public', $file['basename']);
 
-    //     foreach ($rows as $row) {
-    //         $body .= "\t" . '<div class="' . $row->class . '">' . PHP_EOL;
-    //         foreach ($row->cols as $col) {
-    //             $body .= "\t\t" . '<div class="' . $col->class . '">' . PHP_EOL;
+        }
+    }
 
-    //             foreach ($col->positions as $position) {
-    //                 $body .= "\t\t\t" . '<div class="' . $position->class . '">' . PHP_EOL;
-    //                 $body .= "\t\t\t\t" . '@foreach(getModulesforPosition("' . $position->name . '") as $module)' . PHP_EOL;
-    //                 $body .= "\t\t\t\t\t" . '@includeIf($module)' . PHP_EOL;
-    //                 $body .= "\t\t\t\t" . '@endforeach' . PHP_EOL;
 
-    //                 foreach ($position->items as $item) {
-    //                     if ($item->placeholder->tag === 'span') {
-    //                         $body .= "\t\t\t\t" . '<span class="' . $item->class . '">' . self::p($item->name, $type) . '</span>' . PHP_EOL;
-    //                     }
-    //                     if ($item->placeholder->tag === 'p') {
-    //                         $body .= "\t\t\t\t" . '<p class="' . $item->class . '">' . self::p($item->name, $type) . '</p>' . PHP_EOL;
-    //                     }
-    //                     if ($item->placeholder->tag === 'div') {
-    //                         $body .= "\t\t\t\t" . '<div class="' . $item->class . '">' . self::p($item->name, $type) . '</div>' . PHP_EOL;
-    //                     }
-    //                     if ($item->placeholder->tag === 'a') {
-    //                         $body .= "\t\t\t\t" . '<a class="' . $item->class . '" href="' . self::p($item->placeholder->href, $type) . '">' . self::p($item->name, $type) . '</a>' . PHP_EOL;
-    //                     }
-    //                     if ($item->placeholder->tag === 'img') {
-    //                         $body .= "\t\t\t\t" . '<img class="' . $item->class . '" src="' . self::p($item->name, $type) . '" />' . PHP_EOL;
-    //                     }
-    //                 }
 
-    //                 $body .= "\t\t\t" . '</div>' . PHP_EOL;
-    //             }
-    //             $body .= "\t\t" . '</div>' . PHP_EOL;
-    //         }
-    //         $body .= "\t" . '</div>' . PHP_EOL;
-    //     }
-    //     $body .= "\t" . '<script src="' . self::getHeader($head, 'js')  . '"></script>' . PHP_EOL;
-    //     $body .= '</body>' . PHP_EOL;
-    //     $body .= '</html>';
+    /**
+     * Deletes any static file related to this template
+     * from the public directory.
+     */
+    private function deleteStaticFileIfExists ($file)
+    {
+        if (Storage::disk('public')->exists($file['basename'])) {
+            Storage::disk('public')->delete($file['basename']);
+        }
+    }
 
-    //     return $body;
-    // }
 
-    // public static function getHeader(array $props, String $prop)
-    // {
-    //     $val = array_filter($props, function ($item) use ($prop) {
-    //         if ($item->prop === $prop) {
-    //             return true;
-    //         }
-    //         return false;
-    //     });
 
-    //     return array_values($val)[0]->value;
-    // }
+    /**
+     * Deletes any dynamic file (blade.php) from the views directory
+     */
+    private function deleteDynamicFileIfExists ($file) 
+    {
+        if (Storage::disk('resources')->exists('views/' . $file['basename'])) {
+            Storage::disk('resources')->delete('views/' . $file['basename']);
+        }
+    }
 
-    // public static function p($var, $type)
-    // {
-    //     // phpcise it by replacing all '.' with '->'
-    //     // then laravelise it with blade syntax
-    //     //
-    //     // example,
-    //     // input > category.name
-    //     // output > $category['name']
-    //     //
-    //     // input > user.address.zip
-    //     // output > $user['address']['zip']
-    //     //
 
-    //     $attributes = explode(".", $var);
-    //     $initial = '$' . $attributes[0];
-    //     $brackets = '';
-    //     for ($i = 1; $i < count($attributes); $i++) {
-    //         $brackets .= "['" . $attributes[$i] . "']";
-    //     }
-    //     return '{!!' . $initial . $brackets . '!!}';
 
-    //     // return "{{ $" . $type . "['" . str_replace(".", "']['", $var) . "'] }}";
-    // }
+    /**
+     * Copy a file from  a specific location to the other location 
+     * across disks using stream copy method.
+     */
+    private function streamCopy ($sourceDisk, $sourceFile, $targetDisk, $targetFile)
+    {
+        Storage::disk($targetDisk)->writeStream(
+            $targetFile, 
+            Storage::disk($sourceDisk)->readStream($sourceFile)
+        );
+    }
+    
 }

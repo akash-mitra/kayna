@@ -5,9 +5,9 @@
 <div class="py-4 px-6">
         
         <h1 class="w-full p-2">
-                <span class="text-lg font-semibold text-indigo">
-                        Templates /
-                </span>
+                <a class="text-lg font-semibold text-indigo no-underline" href="{{ route('templates.index', $template->id) }}">
+                        Templates / 
+                </a>
                 <span class="text-lg font-semibold text-grey-darker">
                         @if(empty($template->name))
                                 <span class="text-grey-dark">Create</span>
@@ -74,19 +74,17 @@
         @if($template->id != null)
         <div v-if="selectedTab==2" class="bg-white shadow">
                 <div class="px-6 pt-1 pb-4">
-                        <p class="text-xs uppercase text-indigo mt-4 py-2">Standard Template Files</p>
+                        <p class="text-xs uppercase text-indigo mt-4 py-2">Standard Templates</p>
                         <table class="w-full mt-2 rounded text-left table-collapse">
                                 <thead class="text-xs font-semibold text-grey-darker border-b-2">
                                         <tr>
                                                 <th class="py-4">Name</th>
-                                                <th class="hidden sm:table-cell py-4">File</th>
-                                                <th class="py-4"></th>
+                                                <th class="py-4">Action</th>
                                         </tr>
                                 </thead>
                                 <tbody class="align-baseline text-sm">
                                         <tr class="border-b hover:bg-grey-lightest">
                                                 <td class="py-2">Home Page Template</td>
-                                                <td class="py-2"><code>/resources/views/templates/home.blade.php</code></td>
                                                 <td class="">
                                                         <a href="{{ route('templates.file', [$template->id, 'home']) }}" class="no-underline text-blue" v-if="isBladeFileAvailable('home')">Edit</a>
                                                         <a href="{{ route('templates.file', [$template->id, 'home']) }}" v-else>Create</a>
@@ -94,7 +92,6 @@
                                         </tr>
                                         <tr class="border-b hover:bg-grey-lightest">
                                                 <td class="py-2">Category Page Template</td>
-                                                <td class="py-2"><code>/resources/views/templates/category.blade.php</code></td>
                                                 <td class="">
                                                         <a href="{{ route('templates.file', [$template->id, 'category']) }}" class="no-underline text-blue" v-if="isBladeFileAvailable('category')">Edit</a>
                                                         <a href="{{ route('templates.file', [$template->id, 'category']) }}" v-else>Create</a>
@@ -102,7 +99,6 @@
                                         </tr>
                                         <tr class="border-b hover:bg-grey-lightest">
                                                 <td class="py-2">Article Page Template</td>
-                                                <td class="py-2"><code>/resources/views/templates/page.blade.php</code></td>
                                                 <td class="">
                                                         <a href="{{ route('templates.file', [$template->id, 'page']) }}" class="no-underline text-blue" v-if="isBladeFileAvailable('page')">Edit</a>
                                                         <a href="{{ route('templates.file', [$template->id, 'page']) }}" v-else>Create</a>
@@ -110,7 +106,6 @@
                                         </tr>
                                         <tr class="border-b hover:bg-grey-lightest">
                                                 <td class="py-2">User Profile Page Template</td>
-                                                <td class="py-2"><code>/resources/views/templates/profile.blade.php</code></td>
                                                 <td class="">
                                                         <a href="{{ route('templates.file', [$template->id, 'profile']) }}" class="no-underline text-blue" v-if="isBladeFileAvailable('profile')">Edit</a>
                                                         <a href="{{ route('templates.file', [$template->id, 'profile']) }}" v-else>Create</a>
@@ -119,27 +114,56 @@
                                 </tbody>
                         </table>
 
-                        <p class="text-xs uppercase text-indigo mt-4 py-2">All Files</p>
+                        
+                        <p class="text-xs uppercase text-indigo mt-8 py-2">Other Template Files</p>   
+
+                        
                         <table class="w-full mt-2 rounded text-left table-collapse">
                                 <thead class="text-xs font-semibold text-grey-darker border-b-2">
                                         <tr>
-                                                <th class="py-4">Name</th>
+                                                <th class="py-4">File</th>
                                                 <th class="hidden sm:table-cell py-4">Last Modified</th>
                                                 <th class="hidden sm:table-cell py-4">Size (Bytes)</th>
+                                                <th class="py-4">Action</th>
                                         </tr>
                                 </thead>
                                 <tbody class="align-baseline text-sm">
                                 
-                                        <tr v-for="file in files" class="border-b hover:bg-grey-lightest">
-                                                <td class="py-2" v-text="file.name"></td>
+                                        <tr v-for="file in nonStandardFiles" class="border-b hover:bg-grey-lightest">
+                                                <td class="py-2 font-mono" v-text="file.name"></td>
                                                 <td class="py-2" v-text="file.updated"></td>
                                                 <td class="py-2" v-text="file.size"></td>
-
+                                                <td class="py-2 cursor-pointer text-blue" @click="editFile(file.name)">Edit</td>
                                         </tr>
                                 </tbody>
                         </table>
+
+                        <p class="text-xs uppercase text-blue mt-8 py-2 hover:font-bold cursor-pointer" @click="showGetNameModal=true">+ Add Other File</p>   
+
                 </div>
         </div>
+
+        @if(! $template->isActive())
+        <div class="w-full py-4 text-right">
+                <form method="post" action="{{ route('template.destroy', $template->id) }}">
+                        {{ csrf_field() }}
+                        {{ method_field('DELETE') }}
+                        <button class="text-sm text-grey-darker hover:text-red" type="submit">Delete this template</button>
+                </form>
+        </div>
+        @endif
+
+        <base-modal :show="showGetNameModal" cover="1/2" @close="showGetNameModal=null">
+                <h4 slot="header" class="w-full text-blue-dark font-semibold bg-grey-lightest border-blue-lighter border-b py-4 px-8">
+                        What is the name of the file?
+                </h4>
+                <div class="w-full bg-grey-lighter py-4 px-8">
+                        <input type="text" v-model="newFileName" class="p-2 border rounded bg-white w-full" placeholder="e.g. main.css or main.js">
+                        <P class="text-grey-darker py-2 text-xs">Only letters, numbers, dots, dashes and underscores are allowed in file name.</p>
+                        <button class="my-4 p-2 bg-green text-white rounded" @click="addNewFile">Create New File</button>
+                </div>        
+        </base-modal>
+
         @endif
 </div>
         
@@ -151,16 +175,41 @@
 
         <script>
                 let data = {
+                        @if($template->id != null)
+                        selectedTab: 2,
+                        @else
                         selectedTab: 1,
-                        'id':'{{data_get($template, "id")}}',
-                        'name': "{{ old('name', $template->name) }}",
-                        'description': "{{ old('description', $template->description) }}",
-                        'files': @json($template->getFiles()),
-                        resources: []
-                }
-                new Vue({ el: 'main', 
+                        @endif
+                        id:'{{data_get($template, "id")}}',
+                        name: "{{ old('name', $template->name) }}",
+                        description: "{{ old('description', $template->description) }}",
+                        files: @json($template->getFiles()),
+                        resources: [],
+                        standardTemplateFiles: [
+                                "home.blade.php",
+                                "category.blade.php",
+                                "profile.blade.php",
+                                "page.blade.php",
+                        ],
+                        showGetNameModal: null,
+                        newFileName: '',
+                };
+
+                new Vue({ 
+                        el: 'main', 
+
                         data: data,
                         
+                        computed: {
+                                
+                                nonStandardFiles: function() {
+                                        let p = this
+                                        return  this.files.filter(function (file) { 
+                                                return p.standardTemplateFiles.indexOf(file.basename) === -1 
+                                        })
+                                }
+                        },
+
                         methods: {
 
                                 /**
@@ -170,13 +219,39 @@
                                 isBladeFileAvailable: function (type) {
                                         let l = this.files.length;
                                         for (let i = 0; i < l; i++) {
-                                                let file = this.files[i].name
-                                                if (file === "views\/templates\/" + this.name + "\/" + type + ".blade.php") {
+                                                let file = this.files[i].basename
+                                                if (file === type + ".blade.php") {
                                                         return true
                                                 }
                                         }
                                         return false
-                                },                                
+                                },   
+
+
+                                /**
+                                 * Adds a new non-standard template file
+                                 */
+                                addNewFile: function () {
+                                        let re = /^[\w.-]+$/i;
+                                        if(!re.test(this.newFileName)) { 
+                                                alert('Invalid file name')
+                                        } else {
+
+                                                util.submit ("{{ route('templates.file', [$template->id, 'other']) }}", {
+                                                        filename: this.newFileName
+                                                }, 'get')
+                                        }
+                                },
+                                
+                                
+                                editFile: function (fullFilePath) {
+                                        
+                                        let fileName = fullFilePath.split('\\').pop().split('/').pop();
+
+                                        util.submit ("{{ route('templates.file', [$template->id, 'other']) }}", {
+                                                filename: fileName
+                                        }, 'get')
+                                },
                                 
 
                                 /**
@@ -207,29 +282,6 @@
                                                 'name': this.name, 
                                                 'description': this.description
                                         });
-                                },
-
-                                updateAtServer: function () {
-                                        // let p = this
-                                        // util.ajax(
-                                        //         'patch', 
-                                        //         '/admin/categories/' + this.id,
-                                        //         {
-                                        //                 'name': this.name, 
-                                        //                 'description': this.description, 
-                                        //                 'parent_id': this.parent_id
-                                        //         },
-                                        //         function (data) {
-                                        //                 flash({message: data.flash.message}) 
-                                        //         },
-                                        //         function (code, data) {
-                                        //                 p.message = data.message
-                                        //                 p.errors = data.hasOwnProperty('errors')? data.errors : {}
-                                        //         },
-                                        //         function (code, data) {
-                                        //                 p.message = data.message
-                                        //         }
-                                        // );
                                 },
 
 

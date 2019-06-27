@@ -19,8 +19,6 @@ class ProfileController extends Controller
 
         $user->load('publications');
 
-        // return compiledView('profile', $user->toArray());
-        // return $user;
         return view('profile', [
             "resource" => $user,
             "common" => (object)[
@@ -31,13 +29,6 @@ class ProfileController extends Controller
             ]
         ]);
     }
-
-    // public function edit(User $user)
-    // {
-    //     $profile = $user->load('publications', 'comments', 'providers');
-
-    //     return view('admin.user.form', compact('profile'));
-    // }
 
     /**
      * Change the password of the user. An authenticated

@@ -38,7 +38,7 @@
             <tr>
                 <th class="py-4 px-6">Name</th>
                 <th class="hidden sm:table-cell p-4">Description</th>
-                <th class="hidden sm:table-cell p-4">Active</th>
+                <th class="hidden sm:table-cell p-4">Use</th>
                 <th class="p-4"></th>
             </tr>
         </thead>
@@ -55,10 +55,19 @@
                     <p v-if="template.description" class="text-grey-dark  my-2 text-sm font-sans truncate" v-text="template.description"></p>
                 </td>
                 
-                <td class="hidden sm:table-cell px-4 py-2 font-mono text-xs text-purple-dark whitespace-no-wrap align-middle" v-text="template.active">
+                <td class="hidden sm:table-cell px-4 py-2 whitespace-no-wrap align-middle">
+                    <div v-if="template.active==='Y'">
+                        <span class="px-1 rounded-full bg-green text-green border border-green-dark mr-2 font-mono">.</span> 
+                        <span class="text-sm text-green">In Use</span>
+                    </div>
+                    <div v-else @click="makeDefault(template)" class="cursor-pointer">
+                        <span class="px-1 rounded-full bg-grey-lighter text-grey-lighter border mr-2 font-mono">.</span> 
+                        <span class="text-sm text-blue">Apply</span>
+                    </div>
                 </td>
+
                 <td class="px-4 py-2 font-mono text-sm whitespace-no-wrap align-middle text-right">
-                    <a href="/" class="mb-1 cursor-pointer text-blue no-underline">
+                    <a v-bind:href="editTemplate(template.id)" class="mb-1 cursor-pointer text-blue no-underline">
                         <svg viewBox="0 0 20 20" class="fill-current h-6 w-6 text-grey" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 							<g id="icon-shape">
 								<polygon id="Combined-Shape" points="12.9497475 10.7071068 13.6568542 10 8 4.34314575 6.58578644 5.75735931 10.8284271 10 6.58578644 14.2426407 8 15.6568542 12.9497475 10.7071068"></polygon>
@@ -108,27 +117,17 @@
         },
 
         methods: {
+            
             editTemplate: function(id) {
                 return "/admin/templates/" + id
             },
 
-        //     deleteTemplate: function(id) {
-        //         let p = this
-        //         axios.delete('/admin/templates/' + id)
-        //             .then(function(response) {
-        //                 p.removeTemplateById(response.data.template_id)
-        //                 flash({
-        //                     message: response.data.flash.message
-        //                 })
-        //             })
-        //     },
+            makeDefault: function (template) {
 
-        //     removeTemplateById: function(template_id) {
-        //         for (let i = 0; i < this.templates.length; i++) {
-        //             if (this.templates[i].id === template_id)
-        //                 this.templates.splice(i, 1)
-        //         }
-        //     }
+                util.submit("{{ route('templates.setDefault') }}", {
+                    'template_id': template.id
+                });
+            }
         }
     })
 </script>

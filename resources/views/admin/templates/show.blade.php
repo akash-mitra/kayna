@@ -18,10 +18,6 @@
 
 @section('main')
 
-
-
-        
-
 <div class="w-full p-6 bg-white shadow">
         <form action="{{ route('templates.update', $template->id) }}" method="POST" id="frm">
                 @csrf
