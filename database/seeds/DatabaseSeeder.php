@@ -13,7 +13,14 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
+            
+            // creates the default parameters
             DefaultParametersSeeder::class,
+
+            // creates the entry for the default template
+            DefaultTemplatesSeeder::class,
+
+            
         ]);
 
         if (App::Environment() === 'local') 
