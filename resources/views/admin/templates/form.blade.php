@@ -12,7 +12,7 @@
                         @if(empty($template->name))
                                 <span class="text-grey-dark">Create</span>
                         @else
-                                <span class="text-grey-dark">Edit</a>
+                                <span class="text-grey-dark">{{ $template->name }}</a>
                         @endif
                 </span>
         </h1>        
@@ -21,7 +21,7 @@
 
 
 @section('main')
-<div class="px-6">
+<div class="px-6 mt-3">
 
         <div class="flex border-b">
                 <span @click="selectedTab=1" class="no-underline text-grey-dark cursor-pointer hover:bg-white px-4 py-3 mr-2" :class="selectedTab===1?'border-t-2 border-indigo bg-white -mb-1 text-indigo':''">
@@ -30,7 +30,11 @@
 
                 @if($template->id != null)
                 <span @click="selectedTab=2" class="no-underline text-grey-dark cursor-pointer hover:bg-white px-4 py-3 mr-2" :class="selectedTab===2?'border-t-2 border-indigo bg-white -mb-1 text-indigo':''">
-                        Files
+                        Blades
+                </span>
+
+                <span @click="selectedTab=3" class="no-underline text-grey-dark cursor-pointer hover:bg-white px-4 py-3 mr-2" :class="selectedTab===3?'border-t-2 border-indigo bg-white -mb-1 text-indigo':''">
+                        Static
                 </span>
                 @endif
 
@@ -74,17 +78,25 @@
         @if($template->id != null)
         <div v-if="selectedTab==2" class="bg-white shadow">
                 <div class="px-6 pt-1 pb-4">
-                        <p class="text-xs uppercase text-indigo mt-4 py-2">Standard Templates</p>
+                        <p class="text-sm uppercase text-indigo mt-4 py-2">Standard Blade Files</p>
                         <table class="w-full mt-2 rounded text-left table-collapse">
                                 <thead class="text-xs font-semibold text-grey-darker border-b-2">
                                         <tr>
                                                 <th class="py-4">Name</th>
+                                                <th class="py-4 hidden sm:table-cell">Last Modified</th>
+                                                <th class="py-4 hidden sm:table-cell">Size (Bytes)</th>
                                                 <th class="py-4">Action</th>
                                         </tr>
                                 </thead>
                                 <tbody class="align-baseline text-sm">
                                         <tr class="border-b hover:bg-grey-lightest">
                                                 <td class="py-2">Home Page Template</td>
+                                                <td class="hidden sm:table-cell">
+                                                        <span v-if="isBladeFileAvailable('home')" v-text="isBladeFileAvailable('home').updated"></span>
+                                                </td>
+                                                <td class="hidden sm:table-cell">
+                                                        <span v-if="isBladeFileAvailable('home')" v-text="isBladeFileAvailable('home').size"></span>
+                                                </td>
                                                 <td class="">
                                                         <a href="{{ route('templates.file', [$template->id, 'home']) }}" class="no-underline text-blue" v-if="isBladeFileAvailable('home')">Edit</a>
                                                         <a href="{{ route('templates.file', [$template->id, 'home']) }}" v-else>Create</a>
@@ -92,6 +104,12 @@
                                         </tr>
                                         <tr class="border-b hover:bg-grey-lightest">
                                                 <td class="py-2">Category Page Template</td>
+                                                <td class="hidden sm:table-cell">
+                                                        <span v-if="isBladeFileAvailable('category')" v-text="isBladeFileAvailable('category').updated"></span>
+                                                </td>
+                                                <td class="hidden sm:table-cell">
+                                                        <span v-if="isBladeFileAvailable('category')" v-text="isBladeFileAvailable('category').size"></span>
+                                                </td>
                                                 <td class="">
                                                         <a href="{{ route('templates.file', [$template->id, 'category']) }}" class="no-underline text-blue" v-if="isBladeFileAvailable('category')">Edit</a>
                                                         <a href="{{ route('templates.file', [$template->id, 'category']) }}" v-else>Create</a>
@@ -99,6 +117,12 @@
                                         </tr>
                                         <tr class="border-b hover:bg-grey-lightest">
                                                 <td class="py-2">Article Page Template</td>
+                                                <td class="hidden sm:table-cell">
+                                                        <span v-if="isBladeFileAvailable('page')" v-text="isBladeFileAvailable('page').updated"></span>
+                                                </td>
+                                                <td class="hidden sm:table-cell">
+                                                        <span v-if="isBladeFileAvailable('page')" v-text="isBladeFileAvailable('page').size"></span>
+                                                </td>
                                                 <td class="">
                                                         <a href="{{ route('templates.file', [$template->id, 'page']) }}" class="no-underline text-blue" v-if="isBladeFileAvailable('page')">Edit</a>
                                                         <a href="{{ route('templates.file', [$template->id, 'page']) }}" v-else>Create</a>
@@ -106,6 +130,12 @@
                                         </tr>
                                         <tr class="border-b hover:bg-grey-lightest">
                                                 <td class="py-2">User Profile Page Template</td>
+                                                <td class="hidden sm:table-cell">
+                                                        <span v-if="isBladeFileAvailable('profile')" v-text="isBladeFileAvailable('profile').updated"></span>
+                                                </td>
+                                                <td class="hidden sm:table-cell">
+                                                        <span v-if="isBladeFileAvailable('profile')" v-text="isBladeFileAvailable('profile').size"></span>
+                                                </td>
                                                 <td class="">
                                                         <a href="{{ route('templates.file', [$template->id, 'profile']) }}" class="no-underline text-blue" v-if="isBladeFileAvailable('profile')">Edit</a>
                                                         <a href="{{ route('templates.file', [$template->id, 'profile']) }}" v-else>Create</a>
@@ -113,10 +143,15 @@
                                         </tr>
                                 </tbody>
                         </table>
+                </div>
 
-                        
-                        <p class="text-xs uppercase text-indigo mt-8 py-2">Other Template Files</p>   
+                <p>&nbsp;</p>
+        </div>
 
+
+        <div v-if="selectedTab==3" class="bg-white shadow">
+                <div class="px-6 pt-1 pb-4">
+                        <p class="text-sm uppercase text-indigo mt-4 py-2">Static Files</p>    
                         
                         <table class="w-full mt-2 rounded text-left table-collapse">
                                 <thead class="text-xs font-semibold text-grey-darker border-b-2">
@@ -129,19 +164,20 @@
                                 </thead>
                                 <tbody class="align-baseline text-sm">
                                 
-                                        <tr v-for="file in nonStandardFiles" class="border-b hover:bg-grey-lightest">
+                                        <tr v-for="file in staticFiles" class="border-b hover:bg-grey-lightest">
                                                 <td class="py-2 font-mono" v-text="file.name"></td>
-                                                <td class="py-2" v-text="file.updated"></td>
-                                                <td class="py-2" v-text="file.size"></td>
+                                                <td class="py-2 hidden sm:table-cell" v-text="file.updated"></td>
+                                                <td class="py-2 hidden sm:table-cell" v-text="file.size"></td>
                                                 <td class="py-2 cursor-pointer text-blue" @click="editFile(file.name)">Edit</td>
                                         </tr>
                                 </tbody>
                         </table>
 
-                        <p class="text-xs uppercase text-blue mt-8 py-2 hover:font-bold cursor-pointer" @click="showGetNameModal=true">+ Add Other File</p>   
+                        <p class="text-xs uppercase text-blue mt-8 py-4 hover:text-blue-darker font-bold cursor-pointer" @click="showGetNameModal=true">+ Add Static File</p>   
 
                 </div>
         </div>
+
 
         @if(! $template->isActive())
         <div class="w-full py-4 text-right">
@@ -202,7 +238,7 @@
                         
                         computed: {
                                 
-                                nonStandardFiles: function() {
+                                staticFiles: function() {
                                         let p = this
                                         return  this.files.filter(function (file) { 
                                                 return p.standardTemplateFiles.indexOf(file.basename) === -1 
@@ -221,7 +257,7 @@
                                         for (let i = 0; i < l; i++) {
                                                 let file = this.files[i].basename
                                                 if (file === type + ".blade.php") {
-                                                        return true
+                                                        return this.files[i]
                                                 }
                                         }
                                         return false
@@ -229,18 +265,29 @@
 
 
                                 /**
-                                 * Adds a new non-standard template file
+                                 * Adds a new static template file
                                  */
                                 addNewFile: function () {
+                                        
+                                        // make sure file name is right format
                                         let re = /^[\w.-]+$/i;
-                                        if(!re.test(this.newFileName)) { 
+                                        if (!re.test(this.newFileName)) { 
                                                 alert('Invalid file name')
-                                        } else {
+                                                return;
+                                        } 
 
-                                                util.submit ("{{ route('templates.file', [$template->id, 'other']) }}", {
-                                                        filename: this.newFileName
-                                                }, 'get')
+
+                                        // make sure file extension is acceptable
+                                        if (['php', 'PHP'].indexOf(this.newFileName.split('.').pop()) != -1) {
+                                                alert ('Only static files, such as CSS or JS files, can be added here');
+                                                return;
                                         }
+
+                                        // submit to the server
+                                        util.submit ("{{ route('templates.file', [$template->id, 'other']) }}", {
+                                                filename: this.newFileName
+                                        }, 'get')
+                                
                                 },
                                 
                                 

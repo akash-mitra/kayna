@@ -18,6 +18,8 @@ class TemplateFileController extends Controller
             
             $fileName = $request->input('filename');
 
+            $this->stopDynamicFileAddition($fileName);
+
             $content = $template->getOtherContent($fileName);
 
             return view('admin.templates.file', [
@@ -52,18 +54,27 @@ class TemplateFileController extends Controller
      */
     public function save (Template $template, $type, Request $request)
     {
-        //TODO some kind of validation needs to be here about type etc.
-        
+        //TODO validation for "type" and "data"
+
         $fileContent = $request->input('data');
-        $fileName = $request->input('filename');
 
         if ($type === 'other') {
+            
+            $fileName = $request->input('filename');
+            
+            $this->stopDynamicFileAddition($fileName);
+
             $template->setOtherContent($fileName, $fileContent);
+            
+            
         } else {
+
             $template->setBladeContent($type, $fileContent);
         }
 
-        if ($template->active === 'Y') $template->activate();
+
+        // refresh the template after changes if the template is in use
+        if ($template->isActive()) $template->activate();
         
         session()->flash('flash', 'Success!');
 
@@ -72,11 +83,23 @@ class TemplateFileController extends Controller
     }
 
 
+
+    /**
+     * This function stops php files to be added as static file
+     */
+    private function stopDynamicFileAddition ($filename)
+    {
+        if (substr_compare($filename, '.php', -4) === 0) {
+            abort (400, 'Dynamic files (such as php files) are not allowed to be added.');
+        }
+    }
+
+
     private function getFileExtension ($fileName)
     {
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
 
-        if (empty($extension)) return 'PHP'; // default
+        if (empty($extension)) return 'TXT'; // default
 
         return strtoupper($extension);
     }

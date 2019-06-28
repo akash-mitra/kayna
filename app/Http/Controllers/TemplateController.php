@@ -4,13 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Template;
 use \Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
-use Guzzle\Http\Exception\ClientErrorResponseException;
-use GuzzleHttp\Exception\ServerException;
-use GuzzleHttp\Exception\BadResponseException;
 
 class TemplateController extends Controller
 {
@@ -75,6 +68,11 @@ class TemplateController extends Controller
      */
     public function setDefault(Request $request)
     {
+
+        $request->validate([
+            'template_id' => 'required|numeric'
+        ]);
+
         $template = Template::findOrFail($request->input('template_id'));
 
         $template->setDefault();

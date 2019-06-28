@@ -4,7 +4,7 @@
             Menu
         </span>
         @foreach(App\Category::whereNull('parent_id')->get() as $c)
-            <a href="{{ $c->url }}" class="menu-mod-item text-indigo-900 whitespace-no-wrap px-4 py-4 my-0 hover:text-indigo-600 hidden md:block">
+            <a href="{{ $c->url }}" class="menu-mod-item whitespace-no-wrap px-4 py-4 my-0 text-indigo-900 hover:text-indigo-600 hidden md:block">
                 {{ $c->name }}
             </a>
         @endforeach
