@@ -109,7 +109,7 @@ class SocialLoginController extends Controller
     {
         $config['client_id'] = param('login_facebook_client_id');
         $config['client_secret'] = param('login_facebook_client_secret');
-        $config['redirect'] = 'https://flower.app/social/login/facebook/callback';
+        $config['redirect'] = url('/social/login/facebook/callback');
 
         return  Socialite::buildProvider(\Laravel\Socialite\Two\FacebookProvider::class, $config);
     }
@@ -118,7 +118,7 @@ class SocialLoginController extends Controller
     {
         $config['client_id'] = param('login_google_client_id');
         $config['client_secret'] = param('login_google_client_secret');
-        $config['redirect'] = 'https://flower.app/social/login/google/callback';
+        $config['redirect'] = url('/social/login/google/callback');
 
         return  Socialite::buildProvider(\Laravel\Socialite\Two\GoogleProvider::class, $config);
     }
