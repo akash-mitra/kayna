@@ -49,12 +49,19 @@ Route::delete('/admin/templates/{template}', 'TemplateController@destroy')->name
 
 
 
+// --------------------------------------------------------------------------------------------------------------------------
+// Feed Generator 
+// --------------------------------------------------------------------------------------------------------------------------
+Route::get('/feed/{type?}', 'FeedController@index')->name('feed');
+
+
+
 // All Tags related general and admin routes
-Route::get('/tags/{tag}/{slug?}', 'TagController@show');
-Route::get('/api/tags', 'TagController@apiIndex')->name('api.tags.index');
-Route::group(['prefix' => 'admin'], function () {
-    Route::resource('tags', 'TagController')->except(['show'])->middleware('admin');
-});
+// Route::get('/tags/{tag}/{slug?}', 'TagController@show');
+// Route::get('/api/tags', 'TagController@apiIndex')->name('api.tags.index');
+// Route::group(['prefix' => 'admin'], function () {
+//     Route::resource('tags', 'TagController')->except(['show'])->middleware('admin');
+// });
 
 // all modules related routes
 Route::group(['prefix' => 'admin'], function () {
@@ -107,3 +114,6 @@ Route::post('/admin/installation/{step}', 'HomeController@installProcess')->name
 
 Route::post('/admin/cache/app/clear', 'SettingController@clearAppCache')->name('app.cache.clear')->middleware('admin');
 Route::post('/admin/app/update', 'SettingController@appUpdate')->name('app.update')->middleware('admin');
+
+
+
