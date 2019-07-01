@@ -23,8 +23,6 @@ class HomeController extends Controller
 
         $categories = Category::take(10)->get();
 
-        // return $data;
-        // return compiledView('home', $data);
         return view('home', [
             "resource" => (object)[
                 "pages" => $pages,

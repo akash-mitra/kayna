@@ -13,7 +13,7 @@ class EnableSSL extends Command
      *
      * @var string
      */
-    protected $signature = 'ssl:enable';
+    protected $signature = 'blog:secure';
 
     /**
      * The console command description.

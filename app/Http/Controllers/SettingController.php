@@ -41,12 +41,28 @@ class SettingController extends Controller
     }
 
 
+    /**
+     * Clears caches and configs
+     */
     public function clearAppCache()
     {
         Artisan::call('cache:clear');
         Artisan::call('config:clear');
 
         session()->flash('message', 'Application Cache has been cleared!');
+        return back();
+    }
+
+
+    /**
+     * Updates the blog application with the latest version.
+     */
+    public function appUpdate ()
+    {
+        Artisan::call('blog:update');
+
+        session()->flash('message', 'Application has been updated to the latest version!');
+
         return back();
     }
 }

@@ -105,3 +105,4 @@ Route::get('/admin/installation/{step}', 'HomeController@install')->name('instal
 Route::post('/admin/installation/{step}', 'HomeController@installProcess')->name('installation-process')->middleware('admin');
 
 Route::post('/admin/cache/app/clear', 'SettingController@clearAppCache')->name('app.cache.clear')->middleware('admin');
+Route::post('/admin/app/update', 'SettingController@appUpdate')->name('app.update')->middleware('admin');

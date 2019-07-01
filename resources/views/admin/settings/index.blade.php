@@ -25,6 +25,7 @@
         <div :class="active_tab!=3? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-l-2 border-indigo'" class="py-4 pl-8" @click="select('storage', $event)">Storage</div>
         <div :class="active_tab!=4? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-l-2 border-indigo'" class="py-4 pl-8" @click="select('editor', $event)">Editor</div>
         <div :class="active_tab!=5? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-l-2 border-indigo'" class="py-4 pl-8" @click="select('cache', $event)">Cache</div>
+        <div :class="active_tab!=6? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-l-2 border-indigo'" class="py-4 pl-8" @click="select('update', $event)">Update</div>
     </div>
 
     <div v-show="active_tab===1" class="w-full md:flex text-sm bg-white border-t">
@@ -46,6 +47,10 @@
     <div v-show="active_tab===5" class="w-full md:flex text-sm bg-white border-t">
         @include('admin.settings.cache-settings')
     </div>
+
+    <div v-show="active_tab===6" class="w-full md:flex text-sm bg-white border-t">
+        @include('admin.settings.update-settings')
+    </div>
 </div>
 @endsection
 
@@ -56,7 +61,7 @@
         el: 'main',
         data: {
             active_tab: 1,
-            tabs: ['general', 'social', 'storage', 'editor', 'cache'],
+            tabs: ['general', 'social', 'storage', 'editor', 'cache', 'update'],
             /* storage related variables */
             storageS3StateClass: 'bg-grey',
 
