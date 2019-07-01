@@ -64,10 +64,18 @@
                 </div>
         </div>
 
-        <div class="px-6 bg-grey-lightest text-sm py-1 border-b">
+        <div class="px-6 bg-grey-lightest text-sm py-1 border-b flex justify-between">
+            <div>
                 <a v-bind:href="page.url" target="_blank" class="p-2 cursor-pointer text-indigo-darker no-underline hover:text-blue">View</a>
                 <button @click="changeStatus(page.id, (page.status != 'Live'? 'Live' : 'Draft'))" v-text="page.status != 'Live'? 'Publish' : 'Take Down'" class="p-2 cursor-pointer text-indigo-darker no-underline hover:text-blue"></button>
-                <button @click="deletePage(page.id)" class="p-2 cursor-pointer text-indigo-darker no-underline hover:text-red">Delete</button>
+            </div>
+
+            @if(auth()->user()->type === 'admin')
+            <div>
+                <button @click="makeMeAuthor(page.id)" v-if="{{auth()->user()->id}} != page.author.id" class="p-2 cursor-pointer text-indigo-darker no-underline hover:text-red">Transfer to Me</button>
+                <button @click="deletePage(page.id)" v-else class="p-2 cursor-pointer text-indigo-darker no-underline hover:text-red">Delete</button>
+            </div>
+            @endif
         </div>
         
     </div> <!-- v-if ends -->
@@ -151,6 +159,22 @@
                         })
                         let page = p.getPageById(response.data.page_id)
                         page.status = status
+                    })
+            },
+
+
+            makeMeAuthor: function (id) {
+
+                let p = this
+                axios.post("{{ route('api.pages.setAuthor') }}", {
+                        page_id: id
+                    })
+                    .then(function(response) {
+                        flash({
+                            message: response.data.flash.message
+                        })
+                        let page = p.getPageById(response.data.page_id)
+                        page.author = @json(auth()->user())
                     })
             },
 

@@ -189,4 +189,23 @@ class PageController extends Controller
             "page_id" => $page->id
         ];
     }
+
+
+    
+    public function apiSetAuthor(Request $request)
+    {
+        $page_id = $request->input('page_id');
+        
+        $page = Page::findOrFail($page_id);
+
+        $page->user_id = auth()->user()->id;
+
+        $page->save();
+
+        return [
+            "status" => "success",
+            "flash" => ["message" => "You are now the author of this page"],
+            "page_id" => $page->id
+        ];
+    }
 }

@@ -13,6 +13,7 @@ Route::delete('/admin/pages/{page}',    'PageController@destroy')->name('pages.d
 Route::get('/api/pages',                'PageController@apiGetAll')->name('api.pages.index')->middleware('web');
 Route::get('/api/pages/{page}',         'PageController@apiGet')->name('api.pages.get')->middleware('author');
 Route::post('/api/pages/status',        'PageController@apiSetStatus')->name('api.pages.setStatus')->middleware('web');
+Route::post('/api/pages/author',        'PageController@apiSetAuthor')->name('api.pages.setAuthor')->middleware('web');
 // --------------------------------------------------------------------------------------------------------------------------
 
 
