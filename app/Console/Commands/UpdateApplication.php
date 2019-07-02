@@ -55,8 +55,8 @@ class UpdateApplication extends Command
 
         $commands = [
             'git pull origin master',
-            'composer install',
-            'php artisan migrate',
+            'composer install --no-interaction --no-dev --prefer-dist',
+            'php artisan migrate --force',
             'php artisan cache:clear',
             'php artisan config:cache',
             'php artisan queue:restart',
