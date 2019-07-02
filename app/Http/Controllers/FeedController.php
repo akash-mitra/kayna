@@ -15,6 +15,11 @@ class FeedController extends Controller
      */
     public function index($type = 'RSS')
     {
+
+        if (param('enable_site_feeds') === 'no') {
+            abort(404, 'Feeds are not available');
+        }
+        
         switch (strtoupper($type)) {
             case 'RSS': return $this->rssFeed();
             case 'ATOM': return $this->atomFeed();
