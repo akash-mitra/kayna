@@ -140,7 +140,7 @@ class User extends Authenticatable
 
         $name = $this->slug . '.' . explode('/', explode(':', substr($photo, 0, strpos($photo, ';')))[1])[1];
         $filePath = storage_path('app/public/media/profile/').$name; 
-        $url = asset('storage/media/profile/' . $name);
+        $url = '/storage/media/profile/' . $name; 
 
         \Image::make($photo)->save($filePath);
         

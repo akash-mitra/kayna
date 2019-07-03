@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\Artisan;
 class SettingController extends Controller
 {
 
-    private $registeredParameters = ['login_facebook_app_secret'];
-
     public function __construct()
     {
         return $this->middleware('auth');
@@ -25,12 +23,20 @@ class SettingController extends Controller
         return view('admin.settings.index', compact('settings'));
     }
 
+
+    /**
+     * Updates the value of a key in the parameter table.
+     */
     public function update(Request $request)
     {
         foreach ($request->input() as $key => $value) {
+            
             Cache::forget($key);
+
+            $value = Parameter::checkForEncryption($key, $value);
+
             DB::table('parameters')->where('key', $key)->update([
-                'value' => $value===null ? '' : $value
+                'value' => alt ($value, '')
             ]);
         }
 

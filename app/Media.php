@@ -73,10 +73,13 @@ class Media extends Model
             return $media;
 
         } catch (Exception $e) {
+            
+            // clean up
             if (Storage::disk($storageType)->exists($path)) {
                 Storage::disk($storageType)->delete($path);
             }
-            Media::where('id', $id)->delete();
+            if ($media) $media->delete();
+
             throw $e;
         }
     }

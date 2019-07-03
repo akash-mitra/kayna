@@ -78,8 +78,6 @@
             <p v-show="!showBioInput" class="w-full py-2 h-16 text-grey-dark text-sm" v-text="about"></p>
             <textarea v-show="showBioInput" v-model="profile.bio" class="w-full bg-grey-lightest p-2 h-24 border rounded shadow-inner text-grey-dark text-sm"></textarea>
 
-
-
             @if($profile->id === auth()->user()->id)
             <div class="py-2 flex justify-between border-b border-dotted items-center">
                 <span class="text-indigo text-sm">Password</span>
@@ -93,6 +91,8 @@
             <input type="password" placeholder="Must be 8 characters" v-show="showPasswordInput" class="w-full bg-grey-lightest p-2 border rounded shadow-inner text-sm" v-model="passwordHolder" autocomplete="off" />
             <p v-show="!showPasswordInput" class="text-grey-dark text-sm">Change your password</p>
             @endif
+
+            
         </div>
 
         <div class="w-full md:w-1/2 p-8">
@@ -126,6 +126,15 @@
         </div>
 
     </div>
+
+    @if(auth()->user()->type === 'admin')
+    <div class="flex w-full justify-end items-center p-6 border-t">
+        @if(auth()->user()->id != $profile->id)
+        <button @click="impersonate" class="py-2 m-2 px-3 bg-white border border-orange text-orange rounded hover:bg-orange hover:text-white hover:border-orange">Impersonate</button>
+        @endif
+        <!-- <button @click="impersonate" class="py-2 m-2 px-3 bg-white border border-red text-red rounded hover:bg-red-dark hover:text-white hover:border-red-dark">Delete</button> -->
+    </div>
+    @endif
 </div>
 
 @include('admin.user.image-upload-modal')
@@ -204,8 +213,10 @@
 
             // for changinf profile image
             changeImage: function () {
+                @if($profile->id === auth()->user()->id)
                 this.imgSrc = this.profile.avatar
                 this.showImageChangeModal = true
+                @endif
             },
 
             makeBioEditable: function() {
@@ -307,7 +318,28 @@
                     }
                 }
                 return xhr.send(form)
-            }
+            },
+
+            /**
+             * Let the logged in user become the user who owns this profile
+             */
+            impersonate: function () {
+                
+                @if($profile->type === 'admin')
+                // if the profile user is admin, no need to go to frontend
+                util.submit("{{ route('profiles.impersonate') }}", {
+                    user_id: '{{$profile->id}}'
+                });
+
+                @else 
+                    // if the profile user is not admin, redirect to frontpage
+                    util.ajax('post', "{{ route('profiles.impersonate') }}", {
+                        user_id: '{{$profile->id}}'
+                    }, function () {
+                        location.href="/";
+                    })
+                @endif
+            },
 
         }
     })

@@ -157,7 +157,7 @@
         </main>
 
         <div class="w-full flex justify-center mt-6 p-4 border-t text-indigo-400 rounded-lg">
-                &copy; {{ $common->sitename }}
+        Copyright &copy; {{ now()->year }}&nbsp;{{ $common->sitename }}. All rights reserved.
         </div>
     </div>
 

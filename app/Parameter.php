@@ -6,13 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Parameter extends Model
 {
-    //
+    private static $encryptionList = [
+        'mail_password'
+    ];
 
 
-    // public static function get($key)
-    // {
-    //     return Parameter::where('key', $key)->pluck('value')->first();
-    // }
     /**
      * Return all the key-value pairs as simple object
      *
@@ -28,5 +26,14 @@ class Parameter extends Model
             $paramObject->{$key} = $param['value'];
         }
         return $paramObject;
+    }
+
+
+    /**
+     * Encrypts the value if the key is in the encryption list.
+     */
+    public static function checkForEncryption($key, $value)
+    {
+        return (in_array($key, self::$encryptionList)? encrypt($value) : $value); 
     }
 }

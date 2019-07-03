@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 
 use DB;
+use Illuminate\Support\Facades\Mail;
 use App\Page;
 use App\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Config;
+use App\Mail\WelcomeUserEmail;
 
 class HomeController extends Controller
 {
@@ -158,7 +161,8 @@ class HomeController extends Controller
 
         if ($step === '3') {
             // send email
-            delete_param('installation');
+            
+            param('installation', '4');
             delete_param('installation_done_till_step');
             return redirect()->route('dashboard');
         }
@@ -171,5 +175,19 @@ class HomeController extends Controller
     public function adminLogin()
     {
         return view('admin.login.form');
+    }
+
+
+
+    public function test (Request $request) {
+        
+        setMailConfig();
+
+        Mail::to('akash.mitra@gmail.com')->queue(
+            new WelcomeUserEmail()
+        );
+
+        return 'mail sent';
+
     }
 }

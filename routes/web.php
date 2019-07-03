@@ -76,6 +76,7 @@ Route::post('/api/users/{slug}', 'UserController@updateAvatar')->name('profiles.
 // some special routes related to user
 Route::get('/profile/{slug}', 'ProfileController@show')->name('profiles.show');
 Route::post('/admin/users/{user}/password', 'ProfileController@changePassword')->name('profiles.password');
+Route::post('/admin/impersonate', 'ProfileController@impersonate')->name('profiles.impersonate')->middleware('admin');
 
 // all media related routes
 // Route::group(['prefix' => 'admin'], function () {
@@ -114,6 +115,8 @@ Route::post('/admin/installation/{step}', 'HomeController@installProcess')->name
 
 Route::post('/admin/cache/app/clear', 'SettingController@clearAppCache')->name('app.cache.clear')->middleware('admin');
 Route::post('/admin/app/update', 'SettingController@appUpdate')->name('app.update')->middleware('admin');
+
+Route::get('/admin/test', 'HomeController@test')->name('test')->middleware('admin');
 
 
 

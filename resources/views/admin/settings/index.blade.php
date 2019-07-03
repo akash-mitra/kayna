@@ -25,7 +25,8 @@
         <div :class="active_tab!=3? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-l-2 border-indigo'" class="py-4 pl-8" @click="select('storage', $event)">Storage</div>
         <div :class="active_tab!=4? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-l-2 border-indigo'" class="py-4 pl-8" @click="select('editor', $event)">Editor</div>
         <div :class="active_tab!=5? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-l-2 border-indigo'" class="py-4 pl-8" @click="select('cache', $event)">Cache</div>
-        <div :class="active_tab!=6? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-l-2 border-indigo'" class="py-4 pl-8" @click="select('feed', $event)">Feeds</div>
+        <div :class="active_tab!=6? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-l-2 border-indigo'" class="py-4 pl-8" @click="select('mail', $event)">Mail</div>
+        <div :class="active_tab!=7? 'cursor-pointer text-grey-dark':'text-indigo-dark bg-white border-l-2 border-indigo'" class="py-4 pl-8" @click="select('feed', $event)">Feeds</div>
     </div>
 
     <div v-show="active_tab===1" class="w-full md:flex text-sm bg-white border-t">
@@ -49,6 +50,10 @@
     </div>
 
     <div v-show="active_tab===6" class="w-full md:flex text-sm bg-white border-t">
+        @include('admin.settings.mail-settings')
+    </div>
+
+    <div v-show="active_tab===7" class="w-full md:flex text-sm bg-white border-t">
         @include('admin.settings.feed-settings')
     </div>
 </div>
@@ -60,8 +65,8 @@
     new Vue({
         el: 'main',
         data: {
-            active_tab: 1,
-            tabs: ['general', 'social', 'storage', 'editor', 'cache', 'feed'],
+            active_tab: 6,
+            tabs: ['general', 'social', 'storage', 'editor', 'cache', 'mail', 'feed'],
             /* storage related variables */
             storageS3StateClass: 'bg-grey',
 

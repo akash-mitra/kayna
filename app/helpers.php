@@ -3,7 +3,8 @@
 use App\Module;
 use App\Template;
 use Illuminate\Support\Facades\Cache;
-use Symfony\Component\Debug\Exception\FatalThrowableError;
+use Illuminate\Support\Facades\Config;
+// use Symfony\Component\Debug\Exception\FatalThrowableError;
 
 /**
  * Retrieves the value of the key from parameter table
@@ -50,6 +51,57 @@ function param(String $key, $value = null)
 
 
 /**
+ * Dynamically configures the mail settings
+ */
+function setMailConfig()
+{
+    $service = param('mail_service');
+
+
+    if ($service === 'google') {
+
+        Config::set('mail.driver', 'smtp');
+        Config::set('mail.host', 'smtp.gmail.com');
+        Config::set('mail.port', '587');
+        Config::set('mail.from', [
+            'address' => param('mail_username'),
+            'name' => alt(param('mail_name'), param('sitename'))
+        ]);
+        Config::set('mail.username', param('mail_username'));
+        Config::set('mail.password', decrypt(param('mail_password')));    
+        Config::set('mail.encryption', 'tls');
+
+        return;
+    }
+    
+
+    if ($service === 'smtp') {
+
+        $driver = alt(param('mail_driver'), 'smtp');
+        $host = param('mail_host');
+        $port = alt(param('mail_port'), '587');
+        $from = [
+            'address' => param('mail_username'),
+            'name' => alt(param('mail_name'), param('sitename'))
+        ];
+        $username = param('mail_username');
+        $password = param('mail_password');
+        $encryption = alt(param('mail_encryption'), 'tls');
+        
+        Config::set('mail.driver', $driver);
+        Config::set('mail.host', $host);
+        Config::set('mail.port', $port);
+        Config::set('mail.from', $from);
+        Config::set('mail.username', $username);
+        Config::set('mail.password', $password);    
+        Config::set('mail.encryption', $encryption);
+
+        return;
+    }    
+}
+
+
+/**
  * Returns an array containing the names of modules
  * that are available under given position name
  *
@@ -63,45 +115,53 @@ function getModulesforPosition($position)
 }
 
 
-
-function getTemplate($contentType)
+function alt($val, $alternate_val)
 {
-    return Template::where('type', $contentType)->where('active', 'Y')->first()->body;
+    return empty($val) ? $alternate_val : $val;
 }
 
-function compiledView(string $contentType, array $data)
-{
-    $template = getTemplate($contentType);
 
-    $compiledTemplate = Blade::compileString($template);
 
-    //TODO
-    // for each content type, cache the compiledTemplate
+// function getTemplate($contentType)
+// {
+//     return Template::where('type', $contentType)->where('active', 'Y')->first()->body;
+// }
 
-    return render($compiledTemplate, $data);
-}
+// function compiledView(string $contentType, array $data)
+// {
+//     $template = getTemplate($contentType);
 
-function render(string $__php, array $page)
-{
-    // dd($page->title);
-    $page['__env'] = app(\Illuminate\View\Factory::class);
+//     $compiledTemplate = Blade::compileString($template);
 
-    $obLevel = ob_get_level();
-    ob_start();
-    extract($page, EXTR_SKIP);
-    try {
-        eval('?' . '>' . $__php);
-    } catch (Exception $e) {
-        while (ob_get_level() > $obLevel) {
-            ob_end_clean();
-        }
-        throw $e;
-    } catch (Throwable $e) {
-        while (ob_get_level() > $obLevel) {
-            ob_end_clean();
-        }
-        throw new FatalThrowableError($e);
-    }
+//     //TODO
+//     // for each content type, cache the compiledTemplate
 
-    return ob_get_clean();
-}
+//     return render($compiledTemplate, $data);
+// }
+
+// function render(string $__php, array $page)
+// {
+//     // dd($page->title);
+//     $page['__env'] = app(\Illuminate\View\Factory::class);
+
+//     $obLevel = ob_get_level();
+//     ob_start();
+//     extract($page, EXTR_SKIP);
+//     try {
+//         eval('?' . '>' . $__php);
+//     } catch (Exception $e) {
+//         while (ob_get_level() > $obLevel) {
+//             ob_end_clean();
+//         }
+//         throw $e;
+//     } catch (Throwable $e) {
+//         while (ob_get_level() > $obLevel) {
+//             ob_end_clean();
+//         }
+//         throw new FatalThrowableError($e);
+//     }
+
+//     return ob_get_clean();
+// }
+
+

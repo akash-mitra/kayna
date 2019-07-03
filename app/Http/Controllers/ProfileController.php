@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
@@ -55,5 +56,29 @@ class ProfileController extends Controller
             'status' => 'success',
             'message' => 'Password changed successfully'
         ];
+    }
+
+
+
+    /**
+     * Impersonated the current auth user as the user of supplied user_id
+     */
+    public function impersonate(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required'
+        ]);
+
+        Auth::loginUsingId($request->input('user_id'));
+
+        if ($request->ajax())
+        {
+            return [
+                'status' => 'success'
+            ];
+
+        } else {
+            return back();
+        }
     }
 }

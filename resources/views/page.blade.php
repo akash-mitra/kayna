@@ -27,7 +27,7 @@
         font-family: 'Playfair Display', serif;
         font-size: 1.75em;
         margin-bottom: 0.5em;
-        color: #333333;
+        color: #dddddd;
     }
 
     .page-body h2 {
@@ -45,7 +45,7 @@
 
     .page-body p {
         margin-bottom: 1em;
-        color: #555555;
+        color: #bbbbbb;
         line-height:1.5em;
         font-size: 1.1em;
         font-weight: 100;
@@ -60,7 +60,7 @@
     }
 
     .page-body thead th {
-        background-color: #f7fafc;
+        background-color: #414141;
         font-weight: 600;
         padding: 0.5rem;
         text-align: left;
@@ -71,11 +71,11 @@
     }
 
     .page-body tbody tr:hover {
-        background-color: #f7fafc;
+        background-color: #414141;
     }
     .page-body tbody td {
         border-top-width: 1px;
-        border-color: #e2e8f0;
+        border-color: #111111;
         padding: 0.5rem
     }
 
@@ -84,19 +84,22 @@
         margin-bottom: 2rem;
     }
 
+    .menu-mod-item {
+        color: white;
+    }
   </style>
 
-  <meta name="theme-color" content="#fafafa">
+  <meta name="theme-color" content="#000000">
 
 </head>
 
-<body>
+<body class="bg-black text-white">
     <div class="w-full max-w-5xl mx-auto px-6 font-reading">
 
         <div class="w-full flex items-center justify-between py-4">
             <div class="w-1/3 text-left">
                 <a href="/">
-                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" class="stroke-current text-purple-800 inline-block fill-current" style="height: 3rem; width: 3rem" 
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" class="stroke-current text-purple-300 inline-block fill-current" style="height: 3rem; width: 3rem" 
 	 viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
                     <g>
                         <g>
@@ -145,7 +148,7 @@
                     </a>
             </div>
             <div class="hidden sm:block w-1/3 text-center">
-                <a href="/" title="Homepage" class="cursor-pointer font-heading text-2xl md:text-3xl font-bold text-purple-800">{{ $common->sitename }}</a>
+                <a href="/" title="Homepage" class="cursor-pointer font-heading text-2xl md:text-3xl font-bold text-purple-300">{{ $common->sitename }}</a>
             </div>
             <div class="w-1/3 flex justify-end">
             @includeIf('modules.login')
@@ -165,21 +168,21 @@
                             <a href="{{ $resource->category->url }}" class="text-sm text-blue-500">{{ $resource->category->name }}</a>
                         </p>
                         
-                        <h3 class="mt-4 text-4xl text-center font-heading text-indigo-800">{{ $resource->title }}</h3>
+                        <h3 class="mt-4 text-4xl text-center font-heading text-gray-200">{{ $resource->title }}</h3>
 
-                        <div class="flex justify-center mt-6 items-center text-indigo-800">
+                        <div class="flex justify-center mt-6 items-center text-gray-200">
                             <div class="flex items-center">
                                 <a href="{!! $resource->author->url !!} ">
                                     {!! $resource->author->photo('sm', 'no-modal rounded-full border-2 mr-4') !!}  
                                 </a>
                                 {{ $resource->author->name }}
                             </div>
-                            <time datetime="{{ $resource->updated_at->toDateTimeString() }}" class="text-indigo-800">
+                            <time datetime="{{ $resource->updated_at->toDateTimeString() }}" class="text-gray-200">
                                 &nbsp; Updated on {{ $resource->updated_at->toFormattedDateString() }}
                             </time>
                         </div>
                         
-                        <p class="mt-6 text-lg mt-4 p-6 bg-gray-100 rounded-lg text-gray-700">{{ $resource->summary }}</p>
+                        <p class="mt-6 text-lg mt-4 p-6 bg-gray-800 rounded-lg text-gray-100">{{ $resource->summary }}</p>
 
                     </header>
 
@@ -200,9 +203,9 @@
             </aside>
         </div>
 
-        <div class="w-full flex justify-center mt-10 p-4 border-t text-indigo-400 rounded-lg">
+        <div class="w-full flex justify-center mt-10 p-4 border-t text-gray-800 rounded-lg">
             <footer>
-                &copy; {{ $common->sitename }}
+            Copyright &copy; {{ now()->year }}&nbsp;{{ $common->sitename }}. All rights reserved.
             </footer>
         </div>
     </div>
