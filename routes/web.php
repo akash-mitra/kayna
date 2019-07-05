@@ -37,14 +37,24 @@ Route::get('/api/categories/{category}',        'CategoryController@apiGet')->na
 // --------------------------------------------------------------------------------------------------------------------------
 // All Template related routes
 // --------------------------------------------------------------------------------------------------------------------------
-Route::get('/admin/templates', 'TemplateController@index')->name('templates.index')->middleware('admin');
-Route::get('/admin/templates/create', 'TemplateController@create')->name('templates.create')->middleware('admin');
+Route::get('/admin/templates',                         'TemplateController@index')->name('templates.index')->middleware('admin');
+Route::get('/admin/templates/create',                  'TemplateController@create')->name('templates.create')->middleware('admin');
 Route::get('/admin/templates/{template}/files/{type}', 'TemplateFileController@form')->name('templates.file')->middleware('admin');
-Route::get('/admin/templates/{template}', 'TemplateController@edit')->name('templates.edit')->middleware('admin');
-Route::post('/admin/templates',    'TemplateController@store')->name('templates.store')->middleware('admin');
-Route::post('/admin/templates/default',    'TemplateController@setDefault')->name('templates.setDefault')->middleware('admin');
-Route::post('/admin/templates/{template}/files/{type}', 'TemplateFileController@save')->name('templates.file.save')->middleware('admin');
-Route::delete('/admin/templates/{template}', 'TemplateController@destroy')->name('template.destroy')->middleware('admin');
+Route::get('/admin/templates/{template}',              'TemplateController@edit')->name('templates.edit')->middleware('admin');
+Route::post('/admin/templates',                        'TemplateController@store')->name('templates.store')->middleware('admin');
+Route::post('/admin/templates/default',                'TemplateController@setDefault')->name('templates.setDefault')->middleware('admin');
+Route::post('/admin/templates/{template}/files/{type}','TemplateFileController@save')->name('templates.file.save')->middleware('admin');
+Route::delete('/admin/templates/{template}',           'TemplateController@destroy')->name('template.destroy')->middleware('admin');
+// --------------------------------------------------------------------------------------------------------------------------
+
+
+// --------------------------------------------------------------------------------------------------------------------------
+// All media related routes
+// --------------------------------------------------------------------------------------------------------------------------
+Route::get('/admin/media',            'MediaController@index')->name('media.index')->middleware('author');
+Route::get('/api/media',              'MediaController@apiIndex')->name('api.media.index')->middleware('author');
+Route::post('/admin/media',           'MediaController@store')->name('media.store')->middleware('author');
+Route::delete('/admin/media/{media}', 'MediaController@destroy')->name('media.destroy')->middleware('author');
 // --------------------------------------------------------------------------------------------------------------------------
 
 
@@ -77,17 +87,6 @@ Route::post('/api/users/{slug}', 'UserController@updateAvatar')->name('profiles.
 Route::get('/profile/{slug}', 'ProfileController@show')->name('profiles.show');
 Route::post('/admin/users/{user}/password', 'ProfileController@changePassword')->name('profiles.password');
 Route::post('/admin/impersonate', 'ProfileController@impersonate')->name('profiles.impersonate')->middleware('admin');
-
-// all media related routes
-// Route::group(['prefix' => 'admin'], function () {
-//     Route::resource('media', 'MediaController')->middleware('admin');
-// });
-Route::get('/admin/media', 'MediaController@index')->middleware('auth');
-Route::get('/api/media', 'MediaController@apiIndex')->middleware('auth');
-Route::post('/admin/media', 'MediaController@store')->middleware('auth');
-Route::delete('/admin/media/{media}', 'MediaController@destroy')->middleware('auth');
-
-
 
 
 Route::get('/admin/accesses', 'RestrictionController@index')->name('accesses.index')->middleware('admin');

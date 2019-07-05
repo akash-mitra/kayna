@@ -7,50 +7,22 @@ use Illuminate\Http\Request;
 
 class MediaController extends Controller
 {
+    
     /**
-     * Display a listing of the resource.
+     * Display a page containing the listing of all the media.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $type = $request->input('type');
-        $storage = $request->input('storage');
-        // $size = $request->input('size');
-        $name = $request->input('name');
-
-        $media = Media::query();
-
-        if ($type) {
-            $media->where('type', 'like', '%' . $type . '%');
-        }
-        if ($storage) {
-            $media->where('storage', 'like', '%' . $storage . '%');
-        }
-        // if ($size) { $media->where('size', 'like', '%'.$size. '%'); }
-        if ($name) {
-            $media->where('name', 'like', '%' . $name . '%');
-        }
-
-        $photos = $media->paginate();
-        $query = [
-            'type' => $type,
-            'storage' => $storage,
-            'name' => $name
-        ];
-        return view('admin.media.index')->with('photos', $photos)->with('query', $query);
+        return view('admin.media.index'); 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    { }
+
+
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly uploaded media in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -64,33 +36,8 @@ class MediaController extends Controller
         return Media::store ($uploadedFile, $name);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\media                $media
-     * @return \Illuminate\Http\Response
-     */
-    public function show(media $media)
-    { }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\media                $media
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(media $media)
-    { }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\media                $media
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, media $media)
-    { }
 
     /**
      * Remove the specified resource from storage.
@@ -109,6 +56,11 @@ class MediaController extends Controller
     }
 
 
+
+
+    /**
+     * Returns a JSON listing of all the media.
+     */
     public function apiIndex(Request $request)
     {
         $media = Media::query();
@@ -127,8 +79,6 @@ class MediaController extends Controller
                 if (! empty($q)) $media->orWhere('name', 'like', '%' . $q . '%');
             }
         }
-
-
         return $media->paginate(100);
     }
 }

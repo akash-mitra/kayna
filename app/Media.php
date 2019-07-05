@@ -9,38 +9,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Media extends Model
 {
-    protected $fillable = ['name', 'type', 'size', 'storage', 'path'];
-    protected $appends = ['url'];
+    protected $fillable = ['name', 'type', 'size', 'storage', 'path', 'url'];
     
     // Static Global Variables
     protected static $allowedExtensions = ['jpeg', 'jpg', 'png', 'bmp', 'gif'];
     protected static $maxSize = 10; //megabytes
     protected static $visibility = 'public';
 
-    /**
-     * directoryPath is only applicable for cloud storage.
-     * For example, in case of s3 this is actually the bucket name.
-     */
-    protected static $directoryPath = null;
-
 
     protected static $subDirectoryPath = 'media';
-    
 
-    /** 
-     * Appends an "url" attribute with the model  
-     **/
-    public function getUrlAttribute()
-    {
-        //return ($this->storage === 'public' ? '/' : '') . $this->path;
-
-        if ($this->storage === 'public') {
-            return '/storage/' . $this->path;
-        }
-        if ($this->storage === 's3') {
-            return 'https://'. $this->directoryPath . '.s3.amazonaws.com/'  . $this->path;
-        }
-    }
 
 
     /**
@@ -49,23 +27,28 @@ class Media extends Model
      * file information will also be written in the media table in database.
      * If this flag is set to false, the file will be stored in the disk only.
      */
-    public static function store($file, $name, $register = true)
+    public static function store($file, $name, $subDirectory = null, $register = true)
     {
         try {
             $sizeInBytes = $file->getClientSize(); // bytes
+
             self::_checkFileError($file, $sizeInBytes);
-            $storageType = self::getStorageType();
+
+            $diskStorageType = self::configureAndGetDiskStorageType();
             
-            $path = Storage::disk($storageType)->putFile(self::$subDirectoryPath, $file, self::$visibility);
+            if ($subDirectory === null) $subDirectory = self::$subDirectoryPath;
+            
+            $path = Storage::disk($diskStorageType)->putFile($subDirectory, $file, self::$visibility);
             
             $media = new Media([    
-                'name' => isset($name) ? $name : $file->getClientOriginalName(),
-                'type' => $file->guessExtension(), // $uri_detail['extension'],
-                'size' => round($sizeInBytes / 1024, 2), // killobytes
-                'path' => empty(self::$directoryPath) ? $path : self::$directoryPath . '/' . $path,
-                'storage' => $storageType,
-                'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
+                'name'       => isset($name) ? $name : $file->getClientOriginalName(),
+                'type'       => $file->guessExtension(), 
+                'size'       => round($sizeInBytes / 1024, 2), // killobytes
+                'path'       => $path,
+                'url'        => Storage::disk($diskStorageType)->url($path),
+                'storage'    => $diskStorageType,
+                'created_at' => now()->format('Y-m-d H:i:s'),
+                'updated_at' => now()->format('Y-m-d H:i:s')
             ]);
             
             if ($register) $media->save();
@@ -74,11 +57,12 @@ class Media extends Model
 
         } catch (Exception $e) {
             
-            // clean up
-            if (Storage::disk($storageType)->exists($path)) {
-                Storage::disk($storageType)->delete($path);
+            if (! empty($path)) {
+                if (Storage::disk($diskStorageType)->exists($path)) {
+                    Storage::disk($diskStorageType)->delete($path);
+                }
+                if (!empty ($media) && $register === true) $media->delete();
             }
-            if ($media) $media->delete();
 
             throw $e;
         }
@@ -100,24 +84,26 @@ class Media extends Model
 
     public static function _destroy($media)
     {
-        if ($media->storage === 'public') {
-            Storage::disk('public')->delete($media->path);
-        }
+        // if ($media->storage === 'public') {
+        //     Storage::disk('public')->delete($media->path);
+        // }
 
-        if ($media->storage === 's3') {
-            $path_array = explode('/', $media->path);
-            $bucket = array_shift($path_array); // gets the bucket name
-            $path = implode('/', $path_array);
+        // if ($media->storage === 's3') {
+        //     $path_array = explode('/', $media->path);
+        //     $bucket = array_shift($path_array); // gets the bucket name
+        //     $path = implode('/', $path_array);
             
-            self::setS3StorageParameters(
-                param('storage_s3_key'),
-                param('storage_s3_secret'),
-                param('storage_s3_region'),
-                $bucket
-            );
+        //     self::setS3StorageParameters(
+        //         param('storage_s3_key'),
+        //         param('storage_s3_secret'),
+        //         param('storage_s3_region'),
+        //         $bucket
+        //     );
             
-            Storage::disk('s3')->delete($path);
-        }
+        //     Storage::disk('s3')->delete($path);
+        // }
+
+        Storage::disk($media->storage)->delete($media->path);
 
         $media->delete();
 
@@ -128,7 +114,7 @@ class Media extends Model
     
 
 
-    private static function getStorageType()
+    public static function configureAndGetDiskStorageType()
     {
         if (param('storage_s3_active') === 'yes') {
             self::setS3StorageParameters(
@@ -150,7 +136,7 @@ class Media extends Model
         Config::set('filesystems.disks.s3.secret', $secret);
         Config::set('filesystems.disks.s3.region', $region);
         Config::set('filesystems.disks.s3.bucket', $bucket);
-        self::$directoryPath = $bucket;
+        
     }
 
 
