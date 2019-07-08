@@ -72,7 +72,7 @@ class User extends Authenticatable
 
     public static function findOrFailBySlug($slug)
     {
-        return static::where('slug', $slug)->first();
+        return static::where('slug', $slug)->firstOrFail();
     }
 
     public function createOrUpdateProvider(String $provider, $providerUser)

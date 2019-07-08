@@ -87,9 +87,9 @@ class PageController extends Controller
             "resource" => $pageData,
             "common" => (object)[
                 "sitename" => param('sitename'),
-                "sitetitle" => param('tagline'),
+                "sitetitle" => param('sitedesc'),
                 "metadesc" => param('sitedesc'),
-                "metakey" => param('sitekeys')
+                "metakey" => ''
             ]
         ]);
     }
@@ -164,9 +164,7 @@ class PageController extends Controller
     public function apiGetAll()
     {
         return Page::paginate(10);
-        // return Page::with(['author', 'category'])
-        //     ->orderBy('updated_at', 'desc')
-        //     ->get();
+        
     }
 
 

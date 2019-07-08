@@ -3,8 +3,6 @@
 use App\Module;
 use App\Template;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
-// use Symfony\Component\Debug\Exception\FatalThrowableError;
 
 /**
  * Retrieves the value of the key from parameter table
@@ -53,52 +51,56 @@ function param(String $key, $value = null)
 /**
  * Dynamically configures the mail settings
  */
-function setMailConfig()
-{
-    $service = param('mail_service');
+// function setMailConfig()
+// {
+//     $service = param('mail_service');
 
+//     dump ('received service = ' . $service);
 
-    if ($service === 'google') {
+//     if ($service === 'google') {
 
-        Config::set('mail.driver', 'smtp');
-        Config::set('mail.host', 'smtp.gmail.com');
-        Config::set('mail.port', '587');
-        Config::set('mail.from', [
-            'address' => param('mail_username'),
-            'name' => alt(param('mail_name'), param('sitename'))
-        ]);
-        Config::set('mail.username', param('mail_username'));
-        Config::set('mail.password', decrypt(param('mail_password')));    
-        Config::set('mail.encryption', 'tls');
+//         Config::set('mail.driver', 'smtp');
+//         Config::set('mail.host', 'smtp.gmail.com');
+//         Config::set('mail.port', '587');
+//         Config::set('mail.from', [
+//             'address' => param('mail_username'),
+//             'name' => alt(param('mail_name'), param('sitename'))
+//         ]);
+//         Config::set('mail.username', param('mail_username'));
+//         Config::set('mail.password', decrypt(param('mail_password')));    
+//         Config::set('mail.encryption', 'tls');
 
-        return;
-    }
+//         dump(Config::get('mail.host'));
+//         dump(Config::get('mail.password'));
+
+//         return;
+//     }
     
 
-    if ($service === 'smtp') {
+//     if ($service === 'smtp') {
 
-        $driver = alt(param('mail_driver'), 'smtp');
-        $host = param('mail_host');
-        $port = alt(param('mail_port'), '587');
-        $from = [
-            'address' => param('mail_username'),
-            'name' => alt(param('mail_name'), param('sitename'))
-        ];
-        $username = param('mail_username');
-        $password = param('mail_password');
-        $encryption = alt(param('mail_encryption'), 'tls');
+//         $driver = alt(param('mail_driver'), 'smtp');
+//         $host = param('mail_host');
+//         $port = alt(param('mail_port'), '587');
+//         $from = [
+//             'address' => param('mail_username'),
+//             'name' => alt(param('mail_name'), param('sitename'))
+//         ];
+//         $username = param('mail_username');
+//         $password = param('mail_password');
+//         $encryption = alt(param('mail_encryption'), 'tls');
         
-        Config::set('mail.driver', $driver);
-        Config::set('mail.host', $host);
-        Config::set('mail.port', $port);
-        Config::set('mail.from', $from);
-        Config::set('mail.username', $username);
-        Config::set('mail.password', $password);    
-        Config::set('mail.encryption', $encryption);
+//         Config::set('mail.driver', $driver);
+//         Config::set('mail.host', $host);
+//         Config::set('mail.port', $port);
+//         Config::set('mail.from', $from);
+//         Config::set('mail.username', $username);
+//         Config::set('mail.password', $password);    
+//         Config::set('mail.encryption', $encryption);
 
-        return;
-    }    
-}
+//         return;
+//     }    
+// }
 
 
 /**
@@ -121,47 +123,26 @@ function alt($val, $alternate_val)
 }
 
 
+/**
+ * Very experimental function to guess the 
+ * first name from the fullname.
+ */
+function guess_first_name($name)
+{
+    $name = strtolower($name);
 
-// function getTemplate($contentType)
-// {
-//     return Template::where('type', $contentType)->where('active', 'Y')->first()->body;
-// }
+    if (substr($name, 0, 2) === 'mr' 
+        || substr($name, 0, 2) === 'ms'
+        || substr($name, 0, 4) === 'miss'
+        || substr($name, 0, 6) === 'master'
+        || substr($name, 0, 5) === 'madam'
+        || substr($name, 0, 2) === 'dr'
+        || substr($name, 0, 4) === 'prof'
+        || substr($name, 0, 4) === 'cap.'
+        || substr($name, 0, 4) === 'maj.'
 
-// function compiledView(string $contentType, array $data)
-// {
-//     $template = getTemplate($contentType);
+    ) return ucfirst($name);
 
-//     $compiledTemplate = Blade::compileString($template);
-
-//     //TODO
-//     // for each content type, cache the compiledTemplate
-
-//     return render($compiledTemplate, $data);
-// }
-
-// function render(string $__php, array $page)
-// {
-//     // dd($page->title);
-//     $page['__env'] = app(\Illuminate\View\Factory::class);
-
-//     $obLevel = ob_get_level();
-//     ob_start();
-//     extract($page, EXTR_SKIP);
-//     try {
-//         eval('?' . '>' . $__php);
-//     } catch (Exception $e) {
-//         while (ob_get_level() > $obLevel) {
-//             ob_end_clean();
-//         }
-//         throw $e;
-//     } catch (Throwable $e) {
-//         while (ob_get_level() > $obLevel) {
-//             ob_end_clean();
-//         }
-//         throw new FatalThrowableError($e);
-//     }
-
-//     return ob_get_clean();
-// }
-
+    return ucfirst(explode(' ', str_replace(['.', '-', '_'], ' ', $name))[0]);
+}
 

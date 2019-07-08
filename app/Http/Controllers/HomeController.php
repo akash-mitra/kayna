@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Config;
 use App\Mail\WelcomeUserEmail;
+use App\Jobs\SendWelcomeEmail;
 
 class HomeController extends Controller
 {
@@ -33,9 +34,9 @@ class HomeController extends Controller
             ],
             "common" => (object)[
                 "sitename" => param('sitename'),
-                "sitetitle" => param('tagline'),
+                "sitetitle" => param('sitedesc'),
                 "metadesc" => param('sitedesc'),
-                "metakey" => param('sitekeys')
+                "metakey" => ''
             ]
         ]);
 
@@ -181,11 +182,13 @@ class HomeController extends Controller
 
     public function test (Request $request) {
         
-        setMailConfig();
+        // setMailConfig();
 
-        Mail::to('akash.mitra@gmail.com')->queue(
-            new WelcomeUserEmail()
-        );
+        // Mail::to('akash.mitra@gmail.com')->queue(
+        //     new WelcomeUserEmail()
+        // );
+        // dispatch(new SendWelcomeEmail());
+
 
         return 'mail sent';
 

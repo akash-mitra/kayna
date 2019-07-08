@@ -75,9 +75,9 @@ class CategoryController extends Controller
             "resource" => $categoryData,
             "common" => (object)[
                 "sitename" => param('sitename'),
-                "sitetitle" => param('tagline'),
+                "sitetitle" => param('sitedesc'),
                 "metadesc" => param('sitedesc'),
-                "metakey" => param('sitekeys')
+                "metakey" => ''
             ]
         ]);
     }
