@@ -13,7 +13,7 @@ class SettingController extends Controller
 
     public function __construct()
     {
-        return $this->middleware('auth');
+        return $this->middleware('admin');
     }
 
     public function index()
@@ -33,7 +33,7 @@ class SettingController extends Controller
             
             Cache::forget($key);
 
-            $value = Parameter::checkForEncryption($key, $value);
+            // $value = Parameter::checkForEncryption($key, $value);
 
             DB::table('parameters')->where('key', $key)->update([
                 'value' => alt ($value, '')

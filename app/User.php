@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Jobs\SendEmailJob;
+use App\Mail\WelcomeOnboard;
 
 class User extends Authenticatable
 {
@@ -44,10 +46,16 @@ class User extends Authenticatable
         if (!array_key_exists('slug', $attributes)) {
             $attributes['slug'] = uniqid(mt_rand(0, 9999), true);
         }
+        
         if (!array_key_exists('type', $attributes)) {
             $attributes['type'] = 'general';
         }
-        return parent::create($attributes);
+        
+        $user = parent::create($attributes);
+
+        SendEmailJob::dispatch($user->email, new WelcomeOnboard($user));    
+        
+        return $user;
     }
 
 

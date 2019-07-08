@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Parameter extends Model
 {
-    private static $encryptionList = [
-        'mail_password'
-    ];
+    // private static $encryptionList = [
+    //     //'mail_password'
+    // ];
 
 
     /**
@@ -32,8 +32,8 @@ class Parameter extends Model
     /**
      * Encrypts the value if the key is in the encryption list.
      */
-    public static function checkForEncryption($key, $value)
-    {
-        return (in_array($key, self::$encryptionList)? encrypt($value) : $value); 
-    }
+    // public static function checkForEncryption($key, $value)
+    // {
+    //     return (in_array($key, self::$encryptionList)? encrypt($value) : $value); 
+    // }
 }

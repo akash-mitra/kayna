@@ -4,15 +4,15 @@ namespace App\Http\Controllers;
 
 
 use DB;
-use Illuminate\Support\Facades\Mail;
+
 use App\Page;
 use App\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Config;
-use App\Mail\WelcomeUserEmail;
-use App\Jobs\SendWelcomeEmail;
+
+use App\Jobs\SendEmailJob;
+use App\Mail\WelcomeOnboard;
 
 class HomeController extends Controller
 {
@@ -180,17 +180,15 @@ class HomeController extends Controller
 
 
 
-    public function test (Request $request) {
+    public function test (Request $request) 
+    {
         
-        // setMailConfig();
+        
+           
+        // SendEmailJob::dispatch('akash.mitra@gmail.com', new WelcomeOnboard(), $parameters);
+        
 
-        // Mail::to('akash.mitra@gmail.com')->queue(
-        //     new WelcomeUserEmail()
-        // );
-        // dispatch(new SendWelcomeEmail());
-
-
-        return 'mail sent';
+        return 'mail queued';
 
     }
 }

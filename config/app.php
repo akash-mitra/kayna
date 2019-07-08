@@ -178,6 +178,7 @@ return [
 
         /* custom providers added by me */
         Intervention\Image\ImageServiceProvider::class,
+        App\Providers\BlogEmailServiceProvider::class
 
     ],
 
