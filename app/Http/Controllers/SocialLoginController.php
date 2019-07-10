@@ -43,18 +43,18 @@ class SocialLoginController extends Controller
         return redirect()->intended();
     }
 
+
     private function createUserWithProvider($provider, $authenticatedUser)
     {
-        $user = new User([
+        $user = User::create([
             'name' => $authenticatedUser->getName(),
             'email' => $authenticatedUser->getEmail(),
             'type' => 'general',
             'avatar' => $authenticatedUser->getAvatar(),
-            'slug' => uniqid(mt_rand(0, 9999), true),
-            'email_verified_at' => \Carbon\Carbon::now()
+            'email_verified_at' => now()
         ]);
 
-        $user->save();
+        // $user->save();
 
         $user->providers()->create([
             'provider_user_id' => $authenticatedUser->getId(),
