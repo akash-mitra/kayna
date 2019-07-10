@@ -65,6 +65,17 @@ Route::delete('/admin/media/{media}', 'MediaController@destroy')->name('media.de
 Route::get('/feed/{type?}', 'FeedController@index')->name('feed');
 
 
+// --------------------------------------------------------------------------------------------------------------------------
+// Email 
+// --------------------------------------------------------------------------------------------------------------------------
+Route::get('/admin/mails', 'MailController@index')->middleware('admin')->name('mails.index');
+Route::get('/admin/mails/{mail}', 'MailController@standardForm')->middleware('admin')->name('mails.standard.form');
+Route::get('/admin/mails/standard/{mail}', 'MailController@standardForm')->middleware('admin')->name('mails.standard.form');
+Route::post('/admin/mails', 'MailController@createOrUpdate')->middleware('admin')->name('mails.save');
+Route::post('/admin/mails/{mail}', 'MailController@changeState')->middleware('admin')->name('mails.activate');
+
+
+
 
 // All Tags related general and admin routes
 // Route::get('/tags/{tag}/{slug?}', 'TagController@show');

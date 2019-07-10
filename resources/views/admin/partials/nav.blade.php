@@ -3,7 +3,7 @@
 
         <ul class="menu-list hidden md:block w-full text-center sm:text-left sm:w-1/3 md:w-full list-reset py-4">
             <li class="pb-2">
-                <span class="px-6 text-indigo-light font-semibold text-xs uppercase">Content</span>
+                <span class="px-6 text-indigo-light font-semibold text-xs uppercase">Contents</span>
             </li>
             <li class="px-6 md:px-8 py-2">
                 <a class="hover:text-teal text-grey-darker no-underline font-hairline" href="/admin/pages">
@@ -64,9 +64,9 @@
             </li>
 
             <li class="px-6 md:px-8 py-2">
-                <span class="text-grey no-underline font-hairline" href="#">
-                    Mailing List
-                </span>
+                <a class="hover:text-teal text-grey-darker no-underline font-hairline" href="/admin/mails">
+                    Mails
+                </a>
             </li>
             <li class="px-6 md:px-8 py-2">
                 <span class="text-grey no-underline font-hairline" href="#">

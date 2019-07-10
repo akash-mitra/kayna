@@ -57,7 +57,7 @@
                             @{{ module.file }}
                         </td>
 
-                        </td>
+                        
                         <td class="px-4 py-2 font-mono text-sm whitespace-no-wrap flex justify-around">
                             <a v-bind:href="editModule(module.id)" class="flex items-center mb-1 cursor-pointer text-blue no-underline">
                                 <svg viewBox="0 0 24 24" class="heroicon h-6 w-6 fill-current text-blue-light" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">

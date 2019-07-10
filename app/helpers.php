@@ -48,59 +48,6 @@ function param(String $key, $value = null)
 }
 
 
-/**
- * Dynamically configures the mail settings
- */
-// function setMailConfig()
-// {
-//     $service = param('mail_service');
-
-//     dump ('received service = ' . $service);
-
-//     if ($service === 'google') {
-
-//         Config::set('mail.driver', 'smtp');
-//         Config::set('mail.host', 'smtp.gmail.com');
-//         Config::set('mail.port', '587');
-//         Config::set('mail.from', [
-//             'address' => param('mail_username'),
-//             'name' => alt(param('mail_name'), param('sitename'))
-//         ]);
-//         Config::set('mail.username', param('mail_username'));
-//         Config::set('mail.password', decrypt(param('mail_password')));    
-//         Config::set('mail.encryption', 'tls');
-
-//         dump(Config::get('mail.host'));
-//         dump(Config::get('mail.password'));
-
-//         return;
-//     }
-    
-
-//     if ($service === 'smtp') {
-
-//         $driver = alt(param('mail_driver'), 'smtp');
-//         $host = param('mail_host');
-//         $port = alt(param('mail_port'), '587');
-//         $from = [
-//             'address' => param('mail_username'),
-//             'name' => alt(param('mail_name'), param('sitename'))
-//         ];
-//         $username = param('mail_username');
-//         $password = param('mail_password');
-//         $encryption = alt(param('mail_encryption'), 'tls');
-        
-//         Config::set('mail.driver', $driver);
-//         Config::set('mail.host', $host);
-//         Config::set('mail.port', $port);
-//         Config::set('mail.from', $from);
-//         Config::set('mail.username', $username);
-//         Config::set('mail.password', $password);    
-//         Config::set('mail.encryption', $encryption);
-
-//         return;
-//     }    
-// }
 
 
 /**

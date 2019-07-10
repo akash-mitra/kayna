@@ -1,7 +1,7 @@
 @component('mail::message')
 # Welcome {{ guess_first_name($user->name) }}!
 
-Thanks so much for signing up! 
+Thanks so much for signing up!!!
 
 We are very passionate about data-related technologies and we built DWBI so that professionals can publish 
 technical contents about this subject here. We're glad that you joined us :)
