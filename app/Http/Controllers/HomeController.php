@@ -8,7 +8,7 @@ use DB;
 use App\Page;
 use App\Category;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 use App\Jobs\SendEmailJob;
@@ -186,7 +186,7 @@ class HomeController extends Controller
         
            
         // SendEmailJob::dispatch('akash.mitra@gmail.com', new WelcomeOnboard(), $parameters);
-        
+        SendEmailJob::dispatch(Auth::user()->email, new WelcomeOnboard(Auth::user()));    
 
         return 'mail queued';
 
