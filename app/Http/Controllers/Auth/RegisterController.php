@@ -38,6 +38,9 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+        
+        abort_if(strtoupper(param('login_native_active')) === 'NO', 403, 'User Registration Not Supported');
+        
     }
 
     /**
