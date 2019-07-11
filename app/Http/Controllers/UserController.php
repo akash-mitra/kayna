@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display the latest users (max 100)
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::orderBy('created_at', 'desc')->take(100)->get();
 
         return view('admin.user.index', compact('users'));
     }
