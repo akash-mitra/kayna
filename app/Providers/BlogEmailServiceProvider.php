@@ -30,7 +30,7 @@ class BlogEmailServiceProvider extends ServiceProvider implements DeferrableProv
             $mailer = new Mailer($app->get('view'), $swift_mailer, $app->get('events'));
             $mailer->alwaysFrom($parameters['username'], $parameters['name']);
             // $mailer->alwaysReplyTo($from_email, $from_name);
-            dump('service provider executed');
+            // dump('service provider executed');
             
             return $mailer;
         });

@@ -54,8 +54,6 @@ class SocialLoginController extends Controller
             'email_verified_at' => now()
         ]);
 
-        // $user->save();
-
         $user->providers()->create([
             'provider_user_id' => $authenticatedUser->getId(),
             'provider' => $provider,

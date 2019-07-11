@@ -49,9 +49,15 @@ class SendEmailJob implements ShouldQueue
     }
 
 
+
+    /**
+     * Validate all necessary parameters for emailing are present.
+     * Some of the parameters can be enriched with default values
+     * even if the parameter values are missing.
+     */
     private function getMailTransportParameters ()
     {
-        return [
+        $parameters = [
             'host'       => param('mail_host'),
             'port'       => param('mail_port'),
             'name'       => param('mail_name'),
@@ -59,5 +65,25 @@ class SendEmailJob implements ShouldQueue
             'password'   => param('mail_password'),
             'encryption' => param('mail_encryption'),
         ];
+
+        $service = param('mail_service');
+        
+        // additional parametes based on specific mail 
+        // services can be added here
+        if ($service === 'google') {
+            return $this->updateGmailParameters($parameters);
+        }
+
+        return $parameters;
+    }
+
+
+    private function updateGmailParameters ($parameters)
+    {
+        $parameters['mail_host'] = 'smtp.gmail.com';
+        $parameters['mail_port'] = '587';
+        $parameters['mail_encryption'] = 'tls';
+
+        return $parameters;
     }
 }
