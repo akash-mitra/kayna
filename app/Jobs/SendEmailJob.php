@@ -80,9 +80,9 @@ class SendEmailJob implements ShouldQueue
 
     private function updateGmailParameters ($parameters)
     {
-        $parameters['mail_host'] = 'smtp.gmail.com';
-        $parameters['mail_port'] = '587';
-        $parameters['mail_encryption'] = 'tls';
+        $parameters['host'] = 'smtp.gmail.com';
+        $parameters['port'] = '587';
+        $parameters['encryption'] = 'tls';
 
         return $parameters;
     }
