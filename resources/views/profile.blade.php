@@ -98,20 +98,29 @@
         @include('modules.category-menu')
         </div>
 
-        <div class="w-full pattern text-white rounded-lg p-10 overflow-scroll">
+        <div class="w-full pattern text-white rounded-lg px-10 overflow-scroll">
             <div class="max-w-4xl text-center">
 
                 <header>
                         <div class="flex flex-col items-center justify-center">
+
+                            <form class="w-full" method="post" action="/logout">
+                                @csrf
+                                <button class="w-full text-right pt-4" type="submit">
+                                    Logout
+                                </button>
+                            </form>
+
+                            
                             {!! $resource->photo('xl') !!}
 
-                            <div class="mt-6">
+                            <div class="my-4">
                                 <h1 class="text-5xl text-indigo-100 font-heading font-bold italic leading-tight">
                                     {{ $resource->name }}
                                 </h1>
                                 
-                                <p class="mt-2 text-lg leading-tight italic text-indigo-200">
-                                    {{ ucfirst($resource->type) }}
+                                <p class="mb-6 text-lg leading-tight italic text-indigo-200">
+                                    {{ ucfirst($resource->type) }} 
                                 </p>
                             </div>
                         </div>

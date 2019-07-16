@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use Socialite;
+use Laravel\Socialite\Facades\Socialite;
+// use Socialite;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,7 +12,12 @@ class SocialLoginController extends Controller
 {
     protected $providers = ['facebook', 'google'];
 
-    public function provider($provider)
+
+    /**
+     * Redirect the user to the authentication page
+     * of the provider.
+     */
+    public function redirect($provider)
     {
         if (!in_array($provider, $this->providers)) {
             return abort(404, 'Provider not supported');
@@ -22,6 +28,13 @@ class SocialLoginController extends Controller
         return $driver->redirect();
     }
 
+
+
+    /**
+     * Obtain the user information from the provider and
+     * create or update the user in the system. Then
+     * log the user in.
+     */
     public function callback(String $provider)
     {
         if (!in_array($provider, $this->providers)) {
@@ -29,6 +42,9 @@ class SocialLoginController extends Controller
         }
 
         $authenticatedUser = $this->getAuthenticatedUser($provider);
+
+        // dump ($authenticatedUser);
+
         $this->abortIfInfoMissing($authenticatedUser);
         $existingUser = $this->authenticatedUserExisting($authenticatedUser);
 

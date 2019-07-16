@@ -62,9 +62,12 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     protected function gate()
     {
         Gate::define('viewTelescope', function ($user) {
-            return in_array($user->email, [
-                'akashmitra@gmail.com', 'akash.mitra@gmail.com'
-            ]);
+
+            // only admins should be able to see telescope 
+            // in the non-local environments.
+            return $user->type === 'admin';
+            
+            
         });
     }
 }

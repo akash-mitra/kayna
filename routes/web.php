@@ -110,7 +110,7 @@ Route::patch('/admin/settings', 'SettingController@update')->middleware('admin')
  * Authentication related routes
  */
 Auth::routes();
-Route::get('/social/login/{provider}', 'SocialLoginController@provider')->name('social.login');
+Route::get('/social/login/{provider}', 'SocialLoginController@redirect')->name('social.login');
 Route::get('/social/login/{provider}/callback', 'SocialLoginController@callback');
 
 Route::get('/admin', 'HomeController@dashboard')->name('dashboard')->middleware('admin');
