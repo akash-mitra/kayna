@@ -91,6 +91,7 @@
             </div>
             <div class="w-1/3 flex justify-end">
             @includeIf('modules.login')
+            
             </div>
         </div>
 
@@ -98,32 +99,33 @@
         @include('modules.category-menu')
         </div>
 
-        <div class="w-full pattern text-white rounded-lg px-10 overflow-scroll">
-            <div class="max-w-4xl text-center">
+        <div class="w-full pattern text-white rounded-lg overflow-scroll">
+            <div class="max-w-4xl mx-auto text-center">
 
-                <header>
-                        <div class="flex flex-col items-center justify-center">
+                <header class="w-full">
+                    <div class="flex flex-col items-center justify-center">
 
-                            <form class="w-full" method="post" action="/logout">
-                                @csrf
-                                <button class="w-full text-right pt-4" type="submit">
-                                    Logout
-                                </button>
-                            </form>
+                        <form class="w-full" method="post" action="/logout">
+                            @csrf
+                            <button class="w-full sm:text-right p-4" type="submit">
+                                Logout
+                            </button>
+                        </form>
 
+
+                        {!! $resource->photo('xl') !!}
+
+                        <div class="my-4">
+                            <h1 class="text-5xl text-indigo-100 font-heading font-bold italic leading-tight">
+                                {{ $resource->name }}
+                            </h1>
                             
-                            {!! $resource->photo('xl') !!}
-
-                            <div class="my-4">
-                                <h1 class="text-5xl text-indigo-100 font-heading font-bold italic leading-tight">
-                                    {{ $resource->name }}
-                                </h1>
-                                
-                                <p class="mb-6 text-lg leading-tight italic text-indigo-200">
-                                    {{ ucfirst($resource->type) }} 
-                                </p>
-                            </div>
+                            <p class="mb-6 text-lg leading-tight italic text-indigo-200">
+                                {{ ucfirst($resource->type) }} 
+                            </p>
                         </div>
+                    </div>
+
                 </header>
             </div>
         </div>
